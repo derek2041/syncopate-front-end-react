@@ -11,3 +11,107 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+ul {
+  font-family: 'Exo 2' !important;
+}
+
+.teleport:hover {
+  text-decoration: none;
+  color: black;
+  position: relative;
+}
+
+.teleport:hover:after {
+  background-color: black;
+  border-radius: 1.5px;
+  bottom: -6px;
+  content: '';
+  height: 3px;
+  left: 0;
+  position: absolute;
+  width: 100%;
+}
+
+.App {
+  overflow-x: auto;
+}
+
+h1 {
+  font-family: 'Exo 2' !important;
+}
+
+h2 {
+  font-family: 'Exo 2' !important;
+}
+
+h3 {
+  font-family: 'Exo 2' !important;
+}
+
+h4 {
+  font-family: 'Exo 2' !important;
+  font-weight: 600 !important;
+}
+
+input {
+  font-family: 'Exo 2' !important;
+  background: rgb(247, 248, 250) !important;
+  border-radius: 50px !important;
+}
+
+label {
+  font-family: 'Exo 2' !important;
+}
+
+button {
+  font-family: 'Exo 2' !important;
+}
+
+.links {
+  font-family: 'Exo 2';
+  font-weight: bold;
+  color: rgba(0, 0, 0, .55);
+}
+
+.links:hover {
+  text-decoration: none;
+  color: black;
+  position: relative;
+}
+
+.links:hover:after {
+  background-color: black;
+  border-radius: 1.5px;
+  bottom: -6px;
+  content: '';
+  height: 3px;
+  left: 0;
+  position: absolute;
+  width: 100%;
+}
+
+.error-message * {
+  font-family: 'Exo 2' !important;
+}
+
+.ui.card>.content * {
+  font-family: 'Exo 2' !important;
+}
+
+#mission-header {
+  font-family: 'Exo 2' !important;
+  font-size: 32px;
+  margin: 0 auto;
+  padding-top: 25px;
+  /* min-width: 1040px; */
+}
+
+#mission-text {
+  font-family: 'Exo 2' !important;
+  font-size: 24px;
+  font-weight: 400;
+  margin: 0 auto;
+  padding-bottom: 25px;
+  /* width: 1000px; */
+}
