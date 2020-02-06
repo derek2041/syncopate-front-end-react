@@ -5,7 +5,7 @@ import './App.css';
 import WelcomePage from './WelcomePage';
 import RegistrationPage from './RegistrationPage';
 import ResetPasswordPage from './ResetPasswordPage';
-import MessageClient from './MessageClient';
+import MessageWindow from './MessageWindow';
 
 const App = () => {
   return (
@@ -26,7 +26,7 @@ const App = () => {
 
           <Route path="/chat" exact render={ () => {
             return (
-              <MessageClient />
+              <MessageWindow />
             );
           }}/>
 
