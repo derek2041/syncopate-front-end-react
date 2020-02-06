@@ -29,7 +29,7 @@ const App = () => {
             return (
               <MessageWindow />
             );
-          />
+          }}/>
 
           <Route path="/chat" exact render={() => {
             return (
