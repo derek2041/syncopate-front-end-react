@@ -6,6 +6,7 @@ import WelcomePage from './WelcomePage';
 import RegistrationPage from './RegistrationPage';
 import ResetPasswordPage from './ResetPasswordPage';
 import MessageWindow from './MessageWindow';
+import ChatPage from './ChatPage';
 
 const App = () => {
   return (
@@ -27,6 +28,12 @@ const App = () => {
           <Route path="/sample" exact render={ () => {
             return (
               <MessageWindow />
+            );
+          />
+
+          <Route path="/chat" exact render={() => {
+            return (
+              <ChatPage />
             );
           }}/>
 
