@@ -24,7 +24,7 @@ const App = () => {
             );
           }}/>
 
-          <Route path="/chat" exact render={ () => {
+          <Route path="/sample" exact render={ () => {
             return (
               <MessageWindow />
             );
