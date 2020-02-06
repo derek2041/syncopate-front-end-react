@@ -3,7 +3,7 @@ const socket = openSocket('http://localhost:8000');
 
 function subscribeToRoom(cb, room) {
   socket.on('push to clients', newMessage => cb(null, newMessage));
-  socket.emit('subscribeToRoom', "1533");
+  socket.emit('subscribeToRoom', room);
 }
 export { subscribeToRoom };
 

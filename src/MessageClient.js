@@ -17,7 +17,7 @@ const MessageClient = () => {
       setMessages(curr_messages);
       console.log("Curr_messages: ", curr_messages);
       handleReset();
-    }, "1533");
+    }, "1550");
   }, []);
 
   const handleKeyPress = (event) => {
