@@ -1,5 +1,14 @@
 import openSocket from 'socket.io-client';
-const socket = openSocket('http://18.219.112.140:3001');
+
+var domain;
+
+if (window.location.host.includes("localhost")) {
+  domain = "localhost";
+} else {
+  domain = "18.219.112.140"
+}
+
+const socket = openSocket('http://' + domain + ':3001');
 
 function subscribeToRoom(cb, room) {
   socket.on('push to clients', newMessage => cb(null, newMessage));

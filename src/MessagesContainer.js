@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useDropzone } from 'react-dropzone';
 
 const MessagesContainer = ({ liveMessages }) => {
 
@@ -14,9 +15,9 @@ const MessagesContainer = ({ liveMessages }) => {
   }
 
   return (
-    <>
+    <div style={{ minHeight: '500px' }}>
       { renderMessages() }
-    </>
+    </div>
   );
 }
 
