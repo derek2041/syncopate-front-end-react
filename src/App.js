@@ -25,7 +25,7 @@ const App = () => {
             );
           }}/>
 
-          <Route path="/sample" exact render={ () => {
+          <Route path="/message/:room" render={ () => {
             return (
               <MessageWindow />
             );

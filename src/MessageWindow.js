@@ -3,7 +3,7 @@ import { Input } from 'semantic-ui-react';
 import { subscribeToRoom, sendMessageToRoom } from './api';
 import MessagesContainer from './MessagesContainer';
 
-const MessageClient = () => {
+const MessageWindow = () => {
   const [inputMessage, setInputMessage] = useState("");
   const [messages, setMessages] = useState([]);
 
@@ -22,6 +22,8 @@ const MessageClient = () => {
       return result["is_authenticated"];
     }
 
+    var lastIndex = window.location.href.lastIndexOf("/") + 1;
+
     var isAuthorized = authenticateUser();
     console.log("IS AUTHORIZED: ", isAuthorized);
     if (isAuthorized) {
@@ -32,13 +34,15 @@ const MessageClient = () => {
         setMessages(curr_messages);
         console.log("Curr_messages: ", curr_messages);
         handleReset();
-      }, "1550");
+      }, window.location.href.substring(lastIndex));
     }
   }, []);
 
   const handleKeyPress = (event) => {
-    if (event.key === 'Enter') {
+    if (event.key === 'Enter' && inputMessage !== "") {
       console.log("Sending: ", inputMessage);
+      document.getElementById("new-message").value = "";
+      setInputMessage("");
       sendMessageToRoom(inputMessage);
     }
   }
@@ -50,9 +54,10 @@ const MessageClient = () => {
 
   return (
     <>
-      <Input placeholder="New message.." onKeyPress={ handleKeyPress } onChange={ handleMessageUpdate }/>
       <MessagesContainer key={ instanceKey } liveMessages={ messages } />
+      <Input id="new-message" placeholder="New message.." onKeyPress={ handleKeyPress } onChange={ handleMessageUpdate }/>
+      <Input type="file" />
     </>
   );
 }
-export default MessageClient;
+export default MessageWindow;

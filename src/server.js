@@ -1,4 +1,5 @@
 const io = require('socket.io')();
+const fs = require('fs');
 
 io.on('connection', (socket) => {
   socket.on('subscribeToRoom', (room) => {

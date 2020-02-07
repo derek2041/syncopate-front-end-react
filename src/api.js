@@ -1,5 +1,5 @@
 import openSocket from 'socket.io-client';
-const socket = openSocket('http://18.219.112.140:3001');
+const socket = openSocket('http://localhost:3001');
 
 function subscribeToRoom(cb, room) {
   socket.on('push to clients', newMessage => cb(null, newMessage));

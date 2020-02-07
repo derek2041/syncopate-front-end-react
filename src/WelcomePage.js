@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { Input, Checkbox, Button, Message, Card } from 'semantic-ui-react';
-var faker = require('faker');
-var image = faker.image.business();
+import mainLogo from './images/1x/Asset 22.png';
+import patternLogo from './images/3x/Asset 26@3x.png';
+import './App.css';
 
 const WelcomePage = () => {
   const [loginUsername, setLoginUsername] = useState("");
@@ -24,7 +25,7 @@ const WelcomePage = () => {
         <div style={{ marginLeft: '10vw', marginRight: '10vw', height: '100%', background: 'white' }}>
           <div style={{ height: '120px', minWidth: '500px', marginLeft: '50px', marginRight: '50px', background: 'white' }}>
             <div style={{ height: '100%', width: '50%', background: 'white', float: 'left' }}>
-
+              <img src={ mainLogo } style={{ marginTop: '30px', float: 'left', height: '60px' }} />
             </div>
 
             <div style={{ height: '100%', width: '50%', background: '#fff', float: 'left' }}>
@@ -57,6 +58,10 @@ const WelcomePage = () => {
           </div>
 
           <div className="middle-login-panel" style={{ fontFamily: 'Exo 2', marginTop: '35px', height: '75%', background: 'white' }}>
+            <div style={{ transform: 'translate(250px, -40px)', height: '0px' }}>
+              <img className="App-logo" src={ patternLogo } style={{ height: '625px' }} />
+            </div>
+
             <div className="inner-login-panel" style={{ width: '35%', minWidth: '375px', maxWidth: '375px', marginLeft: '50px', height: '100%', background: 'white' }}>
               <div className="login-form-header" style={{ height: '15%', background: 'white' }}>
                 <h1 style={{ textAlign: 'left', float: 'left', marginTop: '17px', marginLeft: '17px' }}>Join the conversation. Connect at Purdue.</h1>
