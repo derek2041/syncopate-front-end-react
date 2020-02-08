@@ -76,7 +76,7 @@ const RegistrationPage = () => {
               }else if(password.length < 8){
                 setShowError(true);
                 setErrorMessage("Your password should be at least 8 characters in length.");
-              }else if(email.substring(email.indexOf('@')) === "@purdue.edu"){
+              }else if(email.substring(email.indexOf('@')) !== "@purdue.edu"){
                 setShowError(true);
                 setErrorMessage("Your email should be in purdue's domain.");
               }else {
