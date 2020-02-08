@@ -7,12 +7,14 @@ import RegistrationPage from './RegistrationPage';
 import ResetPasswordPage from './ResetPasswordPage';
 import MessageWindow from './MessageWindow';
 import ChatPage from './ChatPage';
+import ResetPassword2 from './ResetPassword2';
 
 const App = () => {
   return (
     <div className="App">
       <Router>
         <Switch>
+
           <Route path="/register" exact render={ () => {
             return (
               <RegistrationPage />
@@ -34,6 +36,12 @@ const App = () => {
           <Route path="/chat" exact render={() => {
             return (
               <ChatPage />
+            );
+          }}/>
+
+          <Route path="/confirm-reset-password/:token" render={ () => {
+            return (
+              <ResetPassword2 />
             );
           }}/>
 

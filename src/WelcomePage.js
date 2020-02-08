@@ -94,6 +94,7 @@ const WelcomePage = () => {
                       if (loginUsername === "" || loginPassword === "") {
                         setShowLoginError(true);
                       } else {
+                        setShowLoginError(false);
                         window.location.href = "/register";
                       }
                     }} />
