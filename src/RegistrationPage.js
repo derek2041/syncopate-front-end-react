@@ -81,7 +81,7 @@ const RegistrationPage = () => {
                 setErrorMessage("Your email should be in purdue's domain.");
               }else {
                 setShowError(false);
-                window.location.href = "/register";
+               // window.location.href = "/register";
               }
               const settings = {
                 method : "POST",
@@ -91,10 +91,14 @@ const RegistrationPage = () => {
                 body: JSON.stringify({ "email": email, "first_name": firstName, "last_name": lastName, "password": password})
               }
               const response = await fetch(
-                `http://18.219.112.140:8000/api/v1/register`, settings
+                `http://18.219.112.140:8000/api/v1/register/`, settings
               );
               const result = await response.json();
               console.log("Result: ", result);
+	      console.log("ResultStatus: ", result.status);
+	      if(result.status === "success"){
+		window.location.href = "/";
+              }
             }}/>
 
 
