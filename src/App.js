@@ -33,7 +33,7 @@ const App = () => {
             );
           }}/>
 
-          <Route path="/chat" exact render={() => {
+          <Route path="/chat/:room" exact render={() => {
             return (
               <ChatPage />
             );

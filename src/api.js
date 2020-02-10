@@ -11,14 +11,18 @@ if (false && window.location.host.includes("localhost")) {
 const socket = openSocket('http://' + domain + ':3001');
 
 function subscribeToRoom(cb, room) {
-  socket.on('push to clients', newMessage => cb(null, newMessage));
+  socket.on('push to clients', newMessage => {
+    try { newMessage = JSON.parse(newMessage) } catch (e) {}
+    cb(null, newMessage)
+  });
   socket.emit('subscribeToRoom', room);
 }
 export { subscribeToRoom };
 
 
 function sendMessageToRoom(message) {
-  socket.emit('new message', message);
+  socket.emit('new message', JSON.stringify(message));
+
 }
 export { sendMessageToRoom };
 

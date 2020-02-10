@@ -36,3 +36,15 @@
     transform: rotate(360deg);
   }
 }
+
+input.message-input {
+    padding: 10px;
+    border: 1px solid #dadada;
+    width: 100%;
+}
+
+.chat-history {
+    height: calc(100vh - 127px) !important;
+    max-height: 100vh !important;
+    padding: 10px;
+}

@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { ChatFeed, ChatBubble, BubbleGroup, Message } from 'react-chat-ui';
+import { subscribeToRoom, sendMessageToRoom } from './api';
+import queryString from 'query-string'
 
 const styles = {
   button: {
@@ -23,36 +25,45 @@ const styles = {
   },
 };
 
-// TODO TAKE THE USERS FROM THE SERVER
-const users = {
-  0: 'You',
-  Mark: 'Mark',
-  2: 'Evan',
-};
-
-
 class Chat extends React.Component {
   constructor() {
     super();
+    const user = queryString.parse(window.location.search).user || localStorage.getItem("username") || prompt("Enter the username")
     this.state = {
-      messages: [
-        new Message({ id: 'Mark', message: 'Hey guys!', senderName: 'Mark' }),
-        new Message({
-          id: 2,
-          message: 'Hey! Evan here. react-chat-ui is pretty dooope.',
-          senderName: 'Evan',
-        }),
-      ],
-      curr_user: 0,
+      messages: [],
+      curr_user: user
     };
+    localStorage.setItem("username", user)
 
-    setInterval(() => {
-      this.pushMessage(1, Math.random().toString(36))
-    }, 5000)
+    this.groupName = window.location.pathname.split("/").slice(-1)[0]
+
+    this.authenticateUser().then(isAuthorized => {
+        console.log("IS AUTHORIZED: ", isAuthorized);
+        if (isAuthorized) {
+          console.log("successfully authenticated");
+          subscribeToRoom((err, newMessage) => {
+            if (err) { return console.error(err) }
+            if (newMessage.user !== this.state.curr_user) {
+               this.pushMessage(newMessage.user, newMessage.message)
+            }
+          }, this.groupName);
+        }
+    }).catch(console.error)
   }
 
-  onPress(user) {
-    this.setState({ curr_user: user });
+  async authenticateUser() {
+     // TODO Fix the authentication
+     return true
+     const response = await fetch(
+       `http://18.219.112.140:3000/authenticate`
+     );
+     const result = await response.json();
+
+     console.log("Result: ", result);
+     console.log("Response: ", response);
+     console.log(result.is_authenticated);
+
+     return result["is_authenticated"];
   }
 
   onMessageSubmit(e) {
@@ -61,6 +72,10 @@ class Chat extends React.Component {
     if (!input.value) {
       return false;
     }
+    sendMessageToRoom({
+     message: input.value,
+     user: this.state.curr_user
+    })
     this.pushMessage(this.state.curr_user, input.value);
     input.value = '';
     return true;
@@ -69,9 +84,9 @@ class Chat extends React.Component {
   pushMessage(recipient, message) {
     const prevState = this.state;
     const newMessage = new Message({
-      id: recipient,
+      id: recipient == this.state.curr_user ? 0 : 1,
       message,
-      senderName: users[recipient],
+      senderName: recipient == this.state.curr_user ? "You" : recipient,
     });
     prevState.messages.push(newMessage);
     this.setState(this.state);
@@ -79,8 +94,8 @@ class Chat extends React.Component {
 
   render() {
     return (
-      <div className="container">
-        <h1 className="text-center">This is the Chat Page</h1>
+     <div className="container">
+        <h1 className="text-center">Welcome, {this.state.curr_user}!</h1>
         <p className="text-center">
 	   Have fun!
         </p>
@@ -100,40 +115,6 @@ class Chat extends React.Component {
               className="message-input"
             />
           </form>
-
-          <div style={{ display: 'flex', justifyContent: 'space-around' }}>
-            <button
-              style={{
-                ...styles.button,
-                ...(this.state.curr_user === 0 ? styles.selected : {}),
-              }}
-              onClick={() => this.onPress(0)}
-            >
-              You
-            </button>
-            <button
-              style={{
-                ...styles.button,
-                ...(this.state.curr_user === 'Mark' ? styles.selected : {}),
-              }}
-              onClick={() => this.onPress('Mark')}
-            >
-              Mark
-            </button>
-            <button
-              style={{
-                ...styles.button,
-                ...(this.state.curr_user === 2 ? styles.selected : {}),
-              }}
-              onClick={() => this.onPress(2)}
-            >
-              Evan
-            </button>
-          </div>
-          <div
-            style={{ display: 'flex', justifyContent: 'center', marginTop: 10 }}
-          >
-          </div>
         </div>
       </div>
     );
