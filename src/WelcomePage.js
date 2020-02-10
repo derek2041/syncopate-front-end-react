@@ -64,11 +64,11 @@ const WelcomePage = () => {
 
             <div className="inner-login-panel" style={{ width: '35%', minWidth: '375px', maxWidth: '375px', marginLeft: '50px', height: '100%', background: 'white' }}>
               <div className="login-form-header" style={{ height: '15%', background: 'white' }}>
-                <h1 style={{ textAlign: 'left', float: 'left', marginTop: '17px', marginLeft: '17px' }}>Join the conversation. Connect at Purdue.</h1>
+                <h1 style={{ textAlign: 'left', float: 'left', marginTop: '17px', marginLeft: '17px', position: 'relative' }}>Join the conversation. Connect at Purdue.</h1>
               </div>
 
               <div className="login-form-description" style={{ height: '15%', background: 'white' }}>
-                <h4 style={{ color: 'rgba(0, 0, 0, .55)', textAlign: 'left', float: 'left', marginTop: '17px', marginLeft: '17px' }}>A simple way to coordinate and connect with students on campus, hassle free.</h4>
+                <h4 style={{ color: 'rgba(0, 0, 0, .55)', textAlign: 'left', float: 'left', marginTop: '17px', marginLeft: '17px', position: 'relative' }}>A simple way to coordinate and connect with students on campus, hassle free.</h4>
               </div>
 
               <div className="error-message">
@@ -94,6 +94,7 @@ const WelcomePage = () => {
                       if (loginUsername === "" || loginPassword === "") {
                         setShowLoginError(true);
                       } else {
+                        setShowLoginError(false);
                         window.location.href = "/register";
                       }
                     }} />
@@ -104,8 +105,8 @@ const WelcomePage = () => {
                 </div>
 
                 <div style={{ float: 'left', width: '100%', height: '15%', textAlign: 'left', marginLeft: '10px' }}>
-                  <a className="links" href="/register">Sign up now!</a>
-                  <a className="links" href="/reset-password" style={{ marginLeft: '40px' }}>Forgot your password?</a>
+                  <a className="links" href="/register" style={{ position: 'relative' }}>Sign up now!</a>
+                  <a className="links" href="/reset-password" style={{ position: 'relative', marginLeft: '40px' }}>Forgot your password?</a>
                 </div>
               </div>
 
