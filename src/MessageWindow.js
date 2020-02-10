@@ -13,7 +13,7 @@ const MessageWindow = () => {
   useEffect(() => {
     async function authenticateUser() {
       const response = await fetch(
-        `http://18.219.112.140:8000/authenticate`
+        `http://18.219.112.140:3000/authenticate`
       );
       const result = await response.json();
       console.log("Result: ", result);

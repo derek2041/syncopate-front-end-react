@@ -2,7 +2,7 @@ import openSocket from 'socket.io-client';
 
 var domain;
 
-if (window.location.host.includes("localhost")) {
+if (false && window.location.host.includes("localhost")) {
   domain = "localhost";
 } else {
   domain = "18.219.112.140"
