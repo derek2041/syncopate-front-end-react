@@ -1,0 +1,31 @@
+.profile-pic {
+    margin: 27px auto 0 auto;
+    width: 200px;
+    height: 200px;
+    background-size: cover;
+    background-position: center;
+    border-radius: 50%;
+}
+
+h1 {
+    font-size: 3em;
+}
+
+h1 small {
+    font-size: 0.3em;
+    position: relative;
+    top: -28px;
+    color: #757575;
+}
+
+h1 small:after {
+    content: " ";
+    border-radius: 50%;
+    width: 10px;
+    height: 10px;
+    background: #58d68d;
+    display: block;
+    position: absolute;
+    right: -13px;
+    top: 3px;
+}

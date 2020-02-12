@@ -4,6 +4,7 @@ import logo from './logo.svg';
 import './App.css';
 import WelcomePage from './WelcomePage';
 import RegistrationPage from './RegistrationPage';
+import ProfilePage from './ProfilePage';
 import ResetPasswordPage from './ResetPasswordPage';
 import MessageWindow from './MessageWindow';
 import ChatPage from './ChatPage';
@@ -18,6 +19,12 @@ const App = () => {
           <Route path="/register" exact render={ () => {
             return (
               <RegistrationPage />
+            );
+          }}/>
+          
+          <Route path="/profile" exact render={ () => {
+            return (
+              <ProfilePage />
             );
           }}/>
 
