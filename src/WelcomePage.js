@@ -127,6 +127,8 @@ const WelcomePage = () => {
 
                         if (result.status === "success") {
                           window.location.href = "/test-login";
+                        } else {
+                          setShowLoginError(true);
                         }
                       }
                     }} />
