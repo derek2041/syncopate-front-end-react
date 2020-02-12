@@ -9,6 +9,7 @@ import ResetPasswordPage from './ResetPasswordPage';
 import MessageWindow from './MessageWindow';
 import ChatPage from './ChatPage';
 import ResetPassword2 from './ResetPassword2';
+import TestLogin from './TestLogin';
 
 const App = () => {
   return (
@@ -21,7 +22,7 @@ const App = () => {
               <RegistrationPage />
             );
           }}/>
-          
+
           <Route path="/profile" exact render={ () => {
             return (
               <ProfilePage />
@@ -49,6 +50,12 @@ const App = () => {
           <Route path="/confirm-reset-password/:token" render={ () => {
             return (
               <ResetPassword2 />
+            );
+          }}/>
+
+          <Route path="/test-login" render={ () => {
+            return (
+              <TestLogin />
             );
           }}/>
 

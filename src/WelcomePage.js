@@ -4,9 +4,16 @@ import mainLogo from './images/1x/Asset 22.png';
 import patternLogo from './images/3x/Asset 26@3x.png';
 import './App.css';
 
+window.onpageshow = function(event) {
+    if (event.persisted) {
+        window.location.reload();
+    }
+};
+
 const WelcomePage = () => {
   const [loginUsername, setLoginUsername] = useState("");
   const [loginPassword, setLoginPassword] = useState("");
+  const [isPersistent, setIsPersistent] = useState(false);
   const [showLoginError, setShowLoginError] = useState(false);
 
   const handleUsernameChange = (event, data) => {
@@ -17,6 +24,11 @@ const WelcomePage = () => {
   const handlePasswordChange = (event, data) => {
     setLoginPassword(data.value);
     console.log(data.value);
+  }
+
+  const handlePersistenceChange = (event, data) => {
+    setIsPersistent(data.checked);
+    console.log(data.checked);
   }
 
   return (
@@ -90,18 +102,38 @@ const WelcomePage = () => {
 
                 <div style={{ float: 'left', width: '100%', height: '25%' }}>
                   <Button primary style={{ float: 'left', width: '120px', marginTop: '8px', marginLeft: '10px', borderRadius: '50px', fontSize: '18px' }} content="Sign In"
-                    onClick={ () => {
+                    onClick={ async () => {
                       if (loginUsername === "" || loginPassword === "") {
                         setShowLoginError(true);
                       } else {
                         setShowLoginError(false);
-                        window.location.href = "/register";
+
+                        const settings = {
+                          method : "POST",
+                          credentials: "include",
+                          headers: {
+                            'Content-Type': 'application/json'
+                          },
+                          body: JSON.stringify({ "email": loginUsername, "password": loginPassword, "persistent": isPersistent })
+                        }
+
+                        const response = await fetch(
+                          `http://18.219.112.140:8000/api/v1/login/`, settings
+                        );
+
+                        const result = await response.json();
+                        console.log("Result: ", result);
+                        console.log("ResultStatus: ", result.status);
+
+                        if (result.status === "success") {
+                          window.location.href = "/test-login";
+                        }
                       }
                     }} />
                 </div>
 
                 <div style={{ float: 'left', width: '100%', height: '15%' }}>
-                  <Checkbox label="Stay signed in" style={{ float: 'left', marginLeft: '15px', marginTop: '5px' }}/>
+                  <Checkbox label="Stay signed in" style={{ float: 'left', marginLeft: '15px', marginTop: '5px' }} onChange={ handlePersistenceChange } />
                 </div>
 
                 <div style={{ float: 'left', width: '100%', height: '15%', textAlign: 'left', marginLeft: '10px' }}>

@@ -59,7 +59,7 @@ const RegistrationPage = () => {
               console.log(data.value);
             }}
           />
-          <Button primary style={{ float: 'center', width: '50%', marginTop: '20px', marginLeft: '10px', borderRadius: '50px', fontSize: '18px' }} content="Sign In"
+          <Button primary style={{ float: 'center', width: '50%', marginTop: '20px', marginLeft: '10px', borderRadius: '50px', fontSize: '18px' }} content="Register"
             onClick={ async () => {
               console.log(password);
               console.log(passwordConfirmation);
