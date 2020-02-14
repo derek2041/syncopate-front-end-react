@@ -10,7 +10,7 @@ import MessageWindow from './MessageWindow';
 import ChatPage from './ChatPage';
 import ResetPassword2 from './ResetPassword2';
 import TestLogin from './TestLogin';
-
+import ChangeUsername from './ChangeUsername';
 const App = () => {
   return (
     <div className="App">
@@ -57,6 +57,12 @@ const App = () => {
             return (
               <TestLogin />
             );
+          }}/>
+
+          <Route path="/change-username" exact render={() => {
+            return(
+              <ChangeUsername />
+            )
           }}/>
 
           <Route path="/" render={ () => {

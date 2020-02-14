@@ -13,6 +13,9 @@ class ProfilePage extends React.Component {
        available: true
     }
   }
+  changeUsername = async e => {
+    window.location.href = "/change-username";
+  }
   render () {
     return (
       <div>
@@ -34,6 +37,9 @@ class ProfilePage extends React.Component {
           <div>
             <h4>{this.state.profile.bio}</h4>
           </div>
+        </div>
+        <div>
+          <Button onClick={this.changeUsername}>Change Username</Button>
         </div>
       </div>
     );
