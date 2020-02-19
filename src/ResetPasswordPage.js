@@ -2,6 +2,9 @@ import React, { useState } from 'react';
 import { Input, Checkbox, Button, Message, Card } from 'semantic-ui-react';
 import mainLogo from './images/1x/Asset 22.png';
 const ResetPasswordPage = () => {
+  const [resetEmail, setResetEmail] = useState("");
+  const [showError, setShowError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
   return (
     <div>
       <div style={{paddingTop: '60px', marginBottom: '20px'}} >
@@ -14,9 +17,48 @@ const ResetPasswordPage = () => {
       </div>
 
       <div  style={{ float: 'center', maxWidth: '700px' , margin: '0 auto'}}>
+        <div className="error-message">
+          <Message negative hidden={ !showError } style={{ marginBottom: '35px' }}>
+            <Message.Header style={{ fontFamily: 'Exo 2' }}>Reset Password Fail</Message.Header>
+            <p style={{ fontFamily: 'Exo 2' }}>{ errorMessage}</p>
+          </Message>
+        </div>
           <Input placeholder="Purdue Email" style={{ float: 'center', width: '50%', maxHeight: '45px', fontSize: '20px', marginTop: '18px', marginLeft: '10px' }}
+          onChange={(event, data) => {
+            setResetEmail(data.value);
+            console.log(data.value);
+          }}
           />
           <Button primary style={{ float: 'center', width: '50%', marginTop: '20px', marginLeft: '10px', borderRadius: '50px', fontSize: '18px' }} content="Send"
+          onClick={ async () => {
+            console.log(resetEmail);
+            if (resetEmail === "") {
+              setShowError(true);
+              setErrorMessage("The email field should not be empty.");
+            }else {
+              setShowError(false);
+             // window.location.href = "/register";
+            }
+            const settings = {
+              method : "POST",
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({ "email": resetEmail})
+            }
+            const response = await fetch(
+              `http://18.219.112.140:8000/api/v1/register/`, settings
+            );
+            const result = await response.json();
+            console.log("Result: ", result);
+            console.log("ResultStatus: ", result.status);
+            if(result.status === "success"){
+                window.location.href = "/";
+            }
+          }}
+
+
+
           />
       </div>
 
