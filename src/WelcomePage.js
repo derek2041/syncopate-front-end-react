@@ -245,6 +245,7 @@ const WelcomePage = () => {
             description='UI/UX Engineer'
           />
         </Card.Group>
+        <h4 style={{ fontSize: '14px', fontFamily: 'Exo 2', paddingBottom: '20px', color: 'gray' }}>© 2020 Syncopate 0.9.0</h4>
       </div>
     </>
   );
