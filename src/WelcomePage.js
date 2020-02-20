@@ -126,7 +126,7 @@ const WelcomePage = () => {
                         console.log("ResultStatus: ", result.status);
 
                         if (result.status === "success") {
-                          window.location.href = "/test-login";
+                          window.location.href = "/profile";
                         } else {
                           setShowLoginError(true);
                         }

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Button } from 'semantic-ui-react';
+import "./TestLogin.css"
 
 const TestLogin = () => {
   const [loadState, setLoadState] = useState(null);
@@ -21,29 +22,29 @@ const TestLogin = () => {
     );
 
     const result = await response.json();
-    console.log(result);
+    console.log("upload=", result);
   }
 
   useEffect(() => {
     async function identifyUser() {
-        const response = await fetch(
-          `http://18.219.112.140:8000/api/v1/identify/`, { method: 'GET', credentials: 'include' }
-        );
+      const response = await fetch(
+        `http://18.219.112.140:8000/api/v1/identify/`, { method: 'GET', credentials: 'include' }
+      );
 
-        const result = await response.json();
-        setLoadedData(result);
-        console.log(result);
+      const result = await response.json();
+      setLoadedData(result);
+      console.log("identifyuser=", result);
     }
 
     async function fetchAvatar() {
       const response = await fetch(
-        `http://18.219.112.140:8000/api/v1/my-avatar/`, { method: 'GET', credentials: 'include'}
+        `http://18.219.112.140:8000/api/v1/my-avatar/`, { method: 'GET', credentials: 'include' }
       );
 
       const result = await response.json();
       setAvatarURL(result.url);
       setLoadState(true);
-      console.log(result);
+      console.log("fetchAvatar=", result);
     }
 
     identifyUser();
@@ -58,14 +59,33 @@ const TestLogin = () => {
   } else if (loadState === true) {
     console.log("url:" + avatarURL);
     return (
-      <>
-        <h1>Email: {loadedData.email}</h1>
-        <h1>F_Name: {loadedData.first_name}</h1>
-        <h1>L_Name: {loadedData.last_name}</h1>
-        <img src={ avatarURL } style={{ height: '200px', width: '200px', borderRadius: '50px' }}/>
-        <input type="file" name="avatar" />
-        <Button primary content="Upload Picture" onClick={ submitFileUpload }/>
-      </>
+      <div>
+        <div className="topDiv">
+          <h3>Profile Page</h3>
+          <div>
+            <h4>This is your profile page.</h4>
+          </div>
+          <div className="profile-pic" style={{
+            backgroundImage: `url(${avatarURL})`
+            // backgroundImage: `url("https://gpluseurope.com/wp-content/uploads/Mauro-profile-picture.jpg")`
+          }}></div>
+          <h1>
+            {`${loadedData.first_name} ${loadedData.last_name}`}
+            {/* {
+                 loadedData.available ? 
+                 <small>Available</small>: null
+             } */}
+            <small>Available</small>
+          </h1>
+          <div>
+            <h4>{loadedData.email}</h4>
+          </div>
+        </div>
+        <div>
+          <input type="file" name="avatar" />
+          <Button onClick={submitFileUpload}>Upload Photo</Button>
+        </div>
+      </div>
     );
   }
 }

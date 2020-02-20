@@ -8,18 +8,15 @@ const WelcomePage = () => {
     const [newUsername, setnewUsername] = useState("");
     const [errors, setErrors] = useState([]);
   
-    const handleUsernameChange = (event, data) => {
-      setcurrUsername(data.value);
-      console.log(data.value);
+    const handleUsernameChange = (event) => {
+      setcurrUsername(event.target.value);      
     }
   
-    const handlenewUsernameChange = (event, data) => {
-      setnewUsername(data.checked);
-      console.log(data.checked);
+    const handlenewUsernameChange = (event) => {
+      setnewUsername(event.target.value);      
     }
-    const handlePasswordChange = (event, data) => {
-        setPassword(data.value);
-        console.log(data.value);
+    const handlePasswordChange = (event) => {
+        setPassword(event.target.value);        
       }
     
       const submit = async e => {
