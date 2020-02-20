@@ -211,8 +211,8 @@ const WelcomePage = () => {
         </div>
       </div>
 
-      <div id="outer-footer" className="outer-footer" style={{ marginBottom: '20px', borderStyle: 'solid', borderWidth: '1px 0px 0px 0px', borderColor: 'gray', background: 'white' }}>
-        <h1 style={{ marginTop: '20px' }}>Meet The Team</h1>
+      <div id="outer-footer" className="outer-footer" style={{ paddingBottom: '20px', borderStyle: 'solid', borderWidth: '1px 0px 0px 0px', borderColor: 'gray', background: 'white' }}>
+        <h1 style={{ marginTop: '20px', fontSize: '32px' }}>Meet The Team</h1>
         <Card.Group doubling={ true } stackable={ true } textAlign='center' itemsPerRow={ 6 } style={{ margin: '0 auto', minWidth: '675px' }}>
           <Card
             image="http://milab.cs.purdue.edu/static/admin/img/none_ava.jpg"
