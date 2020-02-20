@@ -149,7 +149,7 @@ const WelcomePage = () => {
         </div>
       </div>
 
-      <div id="outer-features-panel" className="outer-features-panel" style={{ height: 'fit-content', background: 'rgb(240,240,240)' }}>
+      <div id="outer-features-panel" className="outer-features-panel" style={{ height: 'fit-content', background: 'rgb(240,240,240)', borderStyle: 'solid', borderWidth: '1px 0px 1px 0px', borderColor: 'gray' }}>
         <Card.Group doubling={ true } stackable={ true } textAlign='center' itemsPerRow={ 4 } style={{ margin: '0 auto', minWidth: '675px', maxWidth: '1000px' }}>
           <Card
             image="https://static.thenounproject.com/png/20389-200.png"
@@ -194,7 +194,7 @@ const WelcomePage = () => {
         </Card.Group>
       </div>
 
-      <div id="outer-mission-panel" className="outer-mission-panel" style={{ height: 'fit-content', background: '#dadada' }}>
+      <div id="outer-mission-panel" className="outer-mission-panel" style={{ height: 'fit-content', background: 'white' }}>
         <div style={{ margin: '0 auto', height: '100%', width: '80%' }}>
           <h1 id="mission-header">"Reinventing how Purdue students communicate with each other."</h1>
           <p id="mission-text">
@@ -211,8 +211,40 @@ const WelcomePage = () => {
         </div>
       </div>
 
-      <div id="outer-footer" className="outer-footer" style={{ height: '550px', background: 'white' }}>
-
+      <div id="outer-footer" className="outer-footer" style={{ marginBottom: '20px', borderStyle: 'solid', borderWidth: '1px 0px 0px 0px', borderColor: 'gray', background: 'white' }}>
+        <h1 style={{ marginTop: '20px' }}>Meet The Team</h1>
+        <Card.Group doubling={ true } stackable={ true } textAlign='center' itemsPerRow={ 6 } style={{ margin: '0 auto', minWidth: '675px' }}>
+          <Card
+            image="http://milab.cs.purdue.edu/static/admin/img/none_ava.jpg"
+            header='Derek Shu'
+            description='Full-Stack Developer'
+          />
+          <Card
+            image='http://milab.cs.purdue.edu/static/admin/img/none_ava.jpg'
+            header='Junyi Zhang'
+            description='UI/UX Engineer'
+          />
+          <Card
+            image='http://milab.cs.purdue.edu/static/admin/img/none_ava.jpg'
+            header='Jia Lin Cheoh'
+            description='UI/UX Engineer'
+          />
+          <Card
+            image='http://milab.cs.purdue.edu/static/admin/img/none_ava.jpg'
+            header='Shafer Hess'
+            description='Backend Engineer'
+          />
+          <Card
+            image='http://milab.cs.purdue.edu/static/admin/img/none_ava.jpg'
+            header='Emily Ou'
+            description='Backend Engineer'
+          />
+          <Card
+            image='http://milab.cs.purdue.edu/static/admin/img/none_ava.jpg'
+            header='Zach Bridwell'
+            description='UI/UX Engineer'
+          />
+        </Card.Group>
       </div>
     </>
   );
