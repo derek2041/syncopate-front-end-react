@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { ChatFeed, ChatBubble, BubbleGroup, Message } from 'react-chat-ui';
 import { subscribeToRoom, sendMessageToRoom } from './api';
 import queryString from 'query-string'
-
+import { Button } from 'semantic-ui-react';
 const styles = {
   button: {
     backgroundColor: '#fff',
@@ -95,10 +95,11 @@ class Chat extends React.Component {
   render() {
     return (
      <div className="container">
-        <h1 className="text-center">Welcome, {this.state.curr_user}!</h1>
+        <h1 className="text-center">Welcome, {this.state.curr_user}!</h1>        
         <p className="text-center">
 	   Have fun!
         </p>
+        <Button onClick={() => window.location.href = "/test-login"} primary>Profile</Button>
         <div className="chatfeed-wrapper">
           <ChatFeed
             maxHeight={250}

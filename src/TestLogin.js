@@ -83,7 +83,7 @@ const TestLogin = () => {
         </div>
         <div>
           <input type="file" name="avatar" />
-          <Button onClick={submitFileUpload}>Upload Photo</Button>
+          <Button onClick={submitFileUpload} primary>Upload Photo</Button>
         </div>
       </div>
     );
