@@ -12,44 +12,44 @@ const RequestList = () => {
 
   const handleReset = () => setInstance(i => i + 1);
 
-  console.log("Request List: ", requestList);
+
 
   useEffect(() => {
     async function buildList() {
-      // const response = await fetch(
-      //   `http://18.219.112.140:8000/api/v1/register/`, settings
-      // );
-      // const result = await response.json();
+      const response = await fetch(
+        `http://18.219.112.140:8000/api/v1/requests/`, {method: 'POST', credentials: 'include'}
+      );
+      const result = await response.json();
 
-      var tempResult = []
-      for (var i = 0; i < 5; i++) {
-        tempResult.push({"name": faker.name.findName(), "picture": faker.image.imageUrl(), "id": faker.random.number()});
-      }
-
-      setRequestList(tempResult);
-      tempResult.forEach((currRequest) => {
-        console.log(currRequest);
-      });
+      // var tempResult = []
+      // for (var i = 0; i < 5; i++) {
+      //   tempResult.push({"name": faker.name.findName(), "picture": faker.image.imageUrl(), "id": faker.random.number()});
+      // }
+      console.log(result.requests);
+      setRequestList(result.requests);
+      // tempResult.forEach((currRequest) => {
+      //   console.log(currRequest);
+      // });
     }
 
     buildList();
   }, [instance]);
 
   const deleteElement = (userid) => {
-    var curr_idx = 0;
-    var final_idx = 0;
-    requestList.forEach((currRequest) => {
-      if(currRequest.id === userid){
-        final_idx = curr_idx;
-      }
-      curr_idx++;
-    });
-
-    console.log("Deleted element: ", userid);
-    var tempList = requestList;
-    tempList.splice(final_idx, 1);
-    console.log(tempList);
-    setRequestList(tempList);
+    // var curr_idx = 0;
+    // var final_idx = 0;
+    // requestList.forEach((currRequest) => {
+    //   if(currRequest.id === userid){
+    //     final_idx = curr_idx;
+    //   }
+    //   curr_idx++;
+    // });
+    //
+    // console.log("Deleted element: ", userid);
+    // var tempList = requestList;
+    // tempList.splice(final_idx, 1);
+    // console.log(tempList);
+    // setRequestList(tempList);
     handleReset();
   }
 
@@ -69,10 +69,10 @@ const RequestList = () => {
             <Image
               floated='right'
               size='mini'
-              src={ faker.image.avatar() }
+              src={ "http://18.219.112.140/images/avatars/" + currRequest.sender__profile_pic_url }
             />
-            <Card.Header>{currRequest.name}</Card.Header>
-            <Card.Meta>{currRequest.id}</Card.Meta>
+            <Card.Header>{currRequest.sender__first_name}</Card.Header>
+            <Card.Meta>{currRequest.sender__email}</Card.Meta>
             <Card.Description>
               { currRequest.name } wants to add you to the group <strong>best friends</strong>
             </Card.Description>
@@ -85,14 +85,17 @@ const RequestList = () => {
                   headers: {
                     'Content-Type': 'application/json'
                   },
-                  body: JSON.stringify({ "user": currRequest.id, "status": true})
+                  body: JSON.stringify({ "request_id": currRequest.id, "action": true}),
+                  credentials: 'include'
                 }
                 console.log(currRequest.id);
-                // const response = await fetch(
-                //   `http://18.219.112.140:8000/api/v1/register/`, settings
-                // );
-                // const result = await response.json();
+                const response = await fetch(
+                  `http://18.219.112.140:8000/api/v1/request-action/`, settings
+                );
+                const result = await response.json();
+
                 deleteElement(currRequest.id);
+
 
               }}>
                 Approve
@@ -103,13 +106,14 @@ const RequestList = () => {
                   headers: {
                     'Content-Type': 'application/json'
                   },
-                  body: JSON.stringify({ "user": currRequest.id, "status": false})
+                  body: JSON.stringify({ "request_id": currRequest.id, "action": false}),
+                  credentials: 'include'
                 }
                 console.log(currRequest.id);
-                // const response = await fetch(
-                //   `http://18.219.112.140:8000/api/v1/register/`, settings
-                // );
-                // const result = await response.json();
+                const response = await fetch(
+                  `http://18.219.112.140:8000/api/v1/request-action/`, settings
+                );
+                const result = await response.json();
                 deleteElement(currRequest.id);
               }} >
                 Decline

@@ -12,6 +12,7 @@ import ResetPassword2 from './ResetPassword2';
 import TestLogin from './TestLogin';
 import ChangeUsername from './ChangeUsername';
 import RequestList from './RequestList';
+import SendRequests from './SendRequests';
 
 const App = () => {
   return (
@@ -70,6 +71,12 @@ const App = () => {
           <Route path="/requests" exact render={() => {
             return(
               <RequestList />
+            )
+          }}/>
+
+          <Route path="/send-requests" exact render={() => {
+            return(
+              <SendRequests />
             )
           }}/>
 
