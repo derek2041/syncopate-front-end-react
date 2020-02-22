@@ -13,6 +13,7 @@ import TestLogin from './TestLogin';
 import ChangeUsername from './ChangeUsername';
 import RequestList from './RequestList';
 import SendRequests from './SendRequests';
+import ConversationPage from './ConversationPage';
 
 const App = () => {
   return (
@@ -77,6 +78,12 @@ const App = () => {
           <Route path="/send-requests" exact render={() => {
             return(
               <SendRequests />
+            )
+          }}/>
+
+          <Route path="/conversation" exact render={() => {
+            return(
+              <ConversationPage />
             )
           }}/>
 

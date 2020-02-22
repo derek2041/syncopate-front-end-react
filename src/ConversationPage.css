@@ -1,0 +1,57 @@
+html {
+  height: 100%;
+}
+body {
+  min-height: 100%;
+  width: 100%;
+  display: table;
+  padding: 0;
+}
+
+
+#search-bar{
+  margin-top: 8px;
+  width: 80%;
+  height: 45px;
+}
+.ui.input.search-input{
+  width: 100%;
+}
+
+.userName{
+  font-size: 150%;
+  float: left;
+  margin-left: -100%;
+  margin-top: 10% !important;
+}
+
+.status{
+  float: right !important;
+  
+}
+
+#friend-list{
+  margin:5%;
+}
+#friends-container {
+  width:40%;
+  height:100% ;
+
+  float:left;
+  border-right: solid;
+  border-width: 1px;
+
+
+
+}
+
+
+
+#friend-info-container{
+  width:60%;
+  height:100%;
+  padding: 50px;
+  float: right;
+  margin: auto;
+
+}
