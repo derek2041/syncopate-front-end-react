@@ -49,3 +49,7 @@ input.message-input {
     max-height: 100vh !important;
     padding: 10px;
 }
+
+.search-container {
+  text-align: left;
+}
