@@ -34,7 +34,7 @@ ul {
 }
 
 .App {
-  overflow-x: auto;
+  overflow-x: hidden;
 }
 
 h1 {
