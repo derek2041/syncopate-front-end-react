@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Button } from 'semantic-ui-react';
 import "./TestLogin.css"
+import NavigationBar from './NavigationBar';
 
 const TestLogin = () => {
   const [loadState, setLoadState] = useState(null);
@@ -54,38 +55,44 @@ const TestLogin = () => {
 
   if (loadState === null) {
     return (
-      <h1>Loading...</h1>
+      <>
+        <NavigationBar />
+        <h1>Loading...</h1>
+      </>
     );
   } else if (loadState === true) {
     console.log("url:" + avatarURL);
     return (
-      <div>
-        <div className="topDiv">
-          <h3>Profile Page</h3>
-          <div>
-            <h4>This is your profile page.</h4>
-          </div>
-          <div className="profile-pic" style={{
-            backgroundImage: `url(${avatarURL})`
-            // backgroundImage: `url("https://gpluseurope.com/wp-content/uploads/Mauro-profile-picture.jpg")`
-          }}></div>
-          <h1>
-            {`${loadedData.first_name} ${loadedData.last_name}`}
-            {/* {
-                 loadedData.available ? 
-                 <small>Available</small>: null
-             } */}
-            <small>Available</small>
-          </h1>
-          <div>
-            <h4>{loadedData.email}</h4>
-          </div>
-        </div>
+      <>
+        <NavigationBar />
         <div>
-          <input type="file" name="avatar" />
-          <Button onClick={submitFileUpload} primary>Upload Photo</Button>
+          <div className="topDiv">
+            <h3>Profile Page</h3>
+            <div>
+              <h4>This is your profile page.</h4>
+            </div>
+            <div className="profile-pic" style={{
+              backgroundImage: `url(${avatarURL})`
+              // backgroundImage: `url("https://gpluseurope.com/wp-content/uploads/Mauro-profile-picture.jpg")`
+            }}></div>
+            <h1>
+              {`${loadedData.first_name} ${loadedData.last_name}`}
+              {/* {
+                   loadedData.available ?
+                   <small>Available</small>: null
+               } */}
+              <small>Available</small>
+            </h1>
+            <div>
+              <h4>{loadedData.email}</h4>
+            </div>
+          </div>
+          <div>
+            <input type="file" name="avatar" />
+            <Button onClick={submitFileUpload} primary>Upload Photo</Button>
+          </div>
         </div>
-      </div>
+      </>
     );
   }
 }
