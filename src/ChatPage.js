@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { ChatFeed, ChatBubble, BubbleGroup, Message } from 'react-chat-ui';
 import { subscribeToRoom, sendMessageToRoom } from './api';
 import queryString from 'query-string'
-import { Button } from 'semantic-ui-react';
+import { Button, Search } from 'semantic-ui-react';
 const styles = {
   button: {
     backgroundColor: '#fff',
@@ -31,39 +31,42 @@ class Chat extends React.Component {
     const user = queryString.parse(window.location.search).user || localStorage.getItem("username") || prompt("Enter the username")
     this.state = {
       messages: [],
-      curr_user: user
+      curr_user: user,
+      searchQuery: "",
+      searchedUsers: [],
+      isLoading: false,
     };
     localStorage.setItem("username", user)
 
     this.groupName = window.location.pathname.split("/").slice(-1)[0]
 
     this.authenticateUser().then(isAuthorized => {
-        console.log("IS AUTHORIZED: ", isAuthorized);
-        if (isAuthorized) {
-          console.log("successfully authenticated");
-          subscribeToRoom((err, newMessage) => {
-            if (err) { return console.error(err) }
-            if (newMessage.user !== this.state.curr_user) {
-               this.pushMessage(newMessage.user, newMessage.message)
-            }
-          }, this.groupName);
-        }
+      console.log("IS AUTHORIZED: ", isAuthorized);
+      if (isAuthorized) {
+        console.log("successfully authenticated");
+        subscribeToRoom((err, newMessage) => {
+          if (err) { return console.error(err) }
+          if (newMessage.user !== this.state.curr_user) {
+            this.pushMessage(newMessage.user, newMessage.message)
+          }
+        }, this.groupName);
+      }
     }).catch(console.error)
   }
 
   async authenticateUser() {
-     // TODO Fix the authentication
-     return true
-     const response = await fetch(
-       `http://18.219.112.140:3000/authenticate`
-     );
-     const result = await response.json();
+    // TODO Fix the authentication
+    return true
+    const response = await fetch(
+      `http://18.219.112.140:3000/authenticate`
+    );
+    const result = await response.json();
 
-     console.log("Result: ", result);
-     console.log("Response: ", response);
-     console.log(result.is_authenticated);
+    console.log("Result: ", result);
+    console.log("Response: ", response);
+    console.log(result.is_authenticated);
 
-     return result["is_authenticated"];
+    return result["is_authenticated"];
   }
 
   onMessageSubmit(e) {
@@ -73,8 +76,8 @@ class Chat extends React.Component {
       return false;
     }
     sendMessageToRoom({
-     message: input.value,
-     user: this.state.curr_user
+      message: input.value,
+      user: this.state.curr_user
     })
     this.pushMessage(this.state.curr_user, input.value);
     input.value = '';
@@ -92,13 +95,53 @@ class Chat extends React.Component {
     this.setState(this.state);
   }
 
+  handleSearchChange = async (e, { value }) => {
+    this.setState({ searchQuery: value, isLoading: true });
+
+    const settings = {
+      method: "POST",
+      credentials: "include",
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ "string": value })
+    }
+
+    const response = await fetch(
+      `http://18.219.112.140:8000/api/v1/search-user/`, settings
+    );
+
+    let result = await response.json();    
+    if (result && result.length) {
+      result = result.map(item => ({ ...item, user_id: item.id}));
+      console.log("Result: ", result);
+    }
+    this.setState(({ isLoading: false, searchedUsers: result }))
+  }
+
+  handleResultSelect = (e, { result }) => {
+    this.setState({ searchQuery: result.email });
+  }
+
   render() {
+    const { isLoading, searchQuery, searchedUsers } = this.state;
+    const resultRenderer = (item) => {      
+      return (        
+        <p>{item.email}</p>
+      )
+    }
+
     return (
-     <div className="container">
-        <h1 className="text-center">Welcome, {this.state.curr_user}!</h1>        
+      <div className="container">
+        <h1 className="text-center">Welcome, {this.state.curr_user}!</h1>
         <p className="text-center">
-	   Have fun!
+          Have fun!
         </p>
+        <div className="search-container">
+          <Search onSearchChange={this.handleSearchChange} value={searchQuery}
+            loading={isLoading} results={searchedUsers} onResultSelect={this.handleResultSelect}
+            resultRenderer={resultRenderer} />
+        </div>
         <Button onClick={() => window.location.href = "/test-login"} primary>Profile</Button>
         <div className="chatfeed-wrapper">
           <ChatFeed
@@ -124,10 +167,10 @@ class Chat extends React.Component {
 
 
 class ChatPage extends React.Component {
-  render () {
+  render() {
     return (
       <>
-        <Chat/>
+        <Chat />
       </>
     );
   }
