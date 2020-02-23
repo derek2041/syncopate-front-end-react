@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "faker": "^4.1.0",
+    "js-levenshtein": "^1.1.6",
     "query-string": "^6.10.1",
     "react": "^16.12.0",
     "react-chat-ui": "^0.3.2",
