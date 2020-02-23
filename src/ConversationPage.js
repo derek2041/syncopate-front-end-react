@@ -17,7 +17,7 @@ const ConversationPage = () => {
   useEffect(() => {
     async function fetchList() {
       const response = await fetch(
-        `http://18.219.112.140:3000/api/v1/load-friends/`, {method: 'POST', credentials: 'include'}
+        `http://18.219.112.140:8000/api/v1/load-friends/`, {method: 'POST', credentials: 'include'}
       );
       const result = await response.json();
       setFriendList(result.friends);
