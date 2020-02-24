@@ -1,14 +1,14 @@
-const io = require('socket.io')();
-const fs = require('fs');
+const io = require("socket.io")();
+const fs = require("fs");
 
-io.on('connection', (socket) => {
-  socket.on('subscribeToRoom', (room) => {
+io.on("connection", socket => {
+  socket.on("subscribeToRoom", room => {
     socket.join(room);
     console.log("Connecting client to room: ", room);
 
-    socket.on('new message', function(message){
+    socket.on("new message", function(message) {
       console.log("Pushing " + message + " to clients.");
-      io.in(room).emit('push to clients', message);
+      io.in(room).emit("push to clients", message);
     });
   });
   // console.log("Connecting client to room: ", "1000");
@@ -30,4 +30,4 @@ io.on('connection', (socket) => {
 
 const port = 3001;
 io.listen(port);
-console.log('listening on port ', port);
+console.log("listening on port ", port);

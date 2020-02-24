@@ -1,28 +1,28 @@
-import openSocket from 'socket.io-client';
+import openSocket from "socket.io-client";
 
 var domain;
 
 if (false && window.location.host.includes("localhost")) {
   domain = "localhost";
 } else {
-  domain = "18.219.112.140"
+  domain = "18.219.112.140";
 }
 
-const socket = openSocket('http://' + domain + ':3001');
+const socket = openSocket("http://" + domain + ":3001");
 
 function subscribeToRoom(cb, room) {
-  socket.on('push to clients', newMessage => {
-    try { newMessage = JSON.parse(newMessage) } catch (e) {}
-    cb(null, newMessage)
+  socket.on("push to clients", newMessage => {
+    try {
+      newMessage = JSON.parse(newMessage);
+    } catch (e) {}
+    cb(null, newMessage);
   });
-  socket.emit('subscribeToRoom', room);
+  socket.emit("subscribeToRoom", room);
 }
 export { subscribeToRoom };
 
-
 function sendMessageToRoom(message) {
-  socket.emit('new message', JSON.stringify(message));
-
+  socket.emit("new message", JSON.stringify(message));
 }
 export { sendMessageToRoom };
 

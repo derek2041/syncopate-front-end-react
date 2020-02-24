@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import { Button } from 'semantic-ui-react';
-import "./TestLogin.css"
-import NavigationBar from './NavigationBar';
+import React, { useState, useEffect } from "react";
+import { Button } from "semantic-ui-react";
+import "./TestLogin.css";
+import NavigationBar from "./NavigationBar";
 
 const TestLogin = () => {
   const [loadState, setLoadState] = useState(null);
@@ -11,25 +11,26 @@ const TestLogin = () => {
   const submitFileUpload = async () => {
     const formData = new FormData();
     const fileField = document.querySelector('input[type="file"]');
-    formData.append('avatar', fileField.files[0]);
+    formData.append("avatar", fileField.files[0]);
 
     const response = await fetch(
       `http://18.219.112.140:8000/api/v1/upload-avatar/`,
       {
-        method: 'POST',
+        method: "POST",
         body: formData,
-        credentials: 'include'
+        credentials: "include"
       }
     );
 
     const result = await response.json();
     console.log("upload=", result);
-  }
+  };
 
   useEffect(() => {
     async function identifyUser() {
       const response = await fetch(
-        `http://18.219.112.140:8000/api/v1/identify/`, { method: 'GET', credentials: 'include' }
+        `http://18.219.112.140:8000/api/v1/identify/`,
+        { method: "GET", credentials: "include" }
       );
 
       const result = await response.json();
@@ -39,7 +40,8 @@ const TestLogin = () => {
 
     async function fetchAvatar() {
       const response = await fetch(
-        `http://18.219.112.140:8000/api/v1/my-avatar/`, { method: 'GET', credentials: 'include' }
+        `http://18.219.112.140:8000/api/v1/my-avatar/`,
+        { method: "GET", credentials: "include" }
       );
 
       const result = await response.json();
@@ -50,7 +52,6 @@ const TestLogin = () => {
 
     identifyUser();
     fetchAvatar();
-
   }, []);
 
   if (loadState === null) {
@@ -71,10 +72,13 @@ const TestLogin = () => {
             <div>
               <h4>This is your profile page.</h4>
             </div>
-            <div className="profile-pic" style={{
-              backgroundImage: `url(${avatarURL})`
-              // backgroundImage: `url("https://gpluseurope.com/wp-content/uploads/Mauro-profile-picture.jpg")`
-            }}></div>
+            <div
+              className="profile-pic"
+              style={{
+                backgroundImage: `url(${avatarURL})`
+                // backgroundImage: `url("https://gpluseurope.com/wp-content/uploads/Mauro-profile-picture.jpg")`
+              }}
+            ></div>
             <h1>
               {`${loadedData.first_name} ${loadedData.last_name}`}
               {/* {
@@ -89,12 +93,14 @@ const TestLogin = () => {
           </div>
           <div>
             <input type="file" name="avatar" />
-            <Button onClick={submitFileUpload} primary>Upload Photo</Button>
+            <Button onClick={submitFileUpload} primary>
+              Upload Photo
+            </Button>
           </div>
         </div>
       </>
     );
   }
-}
+};
 
 export default TestLogin;

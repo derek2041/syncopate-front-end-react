@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import { Input } from 'semantic-ui-react';
-import { subscribeToRoom, sendMessageToRoom } from './api';
-import MessagesContainer from './MessagesContainer';
+import React, { useState, useEffect } from "react";
+import { Input } from "semantic-ui-react";
+import { subscribeToRoom, sendMessageToRoom } from "./api";
+import MessagesContainer from "./MessagesContainer";
 
 const MessageWindow = () => {
   const [inputMessage, setInputMessage] = useState("");
@@ -12,9 +12,7 @@ const MessageWindow = () => {
 
   useEffect(() => {
     async function authenticateUser() {
-      const response = await fetch(
-        `http://18.219.112.140:3000/authenticate`
-      );
+      const response = await fetch(`http://18.219.112.140:3000/authenticate`);
       const result = await response.json();
       console.log("Result: ", result);
       console.log("Response: ", response);
@@ -38,26 +36,31 @@ const MessageWindow = () => {
     }
   }, []);
 
-  const handleKeyPress = (event) => {
-    if (event.key === 'Enter' && inputMessage !== "") {
+  const handleKeyPress = event => {
+    if (event.key === "Enter" && inputMessage !== "") {
       console.log("Sending: ", inputMessage);
       document.getElementById("new-message").value = "";
       setInputMessage("");
       sendMessageToRoom(inputMessage);
     }
-  }
+  };
 
   const handleMessageUpdate = (event, data) => {
     setInputMessage(data.value);
     console.log(data.value);
-  }
+  };
 
   return (
     <>
-      <MessagesContainer key={ instanceKey } liveMessages={ messages } />
-      <Input id="new-message" placeholder="New message.." onKeyPress={ handleKeyPress } onChange={ handleMessageUpdate }/>
+      <MessagesContainer key={instanceKey} liveMessages={messages} />
+      <Input
+        id="new-message"
+        placeholder="New message.."
+        onKeyPress={handleKeyPress}
+        onChange={handleMessageUpdate}
+      />
       <Input type="file" />
     </>
   );
-}
+};
 export default MessageWindow;
