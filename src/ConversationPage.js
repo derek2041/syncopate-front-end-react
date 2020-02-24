@@ -3,6 +3,9 @@ import { Input, Checkbox, Button, Message, Card, Divider, Grid, Image, Segment, 
 import './ConversationPage.css';
 import mainLogo from './images/1x/Asset 23.png';
 
+import heartSign from './images/sign/animat-heart-color.gif';
+import NavigationBar from './NavigationBar';
+
 var faker = require('faker')
 const levenshtein = require('js-levenshtein');
 
@@ -11,8 +14,13 @@ const ConversationPage = () => {
   const [friendList, setFriendList] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
 
+
   const [refreshCount, setRefreshCount] = useState(0);
   const handleRefresh = () => setRefreshCount(i => i + 1);
+
+
+
+
 
   useEffect(() => {
     async function fetchList() {
@@ -23,8 +31,16 @@ const ConversationPage = () => {
       setFriendList(result.friends);
     }
 
+
     fetchList();
+
   }, [refreshCount]);
+
+  const deleteFriend = () => {
+    handleRefresh();
+  }
+
+
 
   const handleSearchChange = (event, data) => {
     setSearchQuery(data.value);
@@ -70,6 +86,26 @@ const ConversationPage = () => {
     }
   }
 
+  const renderAvailable = (curr_user) => {
+    if (curr_user.available) {
+      return (
+        <>
+        <Icon name="circle" style={{color: "green"}}>
+        </Icon>
+        Available
+        </>
+      );
+    } else {
+      return (
+        <>
+        <Icon name="circle" style={{color: "red"}}>
+        </Icon>
+        Offline
+        </>
+      );
+    }
+  }
+
   const renderList = () => {
     console.log("re-rendering friend list!");
     if (friendList == null){
@@ -86,54 +122,133 @@ const ConversationPage = () => {
         return;
       }
 
+
       console.log(curr_friend);
+      const friendUrl = 'http://18.219.112.140/images/avatars/' + curr_friend.profile_pic_url;
       resultJSX.push(
-        <List.Item className="list-item" key={ identifier } style={{height:"70px"}} onClick={()=>{
+        <List.Item className="list-item" key={ identifier } style={{height:"70px", borderRadius:'10px'}} onClick={()=>{
           setCurrUser(curr_friend);
+
           console.log("Selected Friend ID: ", curr_friend.id);
         }}>
-          <Image avatar src={mainLogo} style={{float:"left", width:"40px", height:"40px", marginTop:"13px"}}/>
+          <Image avatar src={friendUrl} style={{float:"left", width:"40px", height:"40px", marginTop:"13px"}}/>
           <List.Content>
-            <List.Header><p className="userName">{ curr_friend.first_name + " " + curr_friend.last_name }</p></List.Header>
-            {/*
-              <div className="status">
-                <Icon name="circle" style={{color: "green"}}>
-                </Icon>
-                <i></i> online
+            <List.Header>
+            <div>
+              <div>
+                <p className="userName">{ curr_friend.first_name + " " + curr_friend.last_name }</p>
               </div>
-              */
-            }
+              <div className="status">
+
+                { renderAvailable(curr_friend) }
+              </div>
+            </div>
+            </List.Header>
+
+
+
+
           </List.Content>
         </List.Item>
       );
       identifier++;
     });
     return resultJSX;
-  }
+  }//vertical-align: middle
 
   const renderSelectedUser = () => {
     if (currUser === null) {
       return (
         <div>
-          <h1>Select someone!</h1>
+          <p style={{fontSize:'80px', transform: 'translateY(30vh)', color: 'grey'}}>Select someone!</p>
         </div>
       );
     }
 
+  const avatarUrl = 'http://18.219.112.140/images/avatars/' + currUser.profile_pic_url;
+  console.log(avatarUrl);
     return (
-      <div>
-        <h1>{currUser.first_name}</h1>
-        <h1>{currUser.last_name}</h1>
-        <h1>{currUser.email}</h1>
-        <h1>{currUser.profile_pic_url}</h1>
-        <h1>{currUser.available}</h1>
-      </div>
+      <>
+
+        <div>
+        <Segment color='blue' style={{borderRadius: '40px', marginTop: '-20px'}}>
+          <div className="topDiv">
+            <h1>Profile Page</h1>
+            <div>
+              <h4>This is  profile page.</h4>
+            </div>
+
+
+
+
+            <div className="profile-pic">
+              <img src={avatarUrl} style={{width: '85%', height: '85%', borderRadius: '50px'}}></img>
+            </div>
+
+
+
+
+            <p style={{fontSize: '40px', marginBottom: '10px', marginTop: '2px'}}>
+              {`${currUser.first_name} ${currUser.last_name}`}
+              {/* {
+                   loadedData.available ?
+                   <small>Available</small>: null
+               } */}
+              <small>{currUser.available}</small>
+            </p>
+            <div>
+              <p style={{fontSize: 'grey', fontSize: '15px'}}>{currUser.email}</p>
+            </div>
+
+
+            <Button primary style={{ float: 'left', width: '20%', marginTop: '100px', marginLeft: '30px', borderRadius: '50px', fontSize: '18px' }} content="Chat"
+            onClick={ async () => {
+              window.location.href = "/chat/t1";
+            }}>
+
+            </Button>
+
+            <Button content="Favorite" as={()=>{
+              return(
+                <img style={{ float: 'center', width: '20%', marginTop: '30px', borderRadius: '50px', fontSize: '18px' }} src={heartSign}>
+                </img>
+              )
+            }}>
+
+            </Button>
+
+            <Button negative style={{ float: 'right', width: '20%', marginTop: '100px', marginRight: '30px', borderRadius: '50px', fontSize: '18px' }} content="Delete"
+            onClick={ async () => {
+              const settings = {
+                method : "POST",
+                headers: {
+                  'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ "friend_id": currUser.id}),
+                credentials: 'include'
+              }
+              console.log(currUser.id);
+              const response = await fetch(
+                `http://18.219.112.140:3434/api/v1/delete-friend/`, settings
+              );
+              const result = await response.json();
+              deleteFriend();
+              setCurrUser(null);
+
+            }}>
+            </Button>
+          </div>
+        </Segment>
+        </div>
+      </>
     );
   }
 
   return (
     <div>
+      <NavigationBar />
       <div id="friends-container" >
+        <div id="right-border">
         <List id="friend-list" celled>
           <div>
             <h1 style={{marginBottom:"20px"}}>My Friends</h1>
@@ -146,7 +261,9 @@ const ConversationPage = () => {
           { renderList() }
 
         </List>
+        </div>
       </div>
+
 
       <div id="friend-info-container">
         <div>

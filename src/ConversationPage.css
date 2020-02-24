@@ -9,6 +9,8 @@ body {
   padding: 0;
 }
 
+
+
 #search-bar{
   margin-top: 8px;
   width: 80%;
@@ -21,12 +23,16 @@ body {
 .userName{
   font-size: 150%;
   float: left;
-  margin-left: -100%;
-  margin-top: 10% !important;
+  margin-right: 10px !important;
+  margin-top: 14px !important;
 }
 
 .status{
-  float: right !important;
+  position: absolute!important;
+  left:32% !important;
+  padding: 22px;
+  display: inline-block;
+
 }
 
 #friend-list{
@@ -37,12 +43,23 @@ body {
   width:40%;
   height:100vh;
   float:left;
-  border-right: solid;
-  border-width: 1px;
+  box-shadow: 5px 7px 15px 0px grey;
+  background-color: white;
+
+}
+.ui.menu{
+  margin: 0 !important;
+}
+
+#right-border{
+
+
+  top: 80%;
+  bottom: 0;
 }
 
 .item.list-item:hover {
-  background: white;
+  background: #e4f0f5;
 }
 
 #friend-info-container{
@@ -51,4 +68,36 @@ body {
   padding: 50px;
   float: right;
   margin: auto;
+}
+
+.profile-pic {
+    margin: 27px auto 0 auto;
+    width: 200px;
+    height: 200px;
+    background-size: cover;
+    background-position: center;
+    border-radius: 50%;
+}
+
+h1 {
+    font-size: 3em;
+}
+
+h1 small {
+    font-size: 0.3em;
+    position: relative;
+    top: -28px;
+    color: #757575;
+}
+
+h1 small:after {
+    content: " ";
+    border-radius: 50%;
+    width: 10px;
+    height: 10px;
+    background: #58d68d;
+    display: block;
+    position: absolute;
+    right: -13px;
+    top: 3px;
 }

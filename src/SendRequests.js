@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import { Input, Checkbox, Button, Message, Card } from 'semantic-ui-react';
 import mainLogo from './images/1x/Asset 22.png';
+import NavigationBar from './NavigationBar';
 
 const SendRequests = () => {
   // const [email, setEmail] = useState("");
   return (
     <div>
+    <NavigationBar />
       <input id="email" placeholder="Email Address"/>
       <Button content="submit"
         onClick = { async () => {
