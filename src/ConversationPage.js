@@ -229,7 +229,7 @@ const ConversationPage = () => {
               }
               console.log(currUser.id);
               const response = await fetch(
-                `http://18.219.112.140:3434/api/v1/delete-friend/`, settings
+                `http://18.219.112.140:8000/api/v1/delete-friend/`, settings
               );
               const result = await response.json();
               deleteFriend();
