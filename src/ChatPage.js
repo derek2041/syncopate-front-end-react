@@ -1,65 +1,70 @@
-import React, { useState } from 'react';
-import { ChatFeed, ChatBubble, BubbleGroup, Message } from 'react-chat-ui';
-import { subscribeToRoom, sendMessageToRoom } from './api';
-import queryString from 'query-string'
-import { Button, Search } from 'semantic-ui-react';
+import React, { useState } from "react";
+import { ChatFeed, ChatBubble, BubbleGroup, Message } from "react-chat-ui";
+import { subscribeToRoom, sendMessageToRoom } from "./api";
+import queryString from "query-string";
+import { Button, Search } from "semantic-ui-react";
 const styles = {
   button: {
-    backgroundColor: '#fff',
-    borderColor: '#1D2129',
-    borderStyle: 'solid',
+    backgroundColor: "#fff",
+    borderColor: "#1D2129",
+    borderStyle: "solid",
     borderRadius: 20,
     borderWidth: 2,
-    color: '#1D2129',
+    color: "#1D2129",
     fontSize: 18,
-    fontWeight: '300',
+    fontWeight: "300",
     paddingTop: 8,
     paddingBottom: 8,
     paddingLeft: 16,
-    paddingRight: 16,
+    paddingRight: 16
   },
   selected: {
-    color: '#fff',
-    backgroundColor: '#0084FF',
-    borderColor: '#0084FF',
-  },
+    color: "#fff",
+    backgroundColor: "#0084FF",
+    borderColor: "#0084FF"
+  }
 };
 
 class Chat extends React.Component {
   constructor() {
     super();
-    const user = queryString.parse(window.location.search).user || localStorage.getItem("username") || prompt("Enter the username")
+    const user =
+      queryString.parse(window.location.search).user ||
+      localStorage.getItem("username") ||
+      prompt("Enter the username");
     this.state = {
       messages: [],
       curr_user: user,
       searchQuery: "",
       searchedUsers: [],
-      isLoading: false,
+      isLoading: false
     };
-    localStorage.setItem("username", user)
+    localStorage.setItem("username", user);
 
-    this.groupName = window.location.pathname.split("/").slice(-1)[0]
+    this.groupName = window.location.pathname.split("/").slice(-1)[0];
 
-    this.authenticateUser().then(isAuthorized => {
-      console.log("IS AUTHORIZED: ", isAuthorized);
-      if (isAuthorized) {
-        console.log("successfully authenticated");
-        subscribeToRoom((err, newMessage) => {
-          if (err) { return console.error(err) }
-          if (newMessage.user !== this.state.curr_user) {
-            this.pushMessage(newMessage.user, newMessage.message)
-          }
-        }, this.groupName);
-      }
-    }).catch(console.error)
+    this.authenticateUser()
+      .then(isAuthorized => {
+        console.log("IS AUTHORIZED: ", isAuthorized);
+        if (isAuthorized) {
+          console.log("successfully authenticated");
+          subscribeToRoom((err, newMessage) => {
+            if (err) {
+              return console.error(err);
+            }
+            if (newMessage.user !== this.state.curr_user) {
+              this.pushMessage(newMessage.user, newMessage.message);
+            }
+          }, this.groupName);
+        }
+      })
+      .catch(console.error);
   }
 
   async authenticateUser() {
     // TODO Fix the authentication
-    return true
-    const response = await fetch(
-      `http://18.219.112.140:3000/authenticate`
-    );
+    return true;
+    const response = await fetch(`http://18.219.112.140:3000/authenticate`);
     const result = await response.json();
 
     console.log("Result: ", result);
@@ -78,9 +83,9 @@ class Chat extends React.Component {
     sendMessageToRoom({
       message: input.value,
       user: this.state.curr_user
-    })
+    });
     this.pushMessage(this.state.curr_user, input.value);
-    input.value = '';
+    input.value = "";
     return true;
   }
 
@@ -89,7 +94,7 @@ class Chat extends React.Component {
     const newMessage = new Message({
       id: recipient == this.state.curr_user ? 0 : 1,
       message,
-      senderName: recipient == this.state.curr_user ? "You" : recipient,
+      senderName: recipient == this.state.curr_user ? "You" : recipient
     });
     prevState.messages.push(newMessage);
     this.setState(this.state);
@@ -102,47 +107,51 @@ class Chat extends React.Component {
       method: "POST",
       credentials: "include",
       headers: {
-        'Content-Type': 'application/json'
+        "Content-Type": "application/json"
       },
-      body: JSON.stringify({ "string": value })
-    }
+      body: JSON.stringify({ string: value })
+    };
 
     const response = await fetch(
-      `http://18.219.112.140:8000/api/v1/search-user/`, settings
+      `http://18.219.112.140:8000/api/v1/search-user/`,
+      settings
     );
 
-    let result = await response.json();    
+    let result = await response.json();
     if (result && result.length) {
-      result = result.map(item => ({ ...item, user_id: item.id}));
+      result = result.map(item => ({ ...item, user_id: item.id }));
       console.log("Result: ", result);
     }
-    this.setState(({ isLoading: false, searchedUsers: result }))
-  }
+    this.setState({ isLoading: false, searchedUsers: result });
+  };
 
   handleResultSelect = (e, { result }) => {
     this.setState({ searchQuery: result.email });
-  }
+  };
 
   render() {
     const { isLoading, searchQuery, searchedUsers } = this.state;
-    const resultRenderer = (item) => {      
-      return (        
-        <p>{item.email}</p>
-      )
-    }
+    const resultRenderer = item => {
+      return <p>{item.email}</p>;
+    };
 
     return (
       <div className="container">
         <h1 className="text-center">Welcome, {this.state.curr_user}!</h1>
-        <p className="text-center">
-          Have fun!
-        </p>
+        <p className="text-center">Have fun!</p>
         <div className="search-container">
-          <Search onSearchChange={this.handleSearchChange} value={searchQuery}
-            loading={isLoading} results={searchedUsers} onResultSelect={this.handleResultSelect}
-            resultRenderer={resultRenderer} />
+          <Search
+            onSearchChange={this.handleSearchChange}
+            value={searchQuery}
+            loading={isLoading}
+            results={searchedUsers}
+            onResultSelect={this.handleResultSelect}
+            resultRenderer={resultRenderer}
+          />
         </div>
-        <Button onClick={() => window.location.href = "/test-login"} primary>Profile</Button>
+        <Button onClick={() => (window.location.href = "/test-login")} primary>
+          Profile
+        </Button>
         <div className="chatfeed-wrapper">
           <ChatFeed
             maxHeight={250}
@@ -164,7 +173,6 @@ class Chat extends React.Component {
     );
   }
 }
-
 
 class ChatPage extends React.Component {
   render() {

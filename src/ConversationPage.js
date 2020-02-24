@@ -1,53 +1,58 @@
-import React, { useState, useEffect } from 'react';
-import { Input, Checkbox, Button, Message, Card, Divider, Grid, Image, Segment, List, Icon, Loader} from 'semantic-ui-react';
-import './ConversationPage.css';
-import mainLogo from './images/1x/Asset 23.png';
+import React, { useState, useEffect } from "react";
+import {
+  Input,
+  Checkbox,
+  Button,
+  Message,
+  Card,
+  Divider,
+  Grid,
+  Image,
+  Segment,
+  List,
+  Icon,
+  Loader
+} from "semantic-ui-react";
+import "./ConversationPage.css";
+import mainLogo from "./images/1x/Asset 23.png";
 
-import heartSign from './images/sign/animat-heart-color.gif';
-import NavigationBar from './NavigationBar';
+import heartSign from "./images/sign/animat-heart-color.gif";
+import NavigationBar from "./NavigationBar";
 
-var faker = require('faker')
-const levenshtein = require('js-levenshtein');
+var faker = require("faker");
+const levenshtein = require("js-levenshtein");
 
 const ConversationPage = () => {
   const [currUser, setCurrUser] = useState(null);
   const [friendList, setFriendList] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
 
-
   const [refreshCount, setRefreshCount] = useState(0);
   const handleRefresh = () => setRefreshCount(i => i + 1);
-
-
-
-
 
   useEffect(() => {
     async function fetchList() {
       const response = await fetch(
-        `http://18.219.112.140:8000/api/v1/load-friends/`, {method: 'POST', credentials: 'include'}
+        `http://18.219.112.140:8000/api/v1/load-friends/`,
+        { method: "POST", credentials: "include" }
       );
       const result = await response.json();
       setFriendList(result.friends);
     }
 
-
     fetchList();
-
   }, [refreshCount]);
 
   const deleteFriend = () => {
     handleRefresh();
-  }
-
-
+  };
 
   const handleSearchChange = (event, data) => {
     setSearchQuery(data.value);
     console.log(data.value);
-  }
+  };
 
-  const compareWithSearchQuery = (checkUser) => {
+  const compareWithSearchQuery = checkUser => {
     if (searchQuery === "") {
       return true;
     }
@@ -55,223 +60,276 @@ const ConversationPage = () => {
     const search_query = searchQuery.toLowerCase();
     if (search_query.includes("@")) {
       // logic to compare emails
-      if (search_query.substring(0, search_query.indexOf("@")) === checkUser.email.substring(0, checkUser.email.indexOf("@"))) {
+      if (
+        search_query.substring(0, search_query.indexOf("@")) ===
+        checkUser.email.substring(0, checkUser.email.indexOf("@"))
+      ) {
         return true;
       }
 
       return false;
     } else {
       // logic to compare names
-      const name = search_query.split(" ", 2)
+      const name = search_query.split(" ", 2);
       if (name.length === 2) {
         if (name[1] === "") {
-          return (levenshtein(name[0], checkUser.first_name.toLowerCase()) < 5);
+          return levenshtein(name[0], checkUser.first_name.toLowerCase()) < 5;
         }
 
-        if (levenshtein(name[0], checkUser.first_name.toLowerCase()) < 5 &&
-            levenshtein(name[1], checkUser.last_name.toLowerCase()) < 5) {
-              return true;
+        if (
+          levenshtein(name[0], checkUser.first_name.toLowerCase()) < 5 &&
+          levenshtein(name[1], checkUser.last_name.toLowerCase()) < 5
+        ) {
+          return true;
         }
         return false;
-
       } else if (name.length === 1) {
         if (levenshtein(name[0], checkUser.first_name.toLowerCase()) < 5) {
           return true;
         }
         return false;
-
       } else {
         return false;
       }
     }
-  }
+  };
 
-  const renderAvailable = (curr_user) => {
+  const renderAvailable = curr_user => {
     if (curr_user.available) {
       return (
         <>
-        <Icon name="circle" style={{color: "green"}}>
-        </Icon>
-        Available
+          <Icon name="circle" style={{ color: "green" }}></Icon>
+          Available
         </>
       );
     } else {
       return (
         <>
-        <Icon name="circle" style={{color: "red"}}>
-        </Icon>
-        Offline
+          <Icon name="circle" style={{ color: "red" }}></Icon>
+          Offline
         </>
       );
     }
-  }
+  };
 
   const renderList = () => {
     console.log("re-rendering friend list!");
-    if (friendList == null){
-      return (
-        <Loader active inline='centered'></Loader>
-      );
+    if (friendList == null) {
+      return <Loader active inline="centered"></Loader>;
     }
 
     var resultJSX = [];
     var identifier = 0;
 
-    friendList.forEach((curr_friend) => {
+    friendList.forEach(curr_friend => {
       if (!compareWithSearchQuery(curr_friend)) {
         return;
       }
 
-
       console.log(curr_friend);
-      const friendUrl = 'http://18.219.112.140/images/avatars/' + curr_friend.profile_pic_url;
+      const friendUrl =
+        "http://18.219.112.140/images/avatars/" + curr_friend.profile_pic_url;
       resultJSX.push(
-        <List.Item className="list-item" key={ identifier } style={{height:"70px", borderRadius:'10px'}} onClick={()=>{
-          setCurrUser(curr_friend);
+        <List.Item
+          className="list-item"
+          key={identifier}
+          style={{ height: "70px", borderRadius: "10px" }}
+          onClick={() => {
+            setCurrUser(curr_friend);
 
-          console.log("Selected Friend ID: ", curr_friend.id);
-        }}>
-          <Image avatar src={friendUrl} style={{float:"left", width:"40px", height:"40px", marginTop:"13px"}}/>
+            console.log("Selected Friend ID: ", curr_friend.id);
+          }}
+        >
+          <Image
+            avatar
+            src={friendUrl}
+            style={{
+              float: "left",
+              width: "40px",
+              height: "40px",
+              marginTop: "13px"
+            }}
+          />
           <List.Content>
             <List.Header>
-            <div>
               <div>
-                <p className="userName">{ curr_friend.first_name + " " + curr_friend.last_name }</p>
+                <div>
+                  <p className="userName">
+                    {curr_friend.first_name + " " + curr_friend.last_name}
+                  </p>
+                </div>
+                <div className="status">{renderAvailable(curr_friend)}</div>
               </div>
-              <div className="status">
-
-                { renderAvailable(curr_friend) }
-              </div>
-            </div>
             </List.Header>
-
-
-
-
           </List.Content>
         </List.Item>
       );
       identifier++;
     });
     return resultJSX;
-  }//vertical-align: middle
+  }; //vertical-align: middle
 
   const renderSelectedUser = () => {
     if (currUser === null) {
       return (
         <div>
-          <p style={{fontSize:'80px', transform: 'translateY(30vh)', color: 'grey'}}>Select someone!</p>
+          <p
+            style={{
+              fontSize: "80px",
+              transform: "translateY(30vh)",
+              color: "grey"
+            }}
+          >
+            Select someone!
+          </p>
         </div>
       );
     }
 
-  const avatarUrl = 'http://18.219.112.140/images/avatars/' + currUser.profile_pic_url;
-  console.log(avatarUrl);
+    const avatarUrl =
+      "http://18.219.112.140/images/avatars/" + currUser.profile_pic_url;
+    console.log(avatarUrl);
     return (
       <>
-
         <div>
-        <Segment color='blue' style={{borderRadius: '40px', marginTop: '-20px'}}>
-          <div className="topDiv">
-            <h1>Profile Page</h1>
-            <div>
-              <h4>This is  profile page.</h4>
-            </div>
+          <Segment
+            color="blue"
+            style={{ borderRadius: "40px", marginTop: "-20px" }}
+          >
+            <div className="topDiv">
+              <h1>Profile Page</h1>
+              <div>
+                <h4>This is profile page.</h4>
+              </div>
 
+              <div className="profile-pic">
+                <img
+                  src={avatarUrl}
+                  style={{ width: "85%", height: "85%", borderRadius: "50px" }}
+                ></img>
+              </div>
 
-
-
-            <div className="profile-pic">
-              <img src={avatarUrl} style={{width: '85%', height: '85%', borderRadius: '50px'}}></img>
-            </div>
-
-
-
-
-            <p style={{fontSize: '40px', marginBottom: '10px', marginTop: '2px'}}>
-              {`${currUser.first_name} ${currUser.last_name}`}
-              {/* {
+              <p
+                style={{
+                  fontSize: "40px",
+                  marginBottom: "10px",
+                  marginTop: "2px"
+                }}
+              >
+                {`${currUser.first_name} ${currUser.last_name}`}
+                {/* {
                    loadedData.available ?
                    <small>Available</small>: null
                } */}
-              <small>{currUser.available}</small>
-            </p>
-            <div>
-              <p style={{fontSize: 'grey', fontSize: '15px'}}>{currUser.email}</p>
+                <small>{currUser.available}</small>
+              </p>
+              <div>
+                <p style={{ fontSize: "grey", fontSize: "15px" }}>
+                  {currUser.email}
+                </p>
+              </div>
+
+              <Button
+                primary
+                style={{
+                  float: "left",
+                  width: "20%",
+                  marginTop: "100px",
+                  marginLeft: "30px",
+                  borderRadius: "50px",
+                  fontSize: "18px"
+                }}
+                content="Chat"
+                onClick={async () => {
+                  window.location.href = "/chat/t1";
+                }}
+              ></Button>
+
+              <Button
+                content="Favorite"
+                as={() => {
+                  return (
+                    <img
+                      style={{
+                        float: "center",
+                        width: "20%",
+                        marginTop: "30px",
+                        borderRadius: "50px",
+                        fontSize: "18px"
+                      }}
+                      src={heartSign}
+                    ></img>
+                  );
+                }}
+              ></Button>
+
+              <Button
+                negative
+                style={{
+                  float: "right",
+                  width: "20%",
+                  marginTop: "100px",
+                  marginRight: "30px",
+                  borderRadius: "50px",
+                  fontSize: "18px"
+                }}
+                content="Delete"
+                onClick={async () => {
+                  const settings = {
+                    method: "POST",
+                    headers: {
+                      "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ friend_id: currUser.id }),
+                    credentials: "include"
+                  };
+                  console.log(currUser.id);
+                  const response = await fetch(
+                    `http://18.219.112.140:8000/api/v1/delete-friend/`,
+                    settings
+                  );
+                  const result = await response.json();
+                  deleteFriend();
+                  setCurrUser(null);
+                }}
+              ></Button>
             </div>
-
-
-            <Button primary style={{ float: 'left', width: '20%', marginTop: '100px', marginLeft: '30px', borderRadius: '50px', fontSize: '18px' }} content="Chat"
-            onClick={ async () => {
-              window.location.href = "/chat/t1";
-            }}>
-
-            </Button>
-
-            <Button content="Favorite" as={()=>{
-              return(
-                <img style={{ float: 'center', width: '20%', marginTop: '30px', borderRadius: '50px', fontSize: '18px' }} src={heartSign}>
-                </img>
-              )
-            }}>
-
-            </Button>
-
-            <Button negative style={{ float: 'right', width: '20%', marginTop: '100px', marginRight: '30px', borderRadius: '50px', fontSize: '18px' }} content="Delete"
-            onClick={ async () => {
-              const settings = {
-                method : "POST",
-                headers: {
-                  'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ "friend_id": currUser.id}),
-                credentials: 'include'
-              }
-              console.log(currUser.id);
-              const response = await fetch(
-                `http://18.219.112.140:8000/api/v1/delete-friend/`, settings
-              );
-              const result = await response.json();
-              deleteFriend();
-              setCurrUser(null);
-
-            }}>
-            </Button>
-          </div>
-        </Segment>
+          </Segment>
         </div>
       </>
     );
-  }
+  };
 
   return (
     <div>
       <NavigationBar />
-      <div id="friends-container" >
+      <div id="friends-container">
         <div id="right-border">
-        <List id="friend-list" celled>
-          <div>
-            <h1 style={{marginBottom:"20px"}}>My Friends</h1>
-          </div>
+          <List id="friend-list" celled>
+            <div>
+              <h1 style={{ marginBottom: "20px" }}>My Friends</h1>
+            </div>
 
-          <List.Item style={{height:"70px"}}>
-            <Input icon='search' className="search-input" placeholder='Search...' id="search-bar" onChange={ handleSearchChange } />
-          </List.Item>
+            <List.Item style={{ height: "70px" }}>
+              <Input
+                icon="search"
+                className="search-input"
+                placeholder="Search..."
+                id="search-bar"
+                onChange={handleSearchChange}
+              />
+            </List.Item>
 
-          { renderList() }
-
-        </List>
+            {renderList()}
+          </List>
         </div>
       </div>
 
-
       <div id="friend-info-container">
-        <div>
-          { renderSelectedUser() }
-        </div>
+        <div>{renderSelectedUser()}</div>
       </div>
     </div>
   );
-}
+};
 
 export default ConversationPage;
