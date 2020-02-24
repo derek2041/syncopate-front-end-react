@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Input, Checkbox, Button, Message, Card, Icon, Image, Loader } from 'semantic-ui-react';
 import mainLogo from './images/1x/Asset 23.png';
 import './RequestList.css';
-
+import NavigationBar from './NavigationBar';
 
 var faker = require('faker')
 
@@ -70,6 +70,7 @@ const RequestList = () => {
               floated='right'
               size='mini'
               src={ "http://18.219.112.140/images/avatars/" + currRequest.sender__profile_pic_url }
+              style={{width:'60px', height: '60px', borderRadius: '50px'}}
             />
             <Card.Header>{currRequest.sender__first_name}</Card.Header>
             <Card.Meta>{currRequest.sender__email}</Card.Meta>
@@ -133,6 +134,7 @@ const RequestList = () => {
 
   return (
     <div>
+    <NavigationBar />
       <div className="container">
         <div className="notification-container">
           <div className="notification-list-header table-content">
