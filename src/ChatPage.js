@@ -3,6 +3,18 @@ import { ChatFeed, ChatBubble, BubbleGroup, Message } from "react-chat-ui";
 import { subscribeToRoom, sendMessageToRoom } from "./api";
 import queryString from "query-string";
 import { Button, Search } from "semantic-ui-react";
+
+
+
+const customBubble = props => {
+  console.log(props)
+  return <div className={`message-item-wrapper ${props.message.id === 0 ? "message-right" : "message-left"}`}>
+    { props.message.image && <img src={props.message.image} /> }
+    { props.message.message && <ChatBubble message={props.message} /> }
+  </div>
+};
+
+
 const styles = {
   button: {
     backgroundColor: "#fff",
@@ -53,7 +65,7 @@ class Chat extends React.Component {
               return console.error(err);
             }
             if (newMessage.user !== this.state.curr_user) {
-              this.pushMessage(newMessage.user, newMessage.message);
+              this.pushMessage(newMessage.user, newMessage.message, newMessage.image);
             }
           }, this.groupName);
         }
@@ -89,13 +101,14 @@ class Chat extends React.Component {
     return true;
   }
 
-  pushMessage(recipient, message) {
+  pushMessage(recipient, message, image) {
     const prevState = this.state;
     const newMessage = new Message({
       id: recipient == this.state.curr_user ? 0 : 1,
       message,
       senderName: recipient == this.state.curr_user ? "You" : recipient
     });
+    newMessage.image = image
     prevState.messages.push(newMessage);
     this.setState(this.state);
   }
@@ -129,6 +142,33 @@ class Chat extends React.Component {
     this.setState({ searchQuery: result.email });
   };
 
+  sendAttachmentImage = async (e) => {
+    e.persist()
+    const toBase64 = file => new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = error => reject(error);
+  });
+  
+    const file = e.target.files[0];
+    if (!file) return
+    const result = await toBase64(file).catch(e => Error(e));
+    if(result instanceof Error) {
+        console.log('Error: ', result.message);
+        return;
+    }
+
+    sendMessageToRoom({
+      message: "",
+      image: result,
+      user: this.state.curr_user
+    });
+    this.pushMessage(this.state.curr_user, "", result);
+
+    e.target.value = ""
+  }
+
   render() {
     const { isLoading, searchQuery, searchedUsers } = this.state;
     const resultRenderer = item => {
@@ -154,6 +194,7 @@ class Chat extends React.Component {
         </Button>
         <div className="chatfeed-wrapper">
           <ChatFeed
+            chatBubble={customBubble}
             maxHeight={250}
             messages={this.state.messages} // Boolean: list of message objects
             showSenderName
@@ -166,6 +207,13 @@ class Chat extends React.Component {
               }}
               placeholder="Type a message..."
               className="message-input"
+            />
+            <button type="button" onClick={e => document.querySelector("#message-attachment").click()} className="ui primary button" id="upload-file-btn">Upload file</button>
+            <input
+              type="file"
+              id="message-attachment"
+              style={{display: "none"}}
+              onChange={e => this.sendAttachmentImage(e)}
             />
           </form>
         </div>
