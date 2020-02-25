@@ -102,7 +102,7 @@ const NavigationBar = () => {
 
                 const result = await response.json();
                 console.log(result);
-                window.location.href = "http://18.219.112.140:3399/";
+                window.location.href = "http://18.219.112.140:3000/";
               }}
             />
           }
