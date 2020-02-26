@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Menu,
   Dropdown,
@@ -18,6 +18,21 @@ const NavigationBar = () => {
     setMouseOver(setting);
   };
 
+  useEffect(() => {
+    async function checkLoggedIn() {
+      const response = await fetch(
+        `http://18.219.112.140:3399/api/v1/check-logged-in/`,
+        { method: "GET", credentials: "include" }
+      );
+      const result = await response.json();
+      return (result.status === "success");
+    }
+
+    if (!checkLoggedIn()) {
+      window.location.href = "/";
+    }
+  }, []);
+
   return (
     <Menu
       borderless
@@ -36,6 +51,9 @@ const NavigationBar = () => {
           onMouseLeave={() => {
             handleMouseOver(null);
           }}
+          onClick={() => {
+            window.location.href = "/my-profile";
+          }}
         ></Menu.Item>
 
         <Menu.Item
@@ -48,6 +66,9 @@ const NavigationBar = () => {
           onMouseLeave={() => {
             handleMouseOver(null);
           }}
+          onClick={() => {
+            window.location.href = "/my-chats";
+          }}
         ></Menu.Item>
 
         <Menu.Item
@@ -59,6 +80,9 @@ const NavigationBar = () => {
           }}
           onMouseLeave={() => {
             handleMouseOver(null);
+          }}
+          onClick={() => {
+            window.location.href = "/my-friends";
           }}
         ></Menu.Item>
       </Menu.Menu>
@@ -74,6 +98,9 @@ const NavigationBar = () => {
           onMouseLeave={() => {
             handleMouseOver(null);
           }}
+          onClick={() => {
+            window.location.href = "/add-friends";
+          }}
         ></Menu.Item>
 
         <Menu.Item
@@ -85,6 +112,9 @@ const NavigationBar = () => {
           }}
           onMouseLeave={() => {
             handleMouseOver(null);
+          }}
+          onClick={() => {
+            window.location.href = "/notifications"
           }}
         ></Menu.Item>
 
@@ -102,7 +132,7 @@ const NavigationBar = () => {
 
                 const result = await response.json();
                 console.log(result);
-                window.location.href = "http://18.219.112.140:3000/";
+                window.location.href = "/";
               }}
             />
           }
