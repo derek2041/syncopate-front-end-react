@@ -21,7 +21,7 @@ const NavigationBar = () => {
   useEffect(() => {
     async function checkLoggedIn() {
       const response = await fetch(
-        `http://18.219.112.140:3399/api/v1/check-logged-in/`,
+        `http://18.219.112.140:8000/api/v1/check-logged-in/`,
         { method: "GET", credentials: "include" }
       );
       const result = await response.json();
