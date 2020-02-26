@@ -29,10 +29,10 @@ const App = () => {
           />
 
           <Route
-            path="/profile"
+            path="/my-profile"
             exact
             render={() => {
-              return <ProfilePage />;
+              return <TestLogin />;
             }}
           />
 
@@ -82,7 +82,7 @@ const App = () => {
           />
 
           <Route
-            path="/requests"
+            path="/notifications"
             exact
             render={() => {
               return <RequestList />;
@@ -90,7 +90,7 @@ const App = () => {
           />
 
           <Route
-            path="/send-requests"
+            path="/add-friends"
             exact
             render={() => {
               return <SendRequests />;
@@ -98,7 +98,7 @@ const App = () => {
           />
 
           <Route
-            path="/conversation"
+            path="/my-friends"
             exact
             render={() => {
               return <ConversationPage />;

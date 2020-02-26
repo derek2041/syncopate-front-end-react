@@ -10,6 +10,7 @@ import {
   Icon
 } from "semantic-ui-react";
 import { Link } from "react-router-dom";
+import "./NavigationBar.css";
 
 const NavigationBar = () => {
   const [mouseOver, setMouseOver] = useState(null);
@@ -18,24 +19,24 @@ const NavigationBar = () => {
     setMouseOver(setting);
   };
 
-  useEffect(() => {
-    async function checkLoggedIn() {
-      const response = await fetch(
-        `http://18.219.112.140:8000/api/v1/check-logged-in/`,
-        { method: "GET", credentials: "include" }
-      );
-      const result = await response.json();
-      return (result.status === "success");
-    }
+  const checkLoggedIn = async () => {
+    const response = await fetch(
+      `http://18.219.112.140:8000/api/v1/check-logged-in/`,
+      { method: "GET", credentials: "include" }
+    );
+    const result = await response.json();
 
-    if (!checkLoggedIn()) {
+    if (result.status !== "success") {
       window.location.href = "/";
     }
-  }, []);
+  }
+
+  checkLoggedIn();
 
   return (
     <Menu
       borderless
+      className="haha"
       fluid
       size="massive"
       style={{ fontFamily: "Exo 2", width: "100%", height: "25%" }}
