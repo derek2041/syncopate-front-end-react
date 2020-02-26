@@ -73,18 +73,19 @@ const ConversationPage = () => {
       const name = search_query.split(" ", 2);
       if (name.length === 2) {
         if (name[1] === "") {
-          return levenshtein(name[0], checkUser.first_name.toLowerCase()) < 5;
+          return (name[0] === checkUser.first_name.toLowerCase().substring(0, name[0].length));
         }
 
         if (
-          levenshtein(name[0], checkUser.first_name.toLowerCase()) < 5 &&
-          levenshtein(name[1], checkUser.last_name.toLowerCase()) < 5
+          name[0] === checkUser.first_name.toLowerCase() &&
+          name[1] === checkUser.last_name.toLowerCase().substring(0, name[1].length)
         ) {
           return true;
         }
+
         return false;
       } else if (name.length === 1) {
-        if (levenshtein(name[0], checkUser.first_name.toLowerCase()) < 5) {
+        if (name[0] === checkUser.first_name.toLowerCase().substring(0, name[0].length)) {
           return true;
         }
         return false;
