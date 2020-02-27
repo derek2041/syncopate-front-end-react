@@ -15,6 +15,7 @@ import RequestList from "./RequestList";
 import SendRequests from "./SendRequests";
 import ConversationPage from "./ConversationPage";
 import ChatListPage from './ChatListPage';
+import SearchUserPage from './SearchUserPage';
 
 const App = () => {
   return (
@@ -95,6 +96,14 @@ const App = () => {
             exact
             render={() => {
               return <SendRequests />;
+            }}
+          />
+
+          <Route
+            path="/search-users"
+            exact
+            render={() => {
+              return <SearchUserPage />
             }}
           />
 
