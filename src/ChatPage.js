@@ -3,7 +3,6 @@ import { ChatFeed, ChatBubble, BubbleGroup, Message } from "react-chat-ui";
 import { subscribeToRoom, sendMessageToRoom } from "./api";
 import queryString from "query-string";
 import { Button, Search } from "semantic-ui-react";
-import NavigationBar from "./NavigationBar";
 
 
 
@@ -177,8 +176,6 @@ class Chat extends React.Component {
     };
 
     return (
-      <>
-      <NavigationBar/>
       <div className="container">
         <h1 className="text-center">Welcome, {this.state.curr_user}!</h1>
         <p className="text-center">Have fun!</p>
@@ -221,7 +218,6 @@ class Chat extends React.Component {
           </form>
         </div>
       </div>
-      </>
     );
   }
 }

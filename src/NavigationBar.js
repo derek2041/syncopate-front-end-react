@@ -133,7 +133,6 @@ const NavigationBar = () => {
 
                 const result = await response.json();
                 console.log(result);
-                window.localStorage.removeItem('username');
                 window.location.href = "/";
               }}
             />
