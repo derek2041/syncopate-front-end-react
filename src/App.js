@@ -14,8 +14,6 @@ import ChangeUsername from "./ChangeUsername";
 import RequestList from "./RequestList";
 import SendRequests from "./SendRequests";
 import ConversationPage from "./ConversationPage";
-import MyChats from "./MyChats";
-
 
 const App = () => {
   return (
@@ -106,14 +104,6 @@ const App = () => {
               return <ConversationPage />;
             }}
           />
-
-          <Route
-            path="/my-chats"
-            exact
-            render={() => {
-              return <MyChats />;
-            }}
-          />  
 
           <Route
             path="/"
