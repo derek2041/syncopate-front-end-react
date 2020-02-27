@@ -102,7 +102,7 @@ const NavigationBar = () => {
             handleMouseOver(null);
           }}
           onClick={() => {
-            window.location.href = "/add-friends";
+            window.location.href = "/search-users";
           }}
         ></Menu.Item>
 
