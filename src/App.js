@@ -14,6 +14,7 @@ import ChangeUsername from "./ChangeUsername";
 import RequestList from "./RequestList";
 import SendRequests from "./SendRequests";
 import ConversationPage from "./ConversationPage";
+import ChatListPage from './ChatListPage';
 
 const App = () => {
   return (
@@ -102,6 +103,14 @@ const App = () => {
             exact
             render={() => {
               return <ConversationPage />;
+            }}
+          />
+
+          <Route
+            path="/my-chats"
+            exact
+            render={() => {
+              return <ChatListPage />;
             }}
           />
 
