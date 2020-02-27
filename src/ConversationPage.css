@@ -9,6 +9,10 @@ body {
   padding: 0;
 }
 
+.App {
+  background-color: white !important;
+}
+
 #search-bar {
   margin-top: 8px;
   width: 80%;
@@ -21,26 +25,36 @@ body {
 .userName {
   font-size: 150%;
   float: left;
-  margin-right: 10px !important;
-  margin-top: 14px !important;
+  margin-top: 15px;
 }
 
+
 .status {
-  position: absolute !important;
-  left: 32% !important;
-  padding: 22px;
-  display: inline-block;
+
+  padding-top: 22px;
+  float: right;
+  margin-left: 10px;
+
+
+
+
 }
 
 #friend-list {
-  margin: 5%;
+  margin: 10px;
 }
 
 #friends-container {
   width: 40%;
-  height: 100vh;
+
+
+  height: 105vh;
+  max-height: 105vh;
   float: left;
-  box-shadow: 5px 7px 15px 0px grey;
+
+
+  /* box-shadow: 5px 7px 15px 0px grey; */
+  box-shadow: 2px 0px 3px -1px grey;
   background-color: white;
 }
 .ui.menu {
@@ -58,11 +72,21 @@ body {
 
 #friend-info-container {
   width: 60%;
-  height: 100vh;
+
+  height: 90vh;
+
+  max-height: 90vh;
   padding: 50px;
   float: right;
   margin: auto;
+
 }
+
+
+#friend-info-back {
+
+}
+
 
 .profile-pic {
   margin: 27px auto 0 auto;
@@ -113,7 +137,9 @@ button#upload-file-btn {
   width: 50%;
   border-radius: 4px;
   border: 1px solid white;
+
 }
+
 
 
 .message-item-wrapper.message-left {
