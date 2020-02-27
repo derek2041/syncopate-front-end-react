@@ -19,19 +19,21 @@ const NavigationBar = () => {
     setMouseOver(setting);
   };
 
-  const checkLoggedIn = async () => {
-    const response = await fetch(
-      `http://18.219.112.140:8000/api/v1/check-logged-in/`,
-      { method: "GET", credentials: "include" }
-    );
-    const result = await response.json();
+  useEffect(() => {
+    async function checkLoggedIn() {
+      const response = await fetch(
+        `http://18.219.112.140:8000/api/v1/check-logged-in/`,
+        { method: "GET", credentials: "include" }
+      );
+      const result = await response.json();
 
-    if (result.status !== "success") {
-      window.location.href = "/";
+      if (result.status !== "success") {
+        window.location.href = "/";
+      }
     }
-  }
 
-  checkLoggedIn();
+    checkLoggedIn();
+  }, []);
 
   return (
     <Menu
