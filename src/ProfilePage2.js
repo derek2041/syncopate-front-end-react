@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { Button } from "semantic-ui-react";
-import "./TestLogin.css";
+import "./ProfilePage2.css";
 import NavigationBar from "./NavigationBar";
 
-const TestLogin = () => {
+const ProfilePage2 = () => {
   const [loadState, setLoadState] = useState(null);
   const [loadedData, setLoadedData] = useState({});
   const [avatarURL, setAvatarURL] = useState(null);
@@ -103,4 +103,4 @@ const TestLogin = () => {
   }
 };
 
-export default TestLogin;
+export default ProfilePage2;

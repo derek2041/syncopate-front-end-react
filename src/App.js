@@ -9,11 +9,11 @@ import ResetPasswordPage from "./ResetPasswordPage";
 import MessageWindow from "./MessageWindow";
 import ChatPage from "./ChatPage";
 import ResetPassword2 from "./ResetPassword2";
-import TestLogin from "./TestLogin";
+import ProfilePage2 from "./ProfilePage2";
 import ChangeUsername from "./ChangeUsername";
 import RequestList from "./RequestList";
 import SendRequests from "./SendRequests";
-import ConversationPage from "./ConversationPage";
+import SearchFriendPage from "./SearchFriendPage";
 import ChatListPage from './ChatListPage';
 import SearchUserPage from './SearchUserPage';
 
@@ -34,7 +34,7 @@ const App = () => {
             path="/my-profile"
             exact
             render={() => {
-              return <TestLogin />;
+              return <ProfilePage2 />;
             }}
           />
 
@@ -71,7 +71,7 @@ const App = () => {
           <Route
             path="/test-login"
             render={() => {
-              return <TestLogin />;
+              return <ProfilePage2 />;
             }}
           />
 
@@ -111,7 +111,7 @@ const App = () => {
             path="/my-friends"
             exact
             render={() => {
-              return <ConversationPage />;
+              return <SearchFriendPage />;
             }}
           />
 

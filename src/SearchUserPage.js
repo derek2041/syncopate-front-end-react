@@ -38,7 +38,7 @@ const SearchUserPage = () => {
       }
 
       const response = await fetch(
-        `http://18.219.112.140:3399/api/v1/search-users/`,
+        `http://18.219.112.140:8000/api/v1/search-users/`,
         { method: "POST", credentials: "include", body: JSON.stringify({ "query": searchQuery })}
       );
       const result = await response.json();
@@ -91,7 +91,7 @@ const SearchUserPage = () => {
         <List.Item
           className="list-item"
           key={identifier}
-          style={{ height: "90px", borderRadius: "8px" }}
+          style={{ height: "fit-content", borderRadius: "8px" }}
           onClick={() => {
             setCurrUser(curr_friend);
 
@@ -180,10 +180,14 @@ const SearchUserPage = () => {
             style={{  marginTop: "-20px", borderRadius: "8px" }}
           >
             <div className="topDiv">
-              <h1>Profile Page</h1>
-              <div>
-                <h4>This is profile page.</h4>
-              </div>
+              {
+                /*
+                <h1>Profile Page</h1>
+                <div>
+                  <h4>This is profile page.</h4>
+                </div>
+                */
+              }
 
               <div className="profile-pic">
                 <img
@@ -251,34 +255,33 @@ const SearchUserPage = () => {
     <div >
       <NavigationBar />
       <div style={{ whiteSpace: 'nowrap' }}>
-      <div id="friends-container">
-        <div id="right-border">
-          <List id="friend-list" celled style={{
-            overflowY: "auto",
-            overflowX: "hidden",
-            maxHeight: "100vh",
-            minHeight: "100vh"
-          }}>
-            <div>
-              <h1 style={{ marginBottom: "20px" }}>User Search</h1>
-            </div>
-            <List.Item style={{ height: "70px" }}>
-              <Input
-                icon="search"
-                className="search-input"
-                placeholder="Search User..."
-                id="search-bar"
-                onChange={handleSearchChange}
-              />
-            </List.Item>
-            {renderList()}
-          </List>
+        <div id="friends-container">
+          <div id="right-border">
+            <List id="friend-list" celled style={{
+              overflowY: "auto",
+              overflowX: "hidden",
+              maxHeight: "100vh",
+              minHeight: "100vh"
+            }}>
+              <div>
+                <h1 style={{ marginBottom: "20px" }}>User Search</h1>
+              </div>
+              <List.Item style={{ height: "70px" }}>
+                <Input
+                  className="search-input"
+                  placeholder="Search by name or email..."
+                  id="search-bar"
+                  onChange={handleSearchChange}
+                />
+              </List.Item>
+              {renderList()}
+            </List>
+          </div>
         </div>
-      </div>
       </div>
       <div style={{ whiteSpace: 'nowrap' }}>
         <div id="friend-info-container">
-          <div  >{renderSelectedUser()}</div>
+          <div>{renderSelectedUser()}</div>
         </div>
       </div>
     </div>

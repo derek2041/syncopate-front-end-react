@@ -308,7 +308,7 @@ const WelcomePage = () => {
                         console.log("ResultStatus: ", result.status);
 
                         if (result.status === "success") {
-                          window.location.href = "/chat/1";
+                          window.location.href = "/my-profile";
                         } else {
                           setShowLoginError(true);
                         }

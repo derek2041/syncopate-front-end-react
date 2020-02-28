@@ -13,7 +13,7 @@ import {
   Icon,
   Loader
 } from "semantic-ui-react";
-import "./ConversationPage.css";
+import "./SearchFriendPage.css";
 import mainLogo from "./images/1x/Asset 23.png";
 
 import heartSign from "./images/sign/animat-heart-color.gif";
@@ -22,7 +22,7 @@ import NavigationBar from "./NavigationBar";
 var faker = require("faker");
 const levenshtein = require("js-levenshtein");
 
-const ConversationPage = () => {
+const SearchFriendPage = () => {
   const [currUser, setCurrUser] = useState(null);
   const [friendList, setFriendList] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
@@ -136,7 +136,7 @@ const ConversationPage = () => {
         <List.Item
           className="list-item"
           key={identifier}
-          style={{ height: "70px", borderRadius: "8px" }}
+          style={{ height: "fit-content", borderRadius: "8px" }}
           onClick={() => {
             setCurrUser(curr_friend);
 
@@ -225,10 +225,14 @@ const ConversationPage = () => {
             style={{  marginTop: "-20px", borderRadius: "8px" }}
           >
             <div className="topDiv">
+              {
+              /*
               <h1>Profile Page</h1>
               <div>
                 <h4>This is profile page.</h4>
               </div>
+              */
+              }
 
               <div className="profile-pic">
                 <img
@@ -347,7 +351,7 @@ const ConversationPage = () => {
               <Input
                 icon="search"
                 className="search-input"
-                placeholder="Search..."
+                placeholder="Search by name or email..."
                 id="search-bar"
                 onChange={handleSearchChange}
               />
@@ -366,4 +370,4 @@ const ConversationPage = () => {
   );
 };
 
-export default ConversationPage;
+export default SearchFriendPage;

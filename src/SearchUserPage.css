@@ -37,9 +37,14 @@ body {
 }
 
 .status {
+
   padding-top: 22px;
   float: right;
   margin-left: 10px;
+
+
+
+
 }
 
 #friend-list {

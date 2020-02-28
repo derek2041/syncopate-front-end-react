@@ -136,7 +136,7 @@ const ChatListPage = () => {
         <List.Item
           className="list-item"
           key={identifier}
-          style={{ height: "70px", borderRadius: "8px" }}
+          style={{ height: "fit-content", borderRadius: "8px" }}
           onClick={() => {
             setCurrUser(curr_friend);
 
@@ -225,10 +225,14 @@ const ChatListPage = () => {
             style={{  marginTop: "-20px", borderRadius: "8px" }}
           >
             <div className="topDiv">
+              {
+              /*
               <h1>Profile Page</h1>
               <div>
                 <h4>This is profile page.</h4>
               </div>
+              */
+              }
 
               <div className="profile-pic">
                 <img
@@ -341,13 +345,13 @@ const ChatListPage = () => {
             minHeight: "100vh"
           }}>
             <div>
-              <h1 style={{ marginBottom: "20px" }}>My Friends</h1>
+              <h1 style={{ marginBottom: "20px" }}>Recent Chats</h1>
             </div>
             <List.Item style={{ height: "70px" }}>
               <Input
                 icon="search"
                 className="search-input"
-                placeholder="Search..."
+                placeholder="Search by name or email..."
                 id="search-bar"
                 onChange={handleSearchChange}
               />
