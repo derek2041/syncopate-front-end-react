@@ -16,6 +16,7 @@ import SendRequests from "./SendRequests";
 import SearchFriendPage from "./SearchFriendPage";
 import ChatListPage from './ChatListPage';
 import SearchUserPage from './SearchUserPage';
+import ChangePassword from './ChangePassword';
 
 const App = () => {
   return (
@@ -35,6 +36,14 @@ const App = () => {
             exact
             render={() => {
               return <ProfilePage2 />;
+            }}
+          />
+
+          <Route
+            path="/change-password"
+            exact
+            render={() => {
+              return <ChangePassword />;
             }}
           />
 

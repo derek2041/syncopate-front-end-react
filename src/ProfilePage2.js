@@ -7,6 +7,10 @@ const ProfilePage2 = () => {
   const [loadState, setLoadState] = useState(null);
   const [loadedData, setLoadedData] = useState({});
   const [avatarURL, setAvatarURL] = useState(null);
+  const [userStatus, setUserStatus] = useState(null);
+
+  const [resetCount, setResetCount] = useState(0);
+  const handleReset = () => setResetCount(i => i + 1);
 
   const submitFileUpload = async () => {
     const formData = new FormData();
@@ -23,6 +27,7 @@ const ProfilePage2 = () => {
     );
 
     const result = await response.json();
+    handleReset();
     console.log("upload=", result);
   };
 
@@ -35,6 +40,7 @@ const ProfilePage2 = () => {
 
       const result = await response.json();
       setLoadedData(result);
+      setUserStatus(result.available)
       console.log("identifyuser=", result);
     }
 
@@ -52,7 +58,44 @@ const ProfilePage2 = () => {
 
     identifyUser();
     fetchAvatar();
-  }, []);
+  }, [resetCount]);
+
+  const updateStatus = async (status) => {
+    console.log("HELLO GOOD SIR");
+
+    const response = await fetch(
+      `http://18.219.112.140:8000/api/v1/set-availability/`,
+      { method: "POST", credentials: 'include', body: JSON.stringify({"available": status})}
+    );
+
+    const result = await response.json();
+    if (result.status === "success") {
+      setUserStatus(status);
+    }
+  }
+
+  const renderStatus = () => {
+    if (loadState === null) {
+      return null;
+    }
+    if (userStatus === true) {
+      return (
+        <>
+          <h3 style={{ color: '#4c4a4a', transform: 'translate(25px, 0px)' }}>Available</h3>
+          <Button style={{ width: '45px', height: '45px', borderRadius: '50px', background: 'green', transform: 'translate(-47px, -47px)' }}
+            onClick={() => { updateStatus(false) }}/>
+        </>
+      );
+    } else if (userStatus === false) {
+      return (
+        <>
+          <h3 style={{ color: '#4c4a4a', transform: 'translate(40px, 0px)' }}>Busy/Offline</h3>
+          <Button style={{ width: '45px', height: '45px', borderRadius: '50px', background: 'rgb(178, 34, 34)', transform: 'translate(-47px, -47px)' }}
+            onClick={() => { updateStatus(true) }}/>
+        </>
+      );
+    }
+  }
 
   if (loadState === null) {
     return (
@@ -66,11 +109,11 @@ const ProfilePage2 = () => {
     return (
       <>
         <NavigationBar />
-        <div>
+        <div style={{ maxWidth: '800px', margin: '0 auto', marginTop: '75px', borderRadius: '50px', marginBottom: '75px', boxShadow: '5px 7px 20px -4px' }}>
           <div className="topDiv">
-            <h3>Profile Page</h3>
+            <h1>Profile Page</h1>
             <div>
-              <h4>This is your profile page.</h4>
+              <h4>This is your profile page. This is how you will appear to other user's on the platform</h4>
             </div>
             <div
               className="profile-pic"
@@ -85,13 +128,21 @@ const ProfilePage2 = () => {
                    loadedData.available ?
                    <small>Available</small>: null
                } */}
-              <small>Available</small>
             </h1>
             <div>
               <h4>{loadedData.email}</h4>
             </div>
           </div>
-          <div>
+
+          <div style={{ height: '60px' }}>
+            { renderStatus() }
+          </div>
+
+          <div style={{ paddingBottom: '20px' }}>
+            <a id="change-password-link" href="/change-password" style={{ fontSize: '15px' }}>Change My Password</a>
+          </div>
+
+          <div style={{ paddingBottom: '50px', paddingTop: '20px' }}>
             <input type="file" name="avatar" />
             <Button onClick={submitFileUpload} primary>
               Upload Photo

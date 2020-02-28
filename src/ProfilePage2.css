@@ -33,3 +33,14 @@ h1 small:after {
   right: -13px;
   top: 3px;
 }
+
+#change-password-link {
+  font-weight: bold;
+  color: rgba(0, 0, 0, 0.55);
+}
+
+#change-password-link:hover {
+  text-decoration: none;
+  color: black;
+  position: relative;
+}
