@@ -378,42 +378,42 @@ const WelcomePage = () => {
           style={{ margin: "0 auto", minWidth: "675px", maxWidth: "1000px" }}
         >
           <Card
-            image="https://static.thenounproject.com/png/20389-200.png"
+            image="http://18.219.112.140/images/generic/real-time-communication.svg"
             header="Real-Time Communication"
             description="Talk with fellow students in real-time, backed by socket.io"
           />
           <Card
-            image="https://static.thenounproject.com/png/20389-200.png"
+            image="http://18.219.112.140/images/generic/group-chats.svg"
             header="Group Chats"
             description="Message entire friend circles instantaneously. Send messages to groups of users instead of just one single user."
           />
           <Card
-            image="https://static.thenounproject.com/png/20389-200.png"
-            header="Share Videos"
-            description="Share recorded moments. Upload videos to chat instances."
+            image="http://18.219.112.140/images/generic/track-statistics.svg"
+            header="Track Statistics"
+            description="Get the details and insight on how you have been using the platform."
           />
           <Card
-            image="https://static.thenounproject.com/png/20389-200.png"
+            image="http://18.219.112.140/images/generic/personalization.svg"
             header="Personalization"
             description="Customization is cool. Upload and set a profile picture to really make your profile yours."
           />
           <Card
-            image="https://static.thenounproject.com/png/20389-200.png"
+            image="http://18.219.112.140/images/generic/privacy.svg"
             header="Privacy"
             description="Communicate with other students on your terms. Approve message requests before anything occurs."
           />
           <Card
-            image="https://static.thenounproject.com/png/20389-200.png"
+            image="http://18.219.112.140/images/generic/safe-and-secure.svg"
             header="Safe and Secure"
             description="Your sensitive information is secured and protected properly with industry standard best practices."
           />
           <Card
-            image="https://static.thenounproject.com/png/20389-200.png"
+            image="http://18.219.112.140/images/generic/share-photos.svg"
             header="Share Photos"
             description="Share priceless pictures. Upload photos to group chats and direct messages."
           />
           <Card
-            image="https://static.thenounproject.com/png/20389-200.png"
+            image="http://18.219.112.140/images/generic/sleek-ux.svg"
             header="Sleek UX"
             description="The year is 2020. Modernized UI/UX to give you the optimal messaging experience."
           />
