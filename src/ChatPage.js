@@ -75,14 +75,21 @@ class Chat extends React.Component {
 
   async authenticateUser() {
     // TODO Fix the authentication
-    return true;
-    const response = await fetch(`http://18.219.112.140:3000/authenticate`);
+    const response = await fetch(
+      `http://18.219.112.140:8000/api/v1/get-messages/`,
+      { method: 'POST', credentials: 'include', body: JSON.stringify({ group_id: window.location.pathname.split("/").slice(-1)[0] }) }
+    );
     const result = await response.json();
+
+    if (result.status !== "success") {
+      window.location.href = "/my-chats";
+    }
 
     console.log("Result: ", result);
     console.log("Response: ", response);
     console.log(result.is_authenticated);
-
+    
+    return true;
     return result["is_authenticated"];
   }
 

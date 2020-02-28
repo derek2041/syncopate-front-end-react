@@ -23,8 +23,8 @@ var faker = require("faker");
 const levenshtein = require("js-levenshtein");
 
 const ChatListPage = () => {
-  const [currUser, setCurrUser] = useState(null);
-  const [friendList, setFriendList] = useState(null);
+  const [currGroup, setCurrGroup] = useState(null);
+  const [groupList, setGroupList] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
 
   const [refreshCount, setRefreshCount] = useState(0);
@@ -33,17 +33,17 @@ const ChatListPage = () => {
   useEffect(() => {
     async function fetchList() {
       const response = await fetch(
-        `http://18.219.112.140:8000/api/v1/load-friends/`,
+        `http://18.219.112.140:8000/api/v1/get-user-group/`,
         { method: "POST", credentials: "include" }
       );
       const result = await response.json();
-      setFriendList(result.friends);
+      setGroupList(result);
     }
 
     fetchList();
   }, [refreshCount]);
 
-  const deleteFriend = () => {
+  const leaveGroup = () => {
     handleRefresh();
   };
 
@@ -52,51 +52,24 @@ const ChatListPage = () => {
     console.log(data.value);
   };
 
-  const compareWithSearchQuery = checkUser => {
+  const compareWithSearchQuery = checkName => {
     if (searchQuery === "") {
       return true;
     }
 
     const search_query = searchQuery.toLowerCase();
-    if (search_query.includes("@")) {
-      // logic to compare emails
-      if (
-        search_query.substring(0, search_query.indexOf("@")) ===
-        checkUser.email.substring(0, checkUser.email.indexOf("@"))
-      ) {
-        return true;
-      }
-
-      return false;
+    // logic to compare names
+    const name = search_query;
+    if (checkName.group__name.toLowerCase().startsWith(name)) {
+      return true;
     } else {
-      // logic to compare names
-      const name = search_query.split(" ", 2);
-      if (name.length === 2) {
-        if (name[1] === "") {
-          return (name[0] === checkUser.first_name.toLowerCase().substring(0, name[0].length));
-        }
-
-        if (
-          name[0] === checkUser.first_name.toLowerCase() &&
-          name[1] === checkUser.last_name.toLowerCase().substring(0, name[1].length)
-        ) {
-          return true;
-        }
-
-        return false;
-      } else if (name.length === 1) {
-        if (name[0] === checkUser.first_name.toLowerCase().substring(0, name[0].length)) {
-          return true;
-        }
-        return false;
-      } else {
-        return false;
-      }
+      return false;
     }
   };
 
-  const renderAvailable = curr_user => {
-    if (curr_user.available) {
+/*
+  const renderAvailable = curr_group => {
+    if (curr_group.available) {
       return (
         <>
           <Icon name="circle" style={{ color: "green" }}></Icon>
@@ -112,25 +85,23 @@ const ChatListPage = () => {
       );
     }
   };
+*/
 
   const renderList = () => {
-    console.log("re-rendering friend list!");
-    if (friendList == null) {
+    console.log("re-rendering group list!");
+    if (groupList == null) {
       return <Loader active inline="centered"></Loader>;
     }
 
     var resultJSX = [];
     var identifier = 0;
 
-    friendList.forEach(curr_friend => {
-      if (!compareWithSearchQuery(curr_friend)) {
+    groupList.forEach(curr_group => {
+      if (!compareWithSearchQuery(curr_group)) {
         return;
       }
 
-      console.log(curr_friend);
-      const friendUrl =
-        "http://18.219.112.140/images/avatars/" + curr_friend.profile_pic_url;
-        console.log(curr_friend.email.substring(0, curr_friend.email.indexOf('@')));
+      console.log(curr_group);
 
       resultJSX.push(
         <List.Item
@@ -138,11 +109,12 @@ const ChatListPage = () => {
           key={identifier}
           style={{ height: "fit-content", borderRadius: "8px" }}
           onClick={() => {
-            setCurrUser(curr_friend);
+            setCurrGroup(curr_group);
 
-            console.log("Selected Friend ID: ", curr_friend.id);
+            console.log("Selected Group ID: ", curr_group.group__id);
           }}
         >
+        { /*
           <Image
             avatar
             src={friendUrl}
@@ -153,6 +125,8 @@ const ChatListPage = () => {
               marginRight:'2px'
             }}
           />
+          */
+        }
           <div className="userName">
 
             <p style={{
@@ -161,7 +135,7 @@ const ChatListPage = () => {
               marginLeft: "20px",
               height: "75%",
             }}>
-              {curr_friend.first_name + " " + curr_friend.last_name}
+              {curr_group.group__name}
               <p style={{
                 fontFamily: "Exo 2",
                 fontWeight: "400",
@@ -171,7 +145,7 @@ const ChatListPage = () => {
                 color: "grey",
                 display: "inline-block"
               }}>
-                {"( " + curr_friend.email.substring(0, curr_friend.email.indexOf('@')) + " )"}
+                {"( " + curr_group.group__description + " )"}
               </p>
             </p>
 
@@ -183,12 +157,16 @@ const ChatListPage = () => {
 
 
           </List.Content>
+          {
+          /*
           <div className="status"><p style={{
             fontFamily: "Exo 2",
             fontWeight: "600",
             height: "75%",
 
-          }} >{renderAvailable(curr_friend)}</p></div>
+          }} >{renderAvailable(curr_group)}</p></div>
+          */
+          }
 
         </List.Item>
       );
@@ -197,8 +175,8 @@ const ChatListPage = () => {
     return resultJSX;
   }; //vertical-align: middle
 
-  const renderSelectedUser = () => {
-    if (currUser === null) {
+  const renderSelectedGroup = () => {
+    if (currGroup === null) {
       return (
         <div>
           <p
@@ -214,9 +192,6 @@ const ChatListPage = () => {
       );
     }
 
-    const avatarUrl =
-      "http://18.219.112.140/images/avatars/" + currUser.profile_pic_url;
-    console.log(avatarUrl);
     return (
       <>
         <div >
@@ -231,8 +206,6 @@ const ChatListPage = () => {
               <div>
                 <h4>This is profile page.</h4>
               </div>
-              */
-              }
 
               <div className="profile-pic">
                 <img
@@ -241,6 +214,8 @@ const ChatListPage = () => {
                 ></img>
               </div>
 
+              */
+              }
               <p
                 style={{
                   fontSize: "40px",
@@ -248,16 +223,15 @@ const ChatListPage = () => {
                   marginTop: "2px"
                 }}
               >
-                {`${currUser.first_name} ${currUser.last_name}`}
+                {`${currGroup.group__name}`}
                 {/* {
                    loadedData.available ?
                    <small>Available</small>: null
                } */}
-                <small>{currUser.available}</small>
               </p>
               <div>
                 <p style={{ fontSize: "grey", fontSize: "15px" }}>
-                  {currUser.email}
+                  {currGroup.group__description}
                 </p>
               </div>
 
@@ -273,10 +247,11 @@ const ChatListPage = () => {
                 }}
                 content="Chat"
                 onClick={async () => {
-                  window.location.href = "/chat/t1";
+                  window.location.href = "/chat/" + currGroup.group__id;
                 }}
               ></Button>
 
+              { /*
               <Button
                 content="Favorite"
                 as={() => {
@@ -294,6 +269,7 @@ const ChatListPage = () => {
                   );
                 }}
               ></Button>
+              */ }
 
               <Button
                 negative
@@ -307,22 +283,24 @@ const ChatListPage = () => {
                 }}
                 content="Delete"
                 onClick={async () => {
+                  /*
                   const settings = {
                     method: "POST",
                     headers: {
                       "Content-Type": "application/json"
                     },
-                    body: JSON.stringify({ friend_id: currUser.id }),
+                    body: JSON.stringify({ friend_id: currGroup.id }),
                     credentials: "include"
                   };
-                  console.log(currUser.id);
+                  console.log(currGroup.id);
                   const response = await fetch(
                     `http://18.219.112.140:8000/api/v1/delete-friend/`,
                     settings
                   );
                   const result = await response.json();
-                  deleteFriend();
-                  setCurrUser(null);
+                  leaveGroup();
+                  setCurrGroup(null);
+                  */
                 }}
               ></Button>
             </div>
@@ -351,7 +329,7 @@ const ChatListPage = () => {
               <Input
                 icon="search"
                 className="search-input"
-                placeholder="Search by name or email..."
+                placeholder="Search by group name..."
                 id="search-bar"
                 onChange={handleSearchChange}
               />
@@ -363,7 +341,7 @@ const ChatListPage = () => {
       </div>
       <div style={{ whiteSpace: 'nowrap' }}>
         <div id="friend-info-container">
-          <div  >{renderSelectedUser()}</div>
+          <div  >{renderSelectedGroup()}</div>
         </div>
       </div>
     </div>
