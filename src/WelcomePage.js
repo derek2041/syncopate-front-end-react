@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Input, Checkbox, Button, Message, Card } from "semantic-ui-react";
 import mainLogo from "./images/1x/Asset 22.png";
 import patternLogo from "./images/3x/Asset 26@3x.png";
@@ -15,6 +15,22 @@ const WelcomePage = () => {
   const [loginPassword, setLoginPassword] = useState("");
   const [isPersistent, setIsPersistent] = useState(false);
   const [showLoginError, setShowLoginError] = useState(false);
+
+  useEffect(() => {
+    async function checkLoggedIn() {
+      const response = await fetch(
+        `http://18.219.112.140:8000/api/v1/check-logged-in/`,
+        { method: "GET", credentials: "include" }
+      );
+      const result = await response.json();
+
+      if (result.status === "success") {
+        window.location.href = "/my-profile";
+      }
+    }
+
+    checkLoggedIn();
+  }, []);
 
   const handleUsernameChange = (event, data) => {
     setLoginUsername(data.value);
