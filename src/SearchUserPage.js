@@ -13,7 +13,7 @@ import {
   Icon,
   Loader
 } from "semantic-ui-react";
-import "./ChatListPage.css";
+import "./SearchUserPage.css";
 import mainLogo from "./images/1x/Asset 23.png";
 
 import heartSign from "./images/sign/animat-heart-color.gif";
@@ -22,9 +22,9 @@ import NavigationBar from "./NavigationBar";
 var faker = require("faker");
 const levenshtein = require("js-levenshtein");
 
-const ChatListPage = () => {
+const SearchUserPage = () => {
   const [currUser, setCurrUser] = useState(null);
-  const [friendList, setFriendList] = useState(null);
+  const [userList, setUserList] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
 
   const [refreshCount, setRefreshCount] = useState(0);
@@ -32,67 +32,26 @@ const ChatListPage = () => {
 
   useEffect(() => {
     async function fetchList() {
+      if (searchQuery === "") {
+        setUserList([]);
+        return;
+      }
+
       const response = await fetch(
-        `http://18.219.112.140:8000/api/v1/load-friends/`,
-        { method: "POST", credentials: "include" }
+        `http://18.219.112.140:8000/api/v1/search-users/`,
+        { method: "POST", credentials: "include", body: JSON.stringify({ "query": searchQuery })}
       );
       const result = await response.json();
-      setFriendList(result.friends);
+      setUserList(result.users);
     }
 
     fetchList();
-  }, [refreshCount]);
-
-  const deleteFriend = () => {
-    handleRefresh();
-  };
+  }, [searchQuery, refreshCount]);
 
   const handleSearchChange = (event, data) => {
+    setUserList(null);
     setSearchQuery(data.value);
     console.log(data.value);
-  };
-
-  const compareWithSearchQuery = checkUser => {
-    if (searchQuery === "") {
-      return true;
-    }
-
-    const search_query = searchQuery.toLowerCase();
-    if (search_query.includes("@")) {
-      // logic to compare emails
-      if (
-        search_query.substring(0, search_query.indexOf("@")) ===
-        checkUser.email.substring(0, checkUser.email.indexOf("@"))
-      ) {
-        return true;
-      }
-
-      return false;
-    } else {
-      // logic to compare names
-      const name = search_query.split(" ", 2);
-      if (name.length === 2) {
-        if (name[1] === "") {
-          return (name[0] === checkUser.first_name.toLowerCase().substring(0, name[0].length));
-        }
-
-        if (
-          name[0] === checkUser.first_name.toLowerCase() &&
-          name[1] === checkUser.last_name.toLowerCase().substring(0, name[1].length)
-        ) {
-          return true;
-        }
-
-        return false;
-      } else if (name.length === 1) {
-        if (name[0] === checkUser.first_name.toLowerCase().substring(0, name[0].length)) {
-          return true;
-        }
-        return false;
-      } else {
-        return false;
-      }
-    }
   };
 
   const renderAvailable = curr_user => {
@@ -115,18 +74,14 @@ const ChatListPage = () => {
 
   const renderList = () => {
     console.log("re-rendering friend list!");
-    if (friendList == null) {
+    if (userList == null) {
       return <Loader active inline="centered"></Loader>;
     }
 
     var resultJSX = [];
     var identifier = 0;
 
-    friendList.forEach(curr_friend => {
-      if (!compareWithSearchQuery(curr_friend)) {
-        return;
-      }
-
+    userList.forEach(curr_friend => {
       console.log(curr_friend);
       const friendUrl =
         "http://18.219.112.140/images/avatars/" + curr_friend.profile_pic_url;
@@ -226,12 +181,12 @@ const ChatListPage = () => {
           >
             <div className="topDiv">
               {
-              /*
-              <h1>Profile Page</h1>
-              <div>
-                <h4>This is profile page.</h4>
-              </div>
-              */
+                /*
+                <h1>Profile Page</h1>
+                <div>
+                  <h4>This is profile page.</h4>
+                </div>
+                */
               }
 
               <div className="profile-pic">
@@ -264,65 +219,29 @@ const ChatListPage = () => {
               <Button
                 primary
                 style={{
-                  float: "left",
-                  width: "20%",
-                  marginTop: "100px",
-                  marginLeft: "30px",
+                  marginTop: "40px",
                   borderRadius: "50px",
                   fontSize: "18px"
                 }}
-                content="Chat"
-                onClick={async () => {
-                  window.location.href = "/chat/t1";
-                }}
-              ></Button>
-
-              <Button
-                content="Favorite"
-                as={() => {
-                  return (
-                    <img
-                      style={{
-                        float: "center",
-                        width: "20%",
-                        marginTop: "30px",
-                        borderRadius: "50px",
-                        fontSize: "18px"
-                      }}
-                      src={heartSign}
-                    ></img>
-                  );
-                }}
-              ></Button>
-
-              <Button
-                negative
-                style={{
-                  float: "right",
-                  width: "20%",
-                  marginTop: "100px",
-                  marginRight: "30px",
-                  borderRadius: "50px",
-                  fontSize: "18px"
-                }}
-                content="Delete"
+                content="Add Friend"
                 onClick={async () => {
                   const settings = {
                     method: "POST",
                     headers: {
                       "Content-Type": "application/json"
                     },
-                    body: JSON.stringify({ friend_id: currUser.id }),
+                    body: JSON.stringify({
+                      email: currUser.email
+                    }),
                     credentials: "include"
                   };
-                  console.log(currUser.id);
+
                   const response = await fetch(
-                    `http://18.219.112.140:8000/api/v1/delete-friend/`,
+                    `http://18.219.112.140:8000/api/v1/send-request/`,
                     settings
                   );
                   const result = await response.json();
-                  deleteFriend();
-                  setCurrUser(null);
+                  console.log(result);
                 }}
               ></Button>
             </div>
@@ -336,38 +255,37 @@ const ChatListPage = () => {
     <div >
       <NavigationBar />
       <div style={{ whiteSpace: 'nowrap' }}>
-      <div id="friends-container">
-        <div id="right-border">
-          <List id="friend-list" celled style={{
-            overflowY: "auto",
-            overflowX: "hidden",
-            maxHeight: "100vh",
-            minHeight: "100vh"
-          }}>
-            <div>
-              <h1 style={{ marginBottom: "20px" }}>Recent Chats</h1>
-            </div>
-            <List.Item style={{ height: "70px" }}>
-              <Input
-                icon="search"
-                className="search-input"
-                placeholder="Search by name or email..."
-                id="search-bar"
-                onChange={handleSearchChange}
-              />
-            </List.Item>
-            {renderList()}
-          </List>
+        <div id="friends-container">
+          <div id="right-border">
+            <List id="friend-list" celled style={{
+              overflowY: "auto",
+              overflowX: "hidden",
+              maxHeight: "100vh",
+              minHeight: "100vh"
+            }}>
+              <div>
+                <h1 style={{ marginBottom: "20px" }}>User Search</h1>
+              </div>
+              <List.Item style={{ height: "70px" }}>
+                <Input
+                  className="search-input"
+                  placeholder="Search by name or email..."
+                  id="search-bar"
+                  onChange={handleSearchChange}
+                />
+              </List.Item>
+              {renderList()}
+            </List>
+          </div>
         </div>
-      </div>
       </div>
       <div style={{ whiteSpace: 'nowrap' }}>
         <div id="friend-info-container">
-          <div  >{renderSelectedUser()}</div>
+          <div>{renderSelectedUser()}</div>
         </div>
       </div>
     </div>
   );
 };
 
-export default ChatListPage;
+export default SearchUserPage;

@@ -11,6 +11,10 @@ h1 {
   font-size: 3em;
 }
 
+body {
+  background: white;
+}
+
 h1 small {
   font-size: 0.3em;
   position: relative;
