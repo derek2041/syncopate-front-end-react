@@ -15,8 +15,8 @@ import {
 } from "semantic-ui-react";
 import "./ChatListPage.css";
 import mainLogo from "./images/1x/Asset 23.png";
-
 import heartSign from "./images/sign/animat-heart-color.gif";
+
 import NavigationBar from "./NavigationBar";
 
 var faker = require("faker");
@@ -26,7 +26,6 @@ const ChatListPage = () => {
   const [currGroup, setCurrGroup] = useState(null);
   const [groupList, setGroupList] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
-
   const [refreshCount, setRefreshCount] = useState(0);
   const handleRefresh = () => setRefreshCount(i => i + 1);
 
@@ -37,6 +36,9 @@ const ChatListPage = () => {
         { method: "POST", credentials: "include" }
       );
       const result = await response.json();
+      console.log(result);
+      result.sort((a,b) => (a.pinned === true && b.pinned === false)? -1 : 1);
+
       setGroupList(result);
     }
 
@@ -67,25 +69,86 @@ const ChatListPage = () => {
     }
   };
 
-/*
-  const renderAvailable = curr_group => {
-    if (curr_group.available) {
+
+  const renderPinStatus = curr_group => {
+    if(curr_group.pinned === true){
       return (
-        <>
-          <Icon name="circle" style={{ color: "green" }}></Icon>
-          Available
-        </>
+        <Button
+          positive
+          content= "unpin"
+          style={{
+            float: "left",
+            width: "20%",
+            marginTop: "100px",
+            marginLeft: "90px",
+            borderRadius: "50px",
+            fontSize: "18px",
+
+          }}
+          onClick={async () => {
+            const settings = {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json"
+              },
+              credentials: 'include',
+              body: JSON.stringify({
+                group_id: curr_group.group__id,
+                pinned: false
+              })
+            };
+            const response = await fetch(
+              `http://18.219.112.140:8000/api/v1/pin-chat/`,
+              settings
+            );
+            const result = await response.json();
+            if(result.status === "success"){
+              handleRefresh();
+              setCurrGroup(null);
+            }
+          }}
+        ></Button>
       );
-    } else {
+    }else{
       return (
-        <>
-          <Icon name="circle" style={{ color: "#B22222" }}></Icon>
-          Offline
-        </>
+        <Button
+          content= "pin"
+          style={{
+            float: "left",
+            width: "20%",
+            marginTop: "100px",
+            marginLeft: "90px",
+            borderRadius: "50px",
+            fontSize: "18px",
+
+          }}
+          onClick={async () => {
+            const settings = {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json"
+              },
+              credentials: 'include',
+              body: JSON.stringify({
+                group_id: curr_group.group__id,
+                pinned: true
+              })
+            };
+            const response = await fetch(
+              `http://18.219.112.140:8000/api/v1/pin-chat/`,
+              settings
+            );
+            const result = await response.json();
+            if(result.status === "success"){
+              handleRefresh();
+              setCurrGroup(null);
+            }
+          }}
+        ></Button>
       );
     }
-  };
-*/
+
+  }
 
   const renderList = () => {
     console.log("re-rendering group list!");
@@ -103,77 +166,91 @@ const ChatListPage = () => {
 
       console.log(curr_group);
 
-      resultJSX.push(
-        <List.Item
-          className="list-item"
-          key={identifier}
-          style={{ height: "fit-content", borderRadius: "8px" }}
-          onClick={() => {
-            setCurrGroup(curr_group);
+      if (curr_group.pinned === true) {
+        resultJSX.push(
+          <List.Item
+            className="list-item-green"
+            key={identifier}
+            style={{ height: "fit-content", borderRadius: "8px" }}
+            onClick={() => {
+              setCurrGroup(curr_group);
 
-            console.log("Selected Group ID: ", curr_group.group__id);
-          }}
-        >
-        { /*
-          <Image
-            avatar
-            src={friendUrl}
-            style={{
-              float: "left",
-              width: "60px",
-              height: "60px",
-              marginRight:'2px'
+              console.log("Selected Group ID: ", curr_group.group__id);
             }}
-          />
-          */
-        }
-          <div className="userName">
-
-            <p style={{
-              fontFamily: "Exo 2",
-              fontWeight: "600",
-              marginLeft: "20px",
-              height: "75%",
-            }}>
-              {curr_group.group__name}
+          >
+            <div className="userName">
               <p style={{
                 fontFamily: "Exo 2",
-                fontWeight: "400",
+                fontWeight: "600",
                 marginLeft: "20px",
                 height: "75%",
-                fontSize: "18px",
-                color: "grey",
-                display: "inline-block"
               }}>
-                {"( " + curr_group.group__description + " )"}
+                {curr_group.group__name}
+                <p style={{
+                  fontFamily: "Exo 2",
+                  fontWeight: "400",
+                  marginLeft: "20px",
+                  height: "75%",
+                  fontSize: "18px",
+                  color: "grey",
+                  display: "inline-block"
+                }}>
+                  {"( " + curr_group.group__description + " )"}
+                </p>
               </p>
-            </p>
+            </div>
+            <List.Content>
 
 
+            </List.Content>
+
+          </List.Item>
+        );
+      } else {
+        resultJSX.push(
+          <List.Item
+            className="list-item"
+            key={identifier}
+            style={{ height: "fit-content", borderRadius: "8px" }}
+            onClick={() => {
+              setCurrGroup(curr_group);
+
+              console.log("Selected Group ID: ", curr_group.group__id);
+            }}
+          >
+            <div className="userName">
+              <p style={{
+                fontFamily: "Exo 2",
+                fontWeight: "600",
+                marginLeft: "20px",
+                height: "75%",
+              }}>
+                {curr_group.group__name}
+                <p style={{
+                  fontFamily: "Exo 2",
+                  fontWeight: "400",
+                  marginLeft: "20px",
+                  height: "75%",
+                  fontSize: "18px",
+                  color: "grey",
+                  display: "inline-block"
+                }}>
+                  {"( " + curr_group.group__description + " )"}
+                </p>
+              </p>
+            </div>
+            <List.Content>
 
 
-          </div>
-          <List.Content>
+            </List.Content>
 
-
-          </List.Content>
-          {
-          /*
-          <div className="status"><p style={{
-            fontFamily: "Exo 2",
-            fontWeight: "600",
-            height: "75%",
-
-          }} >{renderAvailable(curr_group)}</p></div>
-          */
-          }
-
-        </List.Item>
-      );
+          </List.Item>
+        );  
+      }
       identifier++;
     });
     return resultJSX;
-  }; //vertical-align: middle
+  };
 
   const renderSelectedGroup = () => {
     if (currGroup === null) {
@@ -200,22 +277,7 @@ const ChatListPage = () => {
             style={{  marginTop: "-20px", borderRadius: "8px" }}
           >
             <div className="topDiv">
-              {
-              /*
-              <h1>Profile Page</h1>
-              <div>
-                <h4>This is profile page.</h4>
-              </div>
 
-              <div className="profile-pic">
-                <img
-                  src={avatarUrl}
-                  style={{ width: "85%", height: "85%", borderRadius: "50px" }}
-                ></img>
-              </div>
-
-              */
-              }
               <p
                 style={{
                   fontSize: "40px",
@@ -251,25 +313,9 @@ const ChatListPage = () => {
                 }}
               ></Button>
 
-              { /*
-              <Button
-                content="Favorite"
-                as={() => {
-                  return (
-                    <img
-                      style={{
-                        float: "center",
-                        width: "20%",
-                        marginTop: "30px",
-                        borderRadius: "50px",
-                        fontSize: "18px"
-                      }}
-                      src={heartSign}
-                    ></img>
-                  );
-                }}
-              ></Button>
-              */ }
+
+              {renderPinStatus(currGroup)}
+
 
               <Button
                 negative
@@ -282,26 +328,7 @@ const ChatListPage = () => {
                   fontSize: "18px"
                 }}
                 content="Delete"
-                onClick={async () => {
-                  /*
-                  const settings = {
-                    method: "POST",
-                    headers: {
-                      "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify({ friend_id: currGroup.id }),
-                    credentials: "include"
-                  };
-                  console.log(currGroup.id);
-                  const response = await fetch(
-                    `http://18.219.112.140:8000/api/v1/delete-friend/`,
-                    settings
-                  );
-                  const result = await response.json();
-                  leaveGroup();
-                  setCurrGroup(null);
-                  */
-                }}
+
               ></Button>
             </div>
           </Segment>
