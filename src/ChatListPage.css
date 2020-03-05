@@ -70,6 +70,18 @@ body {
   background: #e4f0f5;
 }
 
+.item.list-item {
+  background: white;
+}
+
+.item.list-item-green {
+  background: #ffebf9;
+
+}
+.item.list-item-green:hover{
+  background: #e4f0f5;
+}
+
 #friend-info-container {
   width: 60%;
 
