@@ -14,9 +14,9 @@ import ChangeUsername from "./ChangeUsername";
 import RequestList from "./RequestList";
 import SendRequests from "./SendRequests";
 import SearchFriendPage from "./SearchFriendPage";
-import ChatListPage from './ChatListPage';
-import SearchUserPage from './SearchUserPage';
-import ChangePassword from './ChangePassword';
+import ChatListPage from "./ChatListPage";
+import SearchUserPage from "./SearchUserPage";
+import ChangePassword from "./ChangePassword";
 
 const App = () => {
   return (
@@ -112,7 +112,7 @@ const App = () => {
             path="/search-users"
             exact
             render={() => {
-              return <SearchUserPage />
+              return <SearchUserPage />;
             }}
           />
 

@@ -84,8 +84,15 @@ const RequestList = () => {
             <Card.Header>{currRequest.sender__first_name}</Card.Header>
             <Card.Meta>{currRequest.sender__email}</Card.Meta>
             <Card.Description>
-              <strong>{currRequest.sender__first_name + " " + currRequest.sender__last_name} wants to add you as a {" "}friend!</strong>
-              {" Accepting the request will allow direct messaging and adding each other to group chats."}
+              <strong>
+                {currRequest.sender__first_name +
+                  " " +
+                  currRequest.sender__last_name}{" "}
+                wants to add you as a friend!
+              </strong>
+              {
+                " Accepting the request will allow direct messaging and adding each other to group chats."
+              }
             </Card.Description>
           </Card.Content>
           <Card.Content extra>

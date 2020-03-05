@@ -39,7 +39,11 @@ const SearchUserPage = () => {
 
       const response = await fetch(
         `http://18.219.112.140:8000/api/v1/search-users/`,
-        { method: "POST", credentials: "include", body: JSON.stringify({ "query": searchQuery })}
+        {
+          method: "POST",
+          credentials: "include",
+          body: JSON.stringify({ query: searchQuery })
+        }
       );
       const result = await response.json();
       setUserList(result.users);
@@ -85,7 +89,9 @@ const SearchUserPage = () => {
       console.log(curr_friend);
       const friendUrl =
         "http://18.219.112.140/images/avatars/" + curr_friend.profile_pic_url;
-        console.log(curr_friend.email.substring(0, curr_friend.email.indexOf('@')));
+      console.log(
+        curr_friend.email.substring(0, curr_friend.email.indexOf("@"))
+      );
 
       resultJSX.push(
         <List.Item
@@ -105,46 +111,51 @@ const SearchUserPage = () => {
               float: "left",
               width: "60px",
               height: "60px",
-              marginRight:'2px'
+              marginRight: "2px"
             }}
           />
           <div className="userName">
-
-            <p style={{
-              fontFamily: "Exo 2",
-              fontWeight: "600",
-              marginLeft: "20px",
-              height: "75%",
-            }}>
-              {curr_friend.first_name + " " + curr_friend.last_name}
-              <p style={{
+            <p
+              style={{
                 fontFamily: "Exo 2",
-                fontWeight: "400",
+                fontWeight: "600",
                 marginLeft: "20px",
-                height: "75%",
-                fontSize: "18px",
-                color: "grey",
-                display: "inline-block"
-              }}>
-                {"( " + curr_friend.email.substring(0, curr_friend.email.indexOf('@')) + " )"}
+                height: "75%"
+              }}
+            >
+              {curr_friend.first_name + " " + curr_friend.last_name}
+              <p
+                style={{
+                  fontFamily: "Exo 2",
+                  fontWeight: "400",
+                  marginLeft: "20px",
+                  height: "75%",
+                  fontSize: "18px",
+                  color: "grey",
+                  display: "inline-block"
+                }}
+              >
+                {"( " +
+                  curr_friend.email.substring(
+                    0,
+                    curr_friend.email.indexOf("@")
+                  ) +
+                  " )"}
               </p>
             </p>
-
-
-
-
           </div>
-          <List.Content>
-
-
-          </List.Content>
-          <div className="status"><p style={{
-            fontFamily: "Exo 2",
-            fontWeight: "600",
-            height: "75%",
-
-          }} >{renderAvailable(curr_friend)}</p></div>
-
+          <List.Content></List.Content>
+          <div className="status">
+            <p
+              style={{
+                fontFamily: "Exo 2",
+                fontWeight: "600",
+                height: "75%"
+              }}
+            >
+              {renderAvailable(curr_friend)}
+            </p>
+          </div>
         </List.Item>
       );
       identifier++;
@@ -174,20 +185,18 @@ const SearchUserPage = () => {
     console.log(avatarUrl);
     return (
       <>
-        <div >
-          <Segment id="friend-info-back"
-
-            style={{  marginTop: "-20px", borderRadius: "8px" }}
+        <div>
+          <Segment
+            id="friend-info-back"
+            style={{ marginTop: "-20px", borderRadius: "8px" }}
           >
             <div className="topDiv">
-              {
-                /*
+              {/*
                 <h1>Profile Page</h1>
                 <div>
                   <h4>This is profile page.</h4>
                 </div>
-                */
-              }
+                */}
 
               <div className="profile-pic">
                 <img
@@ -252,17 +261,21 @@ const SearchUserPage = () => {
   };
 
   return (
-    <div >
+    <div>
       <NavigationBar />
-      <div style={{ whiteSpace: 'nowrap' }}>
+      <div style={{ whiteSpace: "nowrap" }}>
         <div id="friends-container">
           <div id="right-border">
-            <List id="friend-list" celled style={{
-              overflowY: "auto",
-              overflowX: "hidden",
-              maxHeight: "100vh",
-              minHeight: "100vh"
-            }}>
+            <List
+              id="friend-list"
+              celled
+              style={{
+                overflowY: "auto",
+                overflowX: "hidden",
+                maxHeight: "100vh",
+                minHeight: "100vh"
+              }}
+            >
               <div>
                 <h1 style={{ marginBottom: "20px" }}>User Search</h1>
               </div>
@@ -279,7 +292,7 @@ const SearchUserPage = () => {
           </div>
         </div>
       </div>
-      <div style={{ whiteSpace: 'nowrap' }}>
+      <div style={{ whiteSpace: "nowrap" }}>
         <div id="friend-info-container">
           <div>{renderSelectedUser()}</div>
         </div>

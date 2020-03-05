@@ -78,7 +78,7 @@ const SendRequests = () => {
         }}
         content="submit"
         onClick={async () => {
-          if (email === "" ) {
+          if (email === "") {
             setShowError(true);
             setErrorMessage("Email field is empty.");
           }
@@ -101,10 +101,10 @@ const SendRequests = () => {
           console.log(result);
           if (result.status === "success") {
             window.location.href = "/conversation";
-          }else {
+          } else {
             setShowError(true);
             setErrorMessage(
-              'Our record shows that this Purdue email is not valid.'
+              "Our record shows that this Purdue email is not valid."
             );
           }
         }}

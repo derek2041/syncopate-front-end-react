@@ -28,16 +28,10 @@ body {
   margin-top: 15px;
 }
 
-
 .status {
-
   padding-top: 22px;
   float: right;
   margin-left: 10px;
-
-
-
-
 }
 
 #friend-list {
@@ -47,11 +41,9 @@ body {
 #friends-container {
   width: 40%;
 
-
   height: 105vh;
   max-height: 105vh;
   float: left;
-
 
   /* box-shadow: 5px 7px 15px 0px grey; */
   box-shadow: 2px 0px 3px -1px grey;
@@ -76,9 +68,8 @@ body {
 
 .item.list-item-green {
   background: #ffebf9;
-
 }
-.item.list-item-green:hover{
+.item.list-item-green:hover {
   background: #e4f0f5;
 }
 
@@ -91,14 +82,10 @@ body {
   padding: 50px;
   float: right;
   margin: auto;
-
 }
-
 
 #friend-info-back {
-
 }
-
 
 .profile-pic {
   margin: 27px auto 0 auto;
@@ -132,13 +119,11 @@ h1 small:after {
   top: 3px;
 }
 
-
 button#upload-file-btn {
   position: fixed;
   bottom: 0;
   right: -5px;
 }
-
 
 .message-item-wrapper {
   clear: both;
@@ -149,15 +134,11 @@ button#upload-file-btn {
   width: 50%;
   border-radius: 4px;
   border: 1px solid white;
-
 }
-
-
 
 .message-item-wrapper.message-left {
   text-align: left;
 }
-
 
 .message-item-wrapper.message-right {
   text-align: right;

@@ -117,7 +117,7 @@ const NavigationBar = () => {
             handleMouseOver(null);
           }}
           onClick={() => {
-            window.location.href = "/notifications"
+            window.location.href = "/notifications";
           }}
         ></Menu.Item>
 

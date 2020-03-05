@@ -4,16 +4,19 @@ import { subscribeToRoom, sendMessageToRoom } from "./api";
 import queryString from "query-string";
 import { Button, Search } from "semantic-ui-react";
 
-
-
 const customBubble = props => {
-  console.log(props)
-  return <div className={`message-item-wrapper ${props.message.id === 0 ? "message-right" : "message-left"}`}>
-    { props.message.image && <img src={props.message.image} /> }
-    { props.message.message && <ChatBubble message={props.message} /> }
-  </div>
+  console.log(props);
+  return (
+    <div
+      className={`message-item-wrapper ${
+        props.message.id === 0 ? "message-right" : "message-left"
+      }`}
+    >
+      {props.message.image && <img src={props.message.image} />}
+      {props.message.message && <ChatBubble message={props.message} />}
+    </div>
+  );
 };
-
 
 const styles = {
   button: {
@@ -65,7 +68,11 @@ class Chat extends React.Component {
               return console.error(err);
             }
             if (newMessage.user !== this.state.curr_user) {
-              this.pushMessage(newMessage.user, newMessage.message, newMessage.image);
+              this.pushMessage(
+                newMessage.user,
+                newMessage.message,
+                newMessage.image
+              );
             }
           }, this.groupName);
         }
@@ -77,7 +84,13 @@ class Chat extends React.Component {
     // TODO Fix the authentication
     const response = await fetch(
       `http://18.219.112.140:8000/api/v1/get-messages/`,
-      { method: 'POST', credentials: 'include', body: JSON.stringify({ group_id: window.location.pathname.split("/").slice(-1)[0] }) }
+      {
+        method: "POST",
+        credentials: "include",
+        body: JSON.stringify({
+          group_id: window.location.pathname.split("/").slice(-1)[0]
+        })
+      }
     );
     const result = await response.json();
 
@@ -88,7 +101,7 @@ class Chat extends React.Component {
     console.log("Result: ", result);
     console.log("Response: ", response);
     console.log(result.is_authenticated);
-    
+
     return true;
     return result["is_authenticated"];
   }
@@ -115,7 +128,7 @@ class Chat extends React.Component {
       message,
       senderName: recipient == this.state.curr_user ? "You" : recipient
     });
-    newMessage.image = image
+    newMessage.image = image;
     prevState.messages.push(newMessage);
     this.setState(this.state);
   }
@@ -149,21 +162,22 @@ class Chat extends React.Component {
     this.setState({ searchQuery: result.email });
   };
 
-  sendAttachmentImage = async (e) => {
-    e.persist()
-    const toBase64 = file => new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = () => resolve(reader.result);
-      reader.onerror = error => reject(error);
-  });
-  
+  sendAttachmentImage = async e => {
+    e.persist();
+    const toBase64 = file =>
+      new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = error => reject(error);
+      });
+
     const file = e.target.files[0];
-    if (!file) return
+    if (!file) return;
     const result = await toBase64(file).catch(e => Error(e));
-    if(result instanceof Error) {
-        console.log('Error: ', result.message);
-        return;
+    if (result instanceof Error) {
+      console.log("Error: ", result.message);
+      return;
     }
 
     sendMessageToRoom({
@@ -173,8 +187,8 @@ class Chat extends React.Component {
     });
     this.pushMessage(this.state.curr_user, "", result);
 
-    e.target.value = ""
-  }
+    e.target.value = "";
+  };
 
   render() {
     const { isLoading, searchQuery, searchedUsers } = this.state;
@@ -215,11 +229,20 @@ class Chat extends React.Component {
               placeholder="Type a message..."
               className="message-input"
             />
-            <button type="button" onClick={e => document.querySelector("#message-attachment").click()} className="ui primary button" id="upload-file-btn">Upload file</button>
+            <button
+              type="button"
+              onClick={e =>
+                document.querySelector("#message-attachment").click()
+              }
+              className="ui primary button"
+              id="upload-file-btn"
+            >
+              Upload file
+            </button>
             <input
               type="file"
               id="message-attachment"
-              style={{display: "none"}}
+              style={{ display: "none" }}
               onChange={e => this.sendAttachmentImage(e)}
             />
           </form>

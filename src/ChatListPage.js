@@ -37,7 +37,7 @@ const ChatListPage = () => {
       );
       const result = await response.json();
       console.log(result);
-      result.sort((a,b) => (a.pinned === true && b.pinned === false)? -1 : 1);
+      result.sort((a, b) => (a.pinned === true && b.pinned === false ? -1 : 1));
 
       setGroupList(result);
     }
@@ -69,21 +69,19 @@ const ChatListPage = () => {
     }
   };
 
-
   const renderPinStatus = curr_group => {
-    if(curr_group.pinned === true){
+    if (curr_group.pinned === true) {
       return (
         <Button
           positive
-          content= "unpin"
+          content="unpin"
           style={{
             float: "left",
             width: "20%",
             marginTop: "100px",
             marginLeft: "90px",
             borderRadius: "50px",
-            fontSize: "18px",
-
+            fontSize: "18px"
           }}
           onClick={async () => {
             const settings = {
@@ -91,7 +89,7 @@ const ChatListPage = () => {
               headers: {
                 "Content-Type": "application/json"
               },
-              credentials: 'include',
+              credentials: "include",
               body: JSON.stringify({
                 group_id: curr_group.group__id,
                 pinned: false
@@ -102,25 +100,24 @@ const ChatListPage = () => {
               settings
             );
             const result = await response.json();
-            if(result.status === "success"){
+            if (result.status === "success") {
               handleRefresh();
               setCurrGroup(null);
             }
           }}
         ></Button>
       );
-    }else{
+    } else {
       return (
         <Button
-          content= "pin"
+          content="pin"
           style={{
             float: "left",
             width: "20%",
             marginTop: "100px",
             marginLeft: "90px",
             borderRadius: "50px",
-            fontSize: "18px",
-
+            fontSize: "18px"
           }}
           onClick={async () => {
             const settings = {
@@ -128,7 +125,7 @@ const ChatListPage = () => {
               headers: {
                 "Content-Type": "application/json"
               },
-              credentials: 'include',
+              credentials: "include",
               body: JSON.stringify({
                 group_id: curr_group.group__id,
                 pinned: true
@@ -139,7 +136,7 @@ const ChatListPage = () => {
               settings
             );
             const result = await response.json();
-            if(result.status === "success"){
+            if (result.status === "success") {
               handleRefresh();
               setCurrGroup(null);
             }
@@ -147,8 +144,7 @@ const ChatListPage = () => {
         ></Button>
       );
     }
-
-  }
+  };
 
   const renderList = () => {
     console.log("re-rendering group list!");
@@ -179,31 +175,31 @@ const ChatListPage = () => {
             }}
           >
             <div className="userName">
-              <p style={{
-                fontFamily: "Exo 2",
-                fontWeight: "600",
-                marginLeft: "20px",
-                height: "75%",
-              }}>
-                {curr_group.group__name}
-                <p style={{
+              <p
+                style={{
                   fontFamily: "Exo 2",
-                  fontWeight: "400",
+                  fontWeight: "600",
                   marginLeft: "20px",
-                  height: "75%",
-                  fontSize: "18px",
-                  color: "grey",
-                  display: "inline-block"
-                }}>
+                  height: "75%"
+                }}
+              >
+                {curr_group.group__name}
+                <p
+                  style={{
+                    fontFamily: "Exo 2",
+                    fontWeight: "400",
+                    marginLeft: "20px",
+                    height: "75%",
+                    fontSize: "18px",
+                    color: "grey",
+                    display: "inline-block"
+                  }}
+                >
                   {"( " + curr_group.group__description + " )"}
                 </p>
               </p>
             </div>
-            <List.Content>
-
-
-            </List.Content>
-
+            <List.Content></List.Content>
           </List.Item>
         );
       } else {
@@ -219,33 +215,33 @@ const ChatListPage = () => {
             }}
           >
             <div className="userName">
-              <p style={{
-                fontFamily: "Exo 2",
-                fontWeight: "600",
-                marginLeft: "20px",
-                height: "75%",
-              }}>
-                {curr_group.group__name}
-                <p style={{
+              <p
+                style={{
                   fontFamily: "Exo 2",
-                  fontWeight: "400",
+                  fontWeight: "600",
                   marginLeft: "20px",
-                  height: "75%",
-                  fontSize: "18px",
-                  color: "grey",
-                  display: "inline-block"
-                }}>
+                  height: "75%"
+                }}
+              >
+                {curr_group.group__name}
+                <p
+                  style={{
+                    fontFamily: "Exo 2",
+                    fontWeight: "400",
+                    marginLeft: "20px",
+                    height: "75%",
+                    fontSize: "18px",
+                    color: "grey",
+                    display: "inline-block"
+                  }}
+                >
                   {"( " + curr_group.group__description + " )"}
                 </p>
               </p>
             </div>
-            <List.Content>
-
-
-            </List.Content>
-
+            <List.Content></List.Content>
           </List.Item>
-        );  
+        );
       }
       identifier++;
     });
@@ -271,13 +267,12 @@ const ChatListPage = () => {
 
     return (
       <>
-        <div >
-          <Segment id="friend-info-back"
-
-            style={{  marginTop: "-20px", borderRadius: "8px" }}
+        <div>
+          <Segment
+            id="friend-info-back"
+            style={{ marginTop: "-20px", borderRadius: "8px" }}
           >
             <div className="topDiv">
-
               <p
                 style={{
                   fontSize: "40px",
@@ -313,9 +308,7 @@ const ChatListPage = () => {
                 }}
               ></Button>
 
-
               {renderPinStatus(currGroup)}
-
 
               <Button
                 negative
@@ -328,7 +321,6 @@ const ChatListPage = () => {
                   fontSize: "18px"
                 }}
                 content="Delete"
-
               ></Button>
             </div>
           </Segment>
@@ -338,37 +330,41 @@ const ChatListPage = () => {
   };
 
   return (
-    <div >
+    <div>
       <NavigationBar />
-      <div style={{ whiteSpace: 'nowrap' }}>
-      <div id="friends-container">
-        <div id="right-border">
-          <List id="friend-list" celled style={{
-            overflowY: "auto",
-            overflowX: "hidden",
-            maxHeight: "100vh",
-            minHeight: "100vh"
-          }}>
-            <div>
-              <h1 style={{ marginBottom: "20px" }}>Recent Chats</h1>
-            </div>
-            <List.Item style={{ height: "70px" }}>
-              <Input
-                icon="search"
-                className="search-input"
-                placeholder="Search by group name..."
-                id="search-bar"
-                onChange={handleSearchChange}
-              />
-            </List.Item>
-            {renderList()}
-          </List>
+      <div style={{ whiteSpace: "nowrap" }}>
+        <div id="friends-container">
+          <div id="right-border">
+            <List
+              id="friend-list"
+              celled
+              style={{
+                overflowY: "auto",
+                overflowX: "hidden",
+                maxHeight: "100vh",
+                minHeight: "100vh"
+              }}
+            >
+              <div>
+                <h1 style={{ marginBottom: "20px" }}>Recent Chats</h1>
+              </div>
+              <List.Item style={{ height: "70px" }}>
+                <Input
+                  icon="search"
+                  className="search-input"
+                  placeholder="Search by group name..."
+                  id="search-bar"
+                  onChange={handleSearchChange}
+                />
+              </List.Item>
+              {renderList()}
+            </List>
+          </div>
         </div>
       </div>
-      </div>
-      <div style={{ whiteSpace: 'nowrap' }}>
+      <div style={{ whiteSpace: "nowrap" }}>
         <div id="friend-info-container">
-          <div  >{renderSelectedGroup()}</div>
+          <div>{renderSelectedGroup()}</div>
         </div>
       </div>
     </div>

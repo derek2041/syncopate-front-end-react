@@ -5,7 +5,9 @@ import mainLogo from "./images/1x/Asset 22.png";
 const ChangePassword = () => {
   const [currentPassword, setCurrentPassword] = useState("");
   const [resetPassword, setResetPassword] = useState("");
-  const [resetPasswordConfirmation, setResetPasswordConfirmation] = useState("");
+  const [resetPasswordConfirmation, setResetPasswordConfirmation] = useState(
+    ""
+  );
   const [showError, setShowError] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
@@ -28,7 +30,8 @@ const ChangePassword = () => {
               position: "relative"
             }}
           >
-            Please enter your current password and newly desired password as directed.
+            Please enter your current password and newly desired password as
+            directed.
           </h4>
         </div>
       </div>
@@ -106,7 +109,11 @@ const ChangePassword = () => {
           }}
           content="Submit"
           onClick={async () => {
-            if (currentPassword === "" || resetPassword === "" || resetPasswordConfirmation === "") {
+            if (
+              currentPassword === "" ||
+              resetPassword === "" ||
+              resetPasswordConfirmation === ""
+            ) {
               setShowError(true);
               setErrorMessage("The password fields should not be empty.");
               return;
@@ -133,10 +140,12 @@ const ChangePassword = () => {
               headers: {
                 "Content-Type": "application/json"
               },
-              credentials: 'include',
-              body: JSON.stringify(
-                { old_password: currentPassword, new_password: resetPassword, new_password2: resetPasswordConfirmation }
-              )
+              credentials: "include",
+              body: JSON.stringify({
+                old_password: currentPassword,
+                new_password: resetPassword,
+                new_password2: resetPasswordConfirmation
+              })
             };
             const response = await fetch(
               `http://18.219.112.140:8000/api/v1/change-password/`,
@@ -147,7 +156,9 @@ const ChangePassword = () => {
             if (result.status === "success") {
               window.location.href = "/my-profile";
             } else {
-              setErrorMessage("The provided current password is incorrect. Please try again. If you have forgotten your password, you can reset it instead.");
+              setErrorMessage(
+                "The provided current password is incorrect. Please try again. If you have forgotten your password, you can reset it instead."
+              );
               setShowError(true);
               return;
             }
