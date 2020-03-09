@@ -84,82 +84,80 @@ const ChatListPage2 = () => {
     return;
   }
 
-  const renderPinStatus = curr_group => {
-    if (curr_group.pinned === true) {
-      return (
-        <Button
-          positive
-          content="unpin"
-          style={{
-            float: "left",
-            width: "20%",
-            marginTop: "100px",
-            marginLeft: "90px",
-            borderRadius: "50px",
-            fontSize: "18px"
-          }}
-          onClick={async () => {
-            const settings = {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json"
-              },
-              credentials: "include",
-              body: JSON.stringify({
-                group_id: curr_group.group__id,
-                pinned: false
-              })
-            };
-            const response = await fetch(
-              `http://18.219.112.140:8000/api/v1/pin-chat/`,
-              settings
-            );
-            const result = await response.json();
-            if (result.status === "success") {
-              handleRefresh();
-              setCurrGroup(null);
-            }
-          }}
-        ></Button>
-      );
-    } else {
-      return (
-        <Button
-          content="pin"
-          style={{
-            float: "left",
-            width: "20%",
-            marginTop: "100px",
-            marginLeft: "90px",
-            borderRadius: "50px",
-            fontSize: "18px"
-          }}
-          onClick={async () => {
-            const settings = {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json"
-              },
-              credentials: "include",
-              body: JSON.stringify({
-                group_id: curr_group.group__id,
-                pinned: true
-              })
-            };
-            const response = await fetch(
-              `http://18.219.112.140:8000/api/v1/pin-chat/`,
-              settings
-            );
-            const result = await response.json();
-            if (result.status === "success") {
-              handleRefresh();
-              setCurrGroup(null);
-            }
-          }}
-        ></Button>
-      );
+  const handleLeaveRequest = async () => {
+    const settings = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      credentials: "include",
+      body: JSON.stringify({
+        group_id: currGroup.group__id
+      })
+    };
+    const response = await fetch(
+      `http://18.219.112.140:8000/api/v1/leave-group/`,
+      settings
+    );
+
+    const result = await response.json();
+
+    if (result.status === "success") {
+      handleRefresh();
+      setCurrGroup(null);
     }
-  };
+  }
+
+  const handlePinnedChange = async (event, data) => {
+    var settings;
+
+    if (data.checked === true) {
+      settings = {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        credentials: "include",
+        body: JSON.stringify({
+          group_id: currGroup.group__id,
+          pinned: true
+        })
+      };
+    } else if (data.checked === false) {
+      settings = {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        credentials: "include",
+        body: JSON.stringify({
+          group_id: currGroup.group__id,
+          pinned: false
+        })
+      };
+    }
+
+    const response = await fetch(
+      `http://18.219.112.140:8000/api/v1/pin-chat/`,
+      settings
+    );
+
+    const result = await response.json();
+
+    if (result.status === "success") {
+      handleRefresh();
+      var clonedCurrGroup = JSON.parse(JSON.stringify(currGroup));
+
+      if (data.checked === true) {
+        clonedCurrGroup.pinned = true;
+        setCurrGroup(clonedCurrGroup);
+      } else if (data.checked === false) {
+        clonedCurrGroup.pinned = false;
+        setCurrGroup(clonedCurrGroup);
+      }
+      // setCurrGroup(null);
+    }
+  }
 
   const renderList = () => {
     console.log("re-rendering group list!");
@@ -263,84 +261,6 @@ const ChatListPage2 = () => {
     return resultJSX;
   };
 
-  /*
-  const renderSelectedGroup = () => {
-    if (currGroup === null) {
-      return (
-        <div>
-          <p
-            style={{
-              fontSize: "80px",
-              transform: "translateY(30vh)",
-              color: "grey"
-            }}
-          >
-            Select someone!
-          </p>
-        </div>
-      );
-    }
-
-    return (
-      <>
-        <div>
-          <Segment
-            id=""
-            style={{ marginTop: "-20px", borderRadius: "8px" }}
-          >
-            <div className="">
-              <p
-                style={{
-                  fontSize: "40px",
-                  marginBottom: "10px",
-                  marginTop: "2px"
-                }}
-              >
-                {`${currGroup.group__name}`}
-              </p>
-              <div>
-                <p style={{ fontSize: "grey", fontSize: "15px" }}>
-                  {currGroup.group__description}
-                </p>
-              </div>
-
-              <Button
-                primary
-                style={{
-                  float: "left",
-                  width: "20%",
-                  marginTop: "100px",
-                  marginLeft: "30px",
-                  borderRadius: "50px",
-                  fontSize: "18px"
-                }}
-                content="Chat"
-                onClick={async () => {
-                  window.location.href = "/chat/" + currGroup.group__id;
-                }}
-              ></Button>
-
-              {renderPinStatus(currGroup)}
-
-              <Button
-                negative
-                style={{
-                  float: "right",
-                  width: "20%",
-                  marginTop: "100px",
-                  marginRight: "30px",
-                  borderRadius: "50px",
-                  fontSize: "18px"
-                }}
-                content="Delete"
-              ></Button>
-            </div>
-          </Segment>
-        </div>
-      </>
-    );
-  };
-*/
   const renderChatInstance = () => {
     return null;
   };
@@ -369,18 +289,18 @@ const ChatListPage2 = () => {
       return (
         <div style={{ width: "100%", borderBottom: "0.1rem solid lightgray", height: "200px" }}>
           <div className="expand-wrapper" style={{ width: "100%", height: "50px" }} onClick={() => { setOptionsExpanded(false); }}>
-            <div className="accordion-text" style={{ width: "50%", height: "100%", float: "left", textAlign: "left", marginLeft: "10px", fontWeight: "700", color: "gray" }}>
+            <div className="accordion-text" style={{ width: "50%", height: "100%", float: "left", paddingTop: "14px", textAlign: "left", marginLeft: "10px", fontWeight: "700", color: "gray" }}>
               Options
             </div>
-            <Icon size="large" name="chevron down" style={{ float: "right", marginRight: "20px" }}/>
+            <Icon size="large" color="grey" name="chevron down" style={{ float: "right", paddingTop: "14px", marginRight: "20px" }}/>
           </div>
 
           <Modal size="tiny" trigger={
-              <div style={{ width: "100%", height: "50px" }}>
-                <div style={{ width: "50%", height: "100%", float: "left", textAlign: "left", marginLeft: "10px", fontWeight: "400", color: "black" }}>
+              <div className="expand-item" style={{ width: "100%", height: "50px" }}>
+                <div style={{ width: "50%", height: "100%", float: "left", textAlign: "left", paddingTop: "14px", marginLeft: "10px", fontWeight: "400", color: "black" }}>
                   Edit Group Name
                 </div>
-                <Icon size="large" name="heading" style={{ float: "right", marginRight: "20px" }}/>
+                <Icon size="large" name="heading" style={{ float: "right", paddingTop: "14px", marginRight: "20px" }}/>
               </div>
             }
             onClose={ () => { setEditGroupName(""); }}>
@@ -389,16 +309,16 @@ const ChatListPage2 = () => {
               <Input placeholder={currGroup.group__name} />
             </Modal.Content>
             <Modal.Actions>
-              <Button primary icon='checkmark' labelPosition='right' content='Save' onClick={ updateGroupName }/>
+              <Button primary icon='checkmark' labelPosition='right' content='Save Changes' onClick={ updateGroupName }/>
             </Modal.Actions>
           </Modal>
 
           <Modal size="tiny" trigger={
-              <div style={{ width: "100%", height: "50px" }}>
-                <div style={{ width: "50%", height: "100%", float: "left", textAlign: "left", marginLeft: "10px", fontWeight: "400", color: "black" }}>
+              <div className="expand-item" style={{ width: "100%", height: "50px" }}>
+                <div style={{ width: "50%", height: "100%", float: "left", textAlign: "left", paddingTop: "14px", marginLeft: "10px", fontWeight: "400", color: "black" }}>
                   Edit Group Description
                 </div>
-                <Icon size="large" name="i cursor" style={{ float: "right", marginRight: "20px" }}/>
+                <Icon size="large" name="i cursor" style={{ float: "right", paddingTop: "14px", marginRight: "20px" }}/>
               </div>
             }
             onClose={ () => { setEditGroupDescription(""); }}>
@@ -407,16 +327,16 @@ const ChatListPage2 = () => {
               <Input placeholder={currGroup.group__description} />
             </Modal.Content>
             <Modal.Actions>
-              <Button primary icon='checkmark' labelPosition='right' content='Save' onClick={ updateGroupDescription }/>
+              <Button primary icon='checkmark' labelPosition='right' content='Save Changes' onClick={ updateGroupDescription }/>
             </Modal.Actions>
           </Modal>
 
           <Modal size="small" trigger={
-              <div style={{ width: "100%", height: "50px" }}>
-                <div style={{ width: "50%", height: "100%", float: "left", textAlign: "left", marginLeft: "10px", fontWeight: "400", color: "black" }}>
+              <div className="expand-item" style={{ width: "100%", height: "50px" }}>
+                <div style={{ width: "50%", height: "100%", float: "left", textAlign: "left", paddingTop: "14px", marginLeft: "10px", fontWeight: "400", color: "black" }}>
                   Edit Group Photo
                 </div>
-                <Icon size="large" name="camera retro" style={{ float: "right", marginRight: "20px" }}/>
+                <Icon size="large" name="camera retro" style={{ float: "right", paddingTop: "14px", marginRight: "20px" }}/>
               </div>
             }
           onClose={ () => { setEditGroupPhoto(null); }}>
@@ -427,11 +347,11 @@ const ChatListPage2 = () => {
       );
     } else if (optionsExpanded === false) {
       return (
-        <div style={{ width: "100%", borderBottom: "0.1rem solid lightgray", height: "50px" }} onClick={() => { setOptionsExpanded(true); }}>
-          <div className="accordion-text" style={{ width: "50%", height: "100%", float: "left", textAlign: "left", marginLeft: "10px", fontWeight: "700", color: "gray" }}>
+        <div className="expand-wrapper" style={{ width: "100%", borderBottom: "0.1rem solid lightgray", height: "50px" }} onClick={() => { setOptionsExpanded(true); }}>
+          <div className="accordion-text" style={{ width: "50%", height: "100%", float: "left", textAlign: "left", paddingTop: "14px", marginLeft: "10px", fontWeight: "700", color: "gray" }}>
             Options
           </div>
-          <Icon size="large" name="chevron left" style={{ float: "right", marginRight: "20px" }}/>
+          <Icon size="large" color="grey" name="chevron left" style={{ float: "right", paddingTop: "14px", marginRight: "20px" }}/>
         </div>
       );
     }
@@ -444,30 +364,41 @@ const ChatListPage2 = () => {
 
     if (settingsExpanded === true) {
       return (
-        <div style={{ width: "100%", borderBottom: "0.1rem solid lightgray", height: "150px" }}>
+        <div style={{ width: "100%", borderBottom: "0.1rem solid lightgray", height: "178px" }}>
           <div className="expand-wrapper" style={{ width: "100%", height: "50px" }} onClick={() => { setSettingsExpanded(false); }}>
-            <div className="accordion-text" style={{ width: "50%", height: "100%", float: "left", textAlign: "left", marginLeft: "10px", fontWeight: "700", color: "gray" }}>
+            <div className="accordion-text" style={{ width: "50%", height: "100%", float: "left", textAlign: "left", paddingTop: "14px", marginLeft: "10px", fontWeight: "700", color: "gray" }}>
               Settings
             </div>
-            <Icon size="large" name="chevron down" style={{ float: "right", marginRight: "20px" }}/>
+            <Icon size="large" color="grey" name="chevron down" style={{ float: "right", paddingTop: "14px", marginRight: "20px" }}/>
+          </div>
+
+          <div style={{ width: "100%", height: "50px", marginBottom: "14px" }}>
+            <Checkbox checked={ currGroup.pinned === true } toggle label="Pin Conversation to Top" onChange={ handlePinnedChange } style={{ paddingTop: "14px" }}/>
           </div>
 
           <div style={{ width: "100%", height: "50px" }}>
-            <Checkbox toggle />
-          </div>
-
-          <div style={{ width: "100%", height: "50px" }}>
-            <Button negative />
+            <Modal size="tiny" trigger={
+                <Button negative content="Leave Group" style={{ paddingTop: "14px" }} />
+              }
+              onClose={ () => { setEditGroupDescription(""); }}>
+              <Modal.Header>{"Leave Group: " + currGroup.group__name + "?"}</Modal.Header>
+              <Modal.Content>
+                <p>Are you sure you want to leave the group {currGroup.group__name + "?"}</p>
+              </Modal.Content>
+              <Modal.Actions>
+                <Button primary icon='checkmark' labelPosition='right' content='Confirm' onClick={ handleLeaveRequest } />
+              </Modal.Actions>
+            </Modal>
           </div>
         </div>
       );
     } else if (settingsExpanded === false) {
       return (
-        <div style={{ width: "100%", borderBottom: "0.1rem solid lightgray", height: "50px" }} onClick={() => { setSettingsExpanded(true); }}>
-          <div className="accordion-text" style={{ width: "50%", height: "100%", float: "left", textAlign: "left", marginLeft: "10px", fontWeight: "700", color: "gray" }}>
+        <div className="expand-wrapper" style={{ width: "100%", borderBottom: "0.1rem solid lightgray", height: "50px" }} onClick={() => { setSettingsExpanded(true); }}>
+          <div className="accordion-text" style={{ width: "50%", height: "100%", float: "left", textAlign: "left", paddingTop: "14px", marginLeft: "10px", fontWeight: "700", color: "gray" }}>
             Settings
           </div>
-          <Icon size="large" name="chevron left" style={{ float: "right", marginRight: "20px" }}/>
+          <Icon size="large" color="grey" name="chevron left" style={{ float: "right", paddingTop: "14px", marginRight: "20px" }}/>
         </div>
       );
     }
