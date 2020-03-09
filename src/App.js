@@ -14,7 +14,7 @@ import ChangeUsername from "./ChangeUsername";
 import RequestList from "./RequestList";
 import SendRequests from "./SendRequests";
 import SearchFriendPage from "./SearchFriendPage";
-import ChatListPage from "./ChatListPage";
+import ChatListPage2 from "./ChatListPage2";
 import SearchUserPage from "./SearchUserPage";
 import ChangePassword from "./ChangePassword";
 
@@ -128,7 +128,7 @@ const App = () => {
             path="/my-chats"
             exact
             render={() => {
-              return <ChatListPage />;
+              return <ChatListPage2 />;
             }}
           />
 
