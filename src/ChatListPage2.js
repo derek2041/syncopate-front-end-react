@@ -11,7 +11,8 @@ import {
   Segment,
   List,
   Icon,
-  Loader
+  Loader,
+  Modal
 } from "semantic-ui-react";
 import "./ChatListPage2.css";
 import mainLogo from "./images/1x/Asset 23.png";
@@ -26,6 +27,12 @@ const ChatListPage2 = () => {
   const [currGroup, setCurrGroup] = useState(null);
   const [groupList, setGroupList] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
+  const [optionsExpanded, setOptionsExpanded] = useState(false);
+  const [settingsExpanded, setSettingsExpanded] = useState(false);
+  const [editGroupName, setEditGroupName] = useState("");
+  const [editGroupDescription, setEditGroupDescription] = useState("");
+  const [editGroupPhoto, setEditGroupPhoto] = useState(null);
+
   const [refreshCount, setRefreshCount] = useState(0);
   const handleRefresh = () => setRefreshCount(i => i + 1);
 
@@ -68,6 +75,14 @@ const ChatListPage2 = () => {
       return false;
     }
   };
+
+  const updateGroupName = async () => {
+    return;
+  }
+
+  const updateGroupDescription = async () => {
+    return;
+  }
 
   const renderPinStatus = curr_group => {
     if (curr_group.pinned === true) {
@@ -167,10 +182,10 @@ const ChatListPage2 = () => {
           <List.Item
             className=""
             key={identifier}
-            style={{ height: "fit-content", minHeight: '80px' }}
+            style={{ height: "fit-content", minHeight: "80px" }}
             onClick={() => {
               setCurrGroup(curr_group);
-	      window.history.pushState("", "", "/" + curr_group.group__id);
+              window.history.pushState("", "", "/" + curr_group.group__id);
               console.log("Selected Group ID: ", curr_group.group__id);
             }}
           >
@@ -207,10 +222,10 @@ const ChatListPage2 = () => {
           <List.Item
             className=""
             key={identifier}
-            style={{ height: "fit-content", minHeight: '80px' }}
+            style={{ height: "fit-content", minHeight: "80px" }}
             onClick={() => {
               setCurrGroup(curr_group);
-	      window.history.pushState("", "", "/" + curr_group.group__id);
+              window.history.pushState("", "", "/" + curr_group.group__id);
               console.log("Selected Group ID: ", curr_group.group__id);
             }}
           >
@@ -248,7 +263,7 @@ const ChatListPage2 = () => {
     return resultJSX;
   };
 
-/*
+  /*
   const renderSelectedGroup = () => {
     if (currGroup === null) {
       return (
@@ -328,25 +343,147 @@ const ChatListPage2 = () => {
 */
   const renderChatInstance = () => {
     return null;
-  }
+  };
 
   const renderGroupInfo = () => {
-    if (currGroup !== null) {
+    if (currGroup === null) {
+      return null;
+    }
+
+    return (
+      <div style={{ width: "100%", borderBottom: "0.1rem solid lightgray" }}>
+        <h1 style={{ paddingTop: "40px" }}>{currGroup.group__name}</h1>
+        <h1 style={{ paddingBottom: "40px", color: "gray" }}>
+          {currGroup.group__description}
+        </h1>
+      </div>
+    );
+  };
+
+  const renderGroupOptions = () => {
+    if (currGroup === null) {
+      return null;
+    }
+
+    if (optionsExpanded === true) {
       return (
-	<div style={{ width: '100%', borderBottom: '0.1rem solid lightgray' }}>
-          <h1 style={{ paddingTop: '30px' }}>{ currGroup.group__name }</h1>
-          <h1 style={{ paddingBottom: '30px', color: 'gray' }}>{ currGroup.group__description }</h1>
+        <div style={{ width: "100%", borderBottom: "0.1rem solid lightgray", height: "200px" }}>
+          <div className="expand-wrapper" style={{ width: "100%", height: "50px" }} onClick={() => { setOptionsExpanded(false); }}>
+            <div className="accordion-text" style={{ width: "50%", height: "100%", float: "left", textAlign: "left", marginLeft: "10px", fontWeight: "700", color: "gray" }}>
+              Options
+            </div>
+            <Icon size="large" name="chevron down" style={{ float: "right", marginRight: "20px" }}/>
+          </div>
+
+          <Modal size="tiny" trigger={
+              <div style={{ width: "100%", height: "50px" }}>
+                <div style={{ width: "50%", height: "100%", float: "left", textAlign: "left", marginLeft: "10px", fontWeight: "400", color: "black" }}>
+                  Edit Group Name
+                </div>
+                <Icon size="large" name="heading" style={{ float: "right", marginRight: "20px" }}/>
+              </div>
+            }
+            onClose={ () => { setEditGroupName(""); }}>
+            <Modal.Header>Change Group Name</Modal.Header>
+            <Modal.Content>
+              <Input placeholder={currGroup.group__name} />
+            </Modal.Content>
+            <Modal.Actions>
+              <Button primary icon='checkmark' labelPosition='right' content='Save' onClick={ updateGroupName }/>
+            </Modal.Actions>
+          </Modal>
+
+          <Modal size="tiny" trigger={
+              <div style={{ width: "100%", height: "50px" }}>
+                <div style={{ width: "50%", height: "100%", float: "left", textAlign: "left", marginLeft: "10px", fontWeight: "400", color: "black" }}>
+                  Edit Group Description
+                </div>
+                <Icon size="large" name="i cursor" style={{ float: "right", marginRight: "20px" }}/>
+              </div>
+            }
+            onClose={ () => { setEditGroupDescription(""); }}>
+            <Modal.Header>Change Group Description</Modal.Header>
+            <Modal.Content>
+              <Input placeholder={currGroup.group__description} />
+            </Modal.Content>
+            <Modal.Actions>
+              <Button primary icon='checkmark' labelPosition='right' content='Save' onClick={ updateGroupDescription }/>
+            </Modal.Actions>
+          </Modal>
+
+          <Modal size="small" trigger={
+              <div style={{ width: "100%", height: "50px" }}>
+                <div style={{ width: "50%", height: "100%", float: "left", textAlign: "left", marginLeft: "10px", fontWeight: "400", color: "black" }}>
+                  Edit Group Photo
+                </div>
+                <Icon size="large" name="camera retro" style={{ float: "right", marginRight: "20px" }}/>
+              </div>
+            }
+          onClose={ () => { setEditGroupPhoto(null); }}>
+            <Modal.Header>Change Group Photo</Modal.Header>
+          </Modal>
+
         </div>
       );
-    } else {
+    } else if (optionsExpanded === false) {
+      return (
+        <div style={{ width: "100%", borderBottom: "0.1rem solid lightgray", height: "50px" }} onClick={() => { setOptionsExpanded(true); }}>
+          <div className="accordion-text" style={{ width: "50%", height: "100%", float: "left", textAlign: "left", marginLeft: "10px", fontWeight: "700", color: "gray" }}>
+            Options
+          </div>
+          <Icon size="large" name="chevron left" style={{ float: "right", marginRight: "20px" }}/>
+        </div>
+      );
+    }
+  }
+
+  const renderGroupSettings = () => {
+    if (currGroup === null) {
       return null;
+    }
+
+    if (settingsExpanded === true) {
+      return (
+        <div style={{ width: "100%", borderBottom: "0.1rem solid lightgray", height: "150px" }}>
+          <div className="expand-wrapper" style={{ width: "100%", height: "50px" }} onClick={() => { setSettingsExpanded(false); }}>
+            <div className="accordion-text" style={{ width: "50%", height: "100%", float: "left", textAlign: "left", marginLeft: "10px", fontWeight: "700", color: "gray" }}>
+              Settings
+            </div>
+            <Icon size="large" name="chevron down" style={{ float: "right", marginRight: "20px" }}/>
+          </div>
+
+          <div style={{ width: "100%", height: "50px" }}>
+            <Checkbox toggle />
+          </div>
+
+          <div style={{ width: "100%", height: "50px" }}>
+            <Button negative />
+          </div>
+        </div>
+      );
+    } else if (settingsExpanded === false) {
+      return (
+        <div style={{ width: "100%", borderBottom: "0.1rem solid lightgray", height: "50px" }} onClick={() => { setSettingsExpanded(true); }}>
+          <div className="accordion-text" style={{ width: "50%", height: "100%", float: "left", textAlign: "left", marginLeft: "10px", fontWeight: "700", color: "gray" }}>
+            Settings
+          </div>
+          <Icon size="large" name="chevron left" style={{ float: "right", marginRight: "20px" }}/>
+        </div>
+      );
     }
   }
 
   return (
     <div>
       <NavigationBar />
-      <div style={{ width: '25%', float: 'left', height: '93vh', borderRight: '0.1rem solid lightgray' }}>
+      <div
+        style={{
+          width: "25%",
+          float: "left",
+          height: "93vh",
+          borderRight: "0.1rem solid lightgray"
+        }}
+      >
         <div id="">
           <div id="">
             <List
@@ -358,7 +495,9 @@ const ChatListPage2 = () => {
               }}
             >
               <div>
-                <h1 style={{ marginBottom: "20px", marginTop: "20px" }}>Recent Chats</h1>
+                <h1 style={{ marginBottom: "20px", marginTop: "20px" }}>
+                  Recent Chats
+                </h1>
               </div>
               <List.Item style={{ height: "70px" }}>
                 <Input
@@ -374,15 +513,17 @@ const ChatListPage2 = () => {
           </div>
         </div>
       </div>
-      <div style={{ width: '50%', float: 'left', height: '93vh' }}>
+      <div style={{ width: "50%", float: "left", height: "93vh" }}>
         <div id="">
           <div>{renderChatInstance()}</div>
         </div>
       </div>
-      <div style={{ width: '25%', float: 'right', height: '93vh' }}>
-        <div style={{ height: '100%', borderLeft: '0.1rem solid lightgray' }}>
-	  { renderGroupInfo() }
-	</div>
+      <div style={{ width: "25%", float: "right", height: "93vh" }}>
+        <div style={{ height: "100%", borderLeft: "0.1rem solid lightgray" }}>
+          {renderGroupInfo()}
+          {renderGroupOptions()}
+          {renderGroupSettings()}
+        </div>
       </div>
     </div>
   );
