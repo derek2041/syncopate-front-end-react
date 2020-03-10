@@ -13,6 +13,7 @@ import {
   Icon,
   Loader,
   Modal,
+  Dropdown,
   Transition
 } from "semantic-ui-react";
 import "./ChatListPage2.css";
@@ -27,12 +28,17 @@ const levenshtein = require("js-levenshtein");
 const ChatListPage2 = () => {
   const [currGroup, setCurrGroup] = useState(null);
   const [groupList, setGroupList] = useState(null);
+  const [friendList, setFriendList] = useState(null);
+  const [dropdownOptions, setDropdownOptions] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
+  const [friendSearchQuery, setFriendSearchQuery] = useState("");
   const [optionsExpanded, setOptionsExpanded] = useState(false);
   const [settingsExpanded, setSettingsExpanded] = useState(false);
+  const [peopleExpanded, setPeopleExpanded] = useState(false);
   const [editGroupName, setEditGroupName] = useState("");
   const [editGroupDescription, setEditGroupDescription] = useState("");
   const [editGroupPhoto, setEditGroupPhoto] = useState(null);
+  const [addingFriendList, setAddingFriendList] = useState([]);
   const [currModal, setCurrModal] = useState(null);
 
   const [refreshCount, setRefreshCount] = useState(0);
@@ -49,6 +55,19 @@ const ChatListPage2 = () => {
       result.sort((a, b) => (a.pinned === true && b.pinned === false ? -1 : 1));
 
       setGroupList(result);
+
+      const response2 = await fetch(
+        `http://18.219.112.140:8000/api/v1/load-friends/`,
+        { method: "POST", credentials: "include" }
+      );
+      const friendResult = await response2.json();
+      setFriendList(friendResult.friends);
+      var temp_options = []
+      friendResult.friends.forEach((curr_friend) => {
+        temp_options.push({text: curr_friend.first_name, value: curr_friend.first_name});
+      })
+      setDropdownOptions(temp_options);
+      console.log("wwww", friendResult.friends);
     }
 
     fetchList();
@@ -61,6 +80,27 @@ const ChatListPage2 = () => {
   const handleSearchChange = (event, data) => {
     setSearchQuery(data.value);
     console.log(data.value);
+  };
+
+  const handleFriendSearchChange = (event, data) => {
+    setFriendSearchQuery(data.value);
+    console.log("friendquery", data.value);
+  };
+
+
+  const compareWithFriendSearchQuery = checkName => {
+    if (friendSearchQuery === "") {
+      return true;
+    }
+
+    const search_query = friendSearchQuery.toLowerCase();
+    // logic to compare names
+    const name = search_query;
+    if (checkName.first_name.toLowerCase().startsWith(name)) {
+      return true;
+    } else {
+      return false;
+    }
   };
 
   const compareWithSearchQuery = checkName => {
@@ -174,7 +214,6 @@ const ChatListPage2 = () => {
       if (!compareWithSearchQuery(curr_group)) {
         return;
       }
-
       console.log(curr_group);
 
       if (curr_group.pinned === true) {
@@ -396,8 +435,7 @@ const ChatListPage2 = () => {
           <div style={{ width: "100%", height: "50px" }}>
             <Modal size="tiny" trigger={
                 <Button negative content="Leave Group" style={{ paddingTop: "14px" }} />
-              }
-              onClose={ () => { setEditGroupDescription(""); }}>
+              }>
               <Modal.Header>{"Leave Group: " + currGroup.group__name + "?"}</Modal.Header>
               <Modal.Content>
                 <p>Are you sure you want to leave the group {currGroup.group__name + "?"}</p>
@@ -420,6 +458,93 @@ const ChatListPage2 = () => {
       );
     }
   }
+
+
+  const renderGroupPeople = () => {
+    if(currGroup === null)  return null;
+    if(peopleExpanded === false){
+      return (
+        <div className="expand-wrapper" style={{ width: "100%", borderBottom: "0.1rem solid lightgray", height: "50px" }} onClick={() => { setPeopleExpanded(true); }}>
+          <div className="accordion-text" style={{ width: "50%", height: "100%", float: "left", textAlign: "left", paddingTop: "14px", marginLeft: "10px", fontWeight: "700", color: "gray" }}>
+            People
+          </div>
+          <Icon size="large" color="grey" name="chevron left" style={{ float: "right", paddingTop: "14px", marginRight: "20px" }}/>
+        </div>
+      );
+    }else{
+
+      return (
+        <div style={{ width: "100%", borderBottom: "0.1rem solid lightgray", height: "178px" }}>
+          <div className="expand-wrapper" style={{ width: "100%", height: "50px" }} onClick={() => { setPeopleExpanded(false); }}>
+            <div className="accordion-text" style={{ width: "50%", height: "100%", float: "left", textAlign: "left", paddingTop: "14px", marginLeft: "10px", fontWeight: "700", color: "gray" }}>
+              People
+            </div>
+            <Icon size="large" color="grey" name="chevron down" style={{ float: "right", paddingTop: "14px", marginRight: "20px" }}/>
+          </div>
+
+          <Modal size="tiny" trigger={
+              <div className="expand-item" style={{ width: "100%", height: "50px" }}>
+                <div style={{ width: "50%", height: "100%", float: "left", textAlign: "left", paddingTop: "14px", marginLeft: "10px", fontWeight: "400", color: "black" }}>
+                  Add people
+                </div>
+                <Icon size="large" name="plus" style={{ float: "right", paddingTop: "14px", marginRight: "20px" }}/>
+              </div>
+            }>
+            <Modal.Header>Add People</Modal.Header>
+            <Modal.Content>
+
+            <Dropdown
+              fluid
+              multiple
+              onChange={(event, data)=>{
+                setAddingFriendList(data.value);
+              }}
+              onSearchChange={handleFriendSearchChange}
+              options={dropdownOptions}
+              placeholder='Search Friends'
+              search
+              searchQuery={friendSearchQuery}
+              selection
+            />
+
+
+            </Modal.Content>
+            <Modal.Actions>
+              <Button primary icon='checkmark' labelPosition='right' content='Add'
+              onClick={async () => {
+                const settings = {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json"
+                  },
+                  credentials: "include",
+                  body: JSON.stringify({
+                    added_people: addingFriendList
+                  })
+                };
+                const response = await fetch(
+                  `http://18.219.112.140:8000/api/v1/add-to-group/`,
+                  settings
+                );
+                const result = await response.json();
+                if (result.status === "success") {
+
+                }
+              }}
+
+
+              />
+            </Modal.Actions>
+          </Modal>
+
+
+        </div>
+      );
+    }
+  }
+
+
+
 
   return (
     <div>
@@ -471,6 +596,7 @@ const ChatListPage2 = () => {
           {renderGroupInfo()}
           {renderGroupOptions()}
           {renderGroupSettings()}
+          {renderGroupPeople()}
         </div>
       </div>
     </div>
