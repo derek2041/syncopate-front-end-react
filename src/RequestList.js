@@ -16,12 +16,27 @@ import NavigationBar from "./NavigationBar";
 var faker = require("faker");
 
 const RequestList = () => {
+  const [validSession, setValidSession] = useState(null);
   const [requestList, setRequestList] = useState(null);
   const [instance, setInstance] = useState(0);
 
   const handleReset = () => setInstance(i => i + 1);
 
   useEffect(() => {
+    async function checkLoggedIn() {
+      const response = await fetch(
+        `http://18.219.112.140:8000/api/v1/check-logged-in/`,
+        { method: "GET", credentials: "include" }
+      );
+      const result = await response.json();
+
+      if (result.status !== "success") {
+        window.location.href = "/";
+      } else if (result.status === "success"){
+        setValidSession(true);
+      }
+    }
+
     async function buildList() {
       const response = await fetch(
         `http://18.219.112.140:8000/api/v1/requests/`,
@@ -40,6 +55,7 @@ const RequestList = () => {
       // });
     }
 
+    checkLoggedIn();
     buildList();
   }, [instance]);
 
@@ -161,6 +177,14 @@ const RequestList = () => {
     return resultJSX;
   };
 
+  if (validSession === null) {
+    return (
+      <div style={{ marginTop: "45vh" }}>
+        <Loader size="huge" active inline="centered"></Loader>
+      </div>
+    );
+  }
+  
   return (
     <div>
       <NavigationBar />
