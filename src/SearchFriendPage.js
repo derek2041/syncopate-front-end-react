@@ -23,6 +23,7 @@ var faker = require("faker");
 const levenshtein = require("js-levenshtein");
 
 const SearchFriendPage = () => {
+  const [validSession, setValidSession] = useState(null);
   const [currUser, setCurrUser] = useState(null);
   const [friendList, setFriendList] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
@@ -31,6 +32,20 @@ const SearchFriendPage = () => {
   const handleRefresh = () => setRefreshCount(i => i + 1);
 
   useEffect(() => {
+    async function checkLoggedIn() {
+      const response = await fetch(
+        `http://18.219.112.140:8000/api/v1/check-logged-in/`,
+        { method: "GET", credentials: "include" }
+      );
+      const result = await response.json();
+
+      if (result.status !== "success") {
+        window.location.href = "/";
+      } else if (result.status === "success"){
+        setValidSession(true);
+      }
+    }
+
     async function fetchList() {
       const response = await fetch(
         `http://18.219.112.140:8000/api/v1/load-friends/`,
@@ -40,6 +55,7 @@ const SearchFriendPage = () => {
       setFriendList(result.friends);
     }
 
+    checkLoggedIn();
     fetchList();
   }, [refreshCount]);
 
@@ -344,6 +360,14 @@ const SearchFriendPage = () => {
     );
   };
 
+  if (validSession === null) {
+    return (
+      <div style={{ marginTop: "45vh" }}>
+        <Loader size="huge" active inline="centered"></Loader>
+      </div>
+    );
+  }
+  
   return (
     <div>
       <NavigationBar />

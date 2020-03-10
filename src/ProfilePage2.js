@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { Button } from "semantic-ui-react";
+import { Button, Loader } from "semantic-ui-react";
 import "./ProfilePage2.css";
 import NavigationBar from "./NavigationBar";
 
 const ProfilePage2 = () => {
+  const [validSession, setValidSession] = useState(null);
   const [loadState, setLoadState] = useState(null);
   const [loadedData, setLoadedData] = useState({});
   const [avatarURL, setAvatarURL] = useState(null);
@@ -32,6 +33,20 @@ const ProfilePage2 = () => {
   };
 
   useEffect(() => {
+    async function checkLoggedIn() {
+      const response = await fetch(
+        `http://18.219.112.140:8000/api/v1/check-logged-in/`,
+        { method: "GET", credentials: "include" }
+      );
+      const result = await response.json();
+
+      if (result.status !== "success") {
+        window.location.href = "/";
+      } else if (result.status === "success"){
+        setValidSession(true);
+      }
+    }
+
     async function identifyUser() {
       const response = await fetch(
         `http://18.219.112.140:8000/api/v1/identify/`,
@@ -56,6 +71,7 @@ const ProfilePage2 = () => {
       console.log("fetchAvatar=", result);
     }
 
+    checkLoggedIn();
     identifyUser();
     fetchAvatar();
   }, [resetCount]);
@@ -125,11 +141,21 @@ const ProfilePage2 = () => {
     }
   };
 
+  if (validSession === null) {
+    return (
+      <div style={{ marginTop: "45vh" }}>
+        <Loader size="huge" active inline="centered"></Loader>
+      </div>
+    );
+  }
+
   if (loadState === null) {
     return (
       <>
         <NavigationBar />
-        <h1>Loading...</h1>
+        <div style={{ marginTop: "45vh" }}>
+          <Loader size="huge" active inline="centered"></Loader>
+        </div>
       </>
     );
   } else if (loadState === true) {

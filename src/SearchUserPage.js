@@ -23,6 +23,7 @@ var faker = require("faker");
 const levenshtein = require("js-levenshtein");
 
 const SearchUserPage = () => {
+  const [validSession, setValidSession] = useState(null);
   const [currUser, setCurrUser] = useState(null);
   const [userList, setUserList] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
@@ -31,6 +32,20 @@ const SearchUserPage = () => {
   const handleRefresh = () => setRefreshCount(i => i + 1);
 
   useEffect(() => {
+    async function checkLoggedIn() {
+      const response = await fetch(
+        `http://18.219.112.140:8000/api/v1/check-logged-in/`,
+        { method: "GET", credentials: "include" }
+      );
+      const result = await response.json();
+
+      if (result.status !== "success") {
+        window.location.href = "/";
+      } else if (result.status === "success"){
+        setValidSession(true);
+      }
+    }
+
     async function fetchList() {
       if (searchQuery === "") {
         setUserList([]);
@@ -49,6 +64,7 @@ const SearchUserPage = () => {
       setUserList(result.users);
     }
 
+    checkLoggedIn();
     fetchList();
   }, [searchQuery, refreshCount]);
 
@@ -259,6 +275,14 @@ const SearchUserPage = () => {
       </>
     );
   };
+
+  if (validSession === null) {
+    return (
+      <div style={{ marginTop: "45vh" }}>
+        <Loader size="huge" active inline="centered"></Loader>
+      </div>
+    );
+  }
 
   return (
     <div>

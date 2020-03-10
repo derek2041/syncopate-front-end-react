@@ -19,22 +19,6 @@ const NavigationBar = () => {
     setMouseOver(setting);
   };
 
-  useEffect(() => {
-    async function checkLoggedIn() {
-      const response = await fetch(
-        `http://18.219.112.140:8000/api/v1/check-logged-in/`,
-        { method: "GET", credentials: "include" }
-      );
-      const result = await response.json();
-
-      if (result.status !== "success") {
-        window.location.href = "/";
-      }
-    }
-
-    checkLoggedIn();
-  }, []);
-
   return (
     <Menu
       borderless

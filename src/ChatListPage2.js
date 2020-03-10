@@ -26,6 +26,7 @@ var faker = require("faker");
 const levenshtein = require("js-levenshtein");
 
 const ChatListPage2 = () => {
+  const [validSession, setValidSession] = useState(null);
   const [currGroup, setCurrGroup] = useState(null);
   const [groupList, setGroupList] = useState(null);
   const [friendList, setFriendList] = useState(null);
@@ -45,6 +46,20 @@ const ChatListPage2 = () => {
   const handleRefresh = () => setRefreshCount(i => i + 1);
 
   useEffect(() => {
+    async function checkLoggedIn() {
+      const response = await fetch(
+        `http://18.219.112.140:8000/api/v1/check-logged-in/`,
+        { method: "GET", credentials: "include" }
+      );
+      const result = await response.json();
+
+      if (result.status !== "success") {
+        window.location.href = "/";
+      } else if (result.status === "success"){
+        setValidSession(true);
+      }
+    }
+
     async function fetchList() {
       const response = await fetch(
         `http://18.219.112.140:8000/api/v1/get-user-group/`,
@@ -73,7 +88,9 @@ const ChatListPage2 = () => {
       console.log("wwww", friendResult.friends);
     }
 
+    checkLoggedIn();
     fetchList();
+
   }, [refreshCount]);
 
   const leaveGroup = () => {
@@ -922,6 +939,14 @@ const ChatListPage2 = () => {
       );
     }
   };
+
+  if (validSession === null) {
+    return (
+      <div style={{ marginTop: "45vh" }}>
+        <Loader size="huge" active inline="centered"></Loader>
+      </div>
+    );
+  }
 
   return (
     <div>
