@@ -943,7 +943,7 @@ const ChatListPage2 = () => {
   if (validSession === null) {
     return (
       <div>
-        <NavigationBar />
+
         <div style={{ marginTop: "40vh" }}>
           <Loader size="huge" active inline="centered"></Loader>
         </div>
@@ -953,7 +953,7 @@ const ChatListPage2 = () => {
 
   return (
     <div>
-      <NavigationBar />
+
       <div
         style={{
           width: "25%",
@@ -981,7 +981,7 @@ const ChatListPage2 = () => {
                 <Input
                   icon="search"
                   className="search-input"
-                  placeholder="Search by group name..."
+                  placeholder="Search..."
                   id="search-bar"
                   onChange={handleSearchChange}
                 />

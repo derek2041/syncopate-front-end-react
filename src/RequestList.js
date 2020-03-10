@@ -180,7 +180,7 @@ const RequestList = () => {
   if (validSession === null) {
     return (
       <div>
-        <NavigationBar />
+
         <div style={{ marginTop: "40vh" }}>
           <Loader size="huge" active inline="centered"></Loader>
         </div>
@@ -190,7 +190,7 @@ const RequestList = () => {
 
   return (
     <div>
-      <NavigationBar />
+
       <div className="container">
         <div className="notification-container">
           <div className="notification-list-header table-content">
