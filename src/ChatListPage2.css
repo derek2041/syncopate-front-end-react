@@ -5,3 +5,7 @@
 .expand-item:hover {
   background: #e4f0f5;
 }
+
+.item.select-group:hover {
+  background: #e4f0f5;
+}
