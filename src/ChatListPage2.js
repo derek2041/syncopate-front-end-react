@@ -62,10 +62,13 @@ const ChatListPage2 = () => {
       );
       const friendResult = await response2.json();
       setFriendList(friendResult.friends);
-      var temp_options = []
-      friendResult.friends.forEach((curr_friend) => {
-        temp_options.push({text: curr_friend.first_name, value: curr_friend.first_name});
-      })
+      var temp_options = [];
+      friendResult.friends.forEach(curr_friend => {
+        temp_options.push({
+          text: curr_friend.first_name,
+          value: curr_friend.first_name
+        });
+      });
       setDropdownOptions(temp_options);
       console.log("wwww", friendResult.friends);
     }
@@ -104,11 +107,11 @@ const ChatListPage2 = () => {
 
   const updateGroupName = async () => {
     return;
-  }
+  };
 
   const updateGroupDescription = async () => {
     return;
-  }
+  };
 
   const handleLeaveRequest = async () => {
     const settings = {
@@ -132,7 +135,7 @@ const ChatListPage2 = () => {
       handleRefresh();
       setCurrGroup(null);
     }
-  }
+  };
 
   const handlePinnedChange = async (event, data) => {
     var settings;
@@ -183,7 +186,7 @@ const ChatListPage2 = () => {
       }
       // setCurrGroup(null);
     }
-  }
+  };
 
   const renderList = () => {
     console.log("re-rendering group list!");
@@ -312,90 +315,274 @@ const ChatListPage2 = () => {
 
     if (optionsExpanded === true) {
       return (
-        <div style={{ width: "100%", borderBottom: "0.1rem solid lightgray", height: "200px" }}>
-          <div className="expand-wrapper" style={{ width: "100%", height: "50px" }} onClick={() => { setOptionsExpanded(false); }}>
-            <div className="accordion-text" style={{ width: "50%", height: "100%", float: "left", paddingTop: "14px", textAlign: "left", marginLeft: "10px", fontWeight: "700", color: "gray" }}>
+        <div
+          style={{
+            width: "100%",
+            borderBottom: "0.1rem solid lightgray",
+            height: "200px"
+          }}
+        >
+          <div
+            className="expand-wrapper"
+            style={{ width: "100%", height: "50px" }}
+            onClick={() => {
+              setOptionsExpanded(false);
+            }}
+          >
+            <div
+              className="accordion-text"
+              style={{
+                width: "50%",
+                height: "100%",
+                float: "left",
+                paddingTop: "14px",
+                textAlign: "left",
+                marginLeft: "10px",
+                fontWeight: "700",
+                color: "gray"
+              }}
+            >
               Options
             </div>
-            <Icon size="large" color="grey" name="chevron down" style={{ float: "right", paddingTop: "14px", marginRight: "20px" }}/>
+            <Icon
+              size="large"
+              color="grey"
+              name="chevron down"
+              style={{
+                float: "right",
+                paddingTop: "14px",
+                marginRight: "20px"
+              }}
+            />
           </div>
 
-          <div onClick={() => { setCurrModal("change-group-name"); }}>
-            <Transition animation="fade" duration={500} visible={optionsExpanded === true} transitionOnMount={true} unmountOnHide={true}>
-              <div className="expand-item" style={{ width: "100%", height: "50px" }}>
-                <div style={{ width: "50%", height: "100%", float: "left", textAlign: "left", paddingTop: "14px", marginLeft: "10px", fontWeight: "400", color: "black" }}>
+          <div
+            onClick={() => {
+              setCurrModal("change-group-name");
+            }}
+          >
+            <Transition
+              animation="fade"
+              duration={500}
+              visible={optionsExpanded === true}
+              transitionOnMount={true}
+              unmountOnHide={true}
+            >
+              <div
+                className="expand-item"
+                style={{ width: "100%", height: "50px" }}
+              >
+                <div
+                  style={{
+                    width: "50%",
+                    height: "100%",
+                    float: "left",
+                    textAlign: "left",
+                    paddingTop: "14px",
+                    marginLeft: "10px",
+                    fontWeight: "400",
+                    color: "black"
+                  }}
+                >
                   Edit Group Name
                 </div>
-                <Icon size="large" name="heading" style={{ float: "right", paddingTop: "14px", marginRight: "20px" }}/>
+                <Icon
+                  size="large"
+                  name="heading"
+                  style={{
+                    float: "right",
+                    paddingTop: "14px",
+                    marginRight: "20px"
+                  }}
+                />
               </div>
             </Transition>
           </div>
 
-          <Modal size="tiny" open={currModal === "change-group-name"}
-            onClose={ () => { setEditGroupName(""); setCurrModal(null); }}
+          <Modal
+            size="tiny"
+            open={currModal === "change-group-name"}
+            onClose={() => {
+              setEditGroupName("");
+              setCurrModal(null);
+            }}
           >
             <Modal.Header>Change Group Name</Modal.Header>
             <Modal.Content>
               <Input placeholder={currGroup.group__name} />
             </Modal.Content>
             <Modal.Actions>
-              <Button primary icon='checkmark' labelPosition='right' content='Save Changes' onClick={ updateGroupName }/>
+              <Button
+                primary
+                icon="checkmark"
+                labelPosition="right"
+                content="Save Changes"
+                onClick={updateGroupName}
+              />
             </Modal.Actions>
           </Modal>
 
-          <div onClick={() => { console.log("setting curr modal"); setCurrModal("change-group-description"); }}>
-            <Transition animation="fade" duration={500} visible={optionsExpanded === true} transitionOnMount={true} unmountOnHide={true}>
-              <div className="expand-item" style={{ width: "100%", height: "50px" }}>
-                <div style={{ width: "50%", height: "100%", float: "left", textAlign: "left", paddingTop: "14px", marginLeft: "10px", fontWeight: "400", color: "black" }}>
+          <div
+            onClick={() => {
+              console.log("setting curr modal");
+              setCurrModal("change-group-description");
+            }}
+          >
+            <Transition
+              animation="fade"
+              duration={500}
+              visible={optionsExpanded === true}
+              transitionOnMount={true}
+              unmountOnHide={true}
+            >
+              <div
+                className="expand-item"
+                style={{ width: "100%", height: "50px" }}
+              >
+                <div
+                  style={{
+                    width: "50%",
+                    height: "100%",
+                    float: "left",
+                    textAlign: "left",
+                    paddingTop: "14px",
+                    marginLeft: "10px",
+                    fontWeight: "400",
+                    color: "black"
+                  }}
+                >
                   Edit Group Description
                 </div>
-                <Icon size="large" name="i cursor" style={{ float: "right", paddingTop: "14px", marginRight: "20px" }}/>
+                <Icon
+                  size="large"
+                  name="i cursor"
+                  style={{
+                    float: "right",
+                    paddingTop: "14px",
+                    marginRight: "20px"
+                  }}
+                />
               </div>
             </Transition>
           </div>
 
-          <Modal size="tiny" open={currModal === "change-group-description"}
-            onClose={ () => { setEditGroupDescription(""); setCurrModal(null); }}
+          <Modal
+            size="tiny"
+            open={currModal === "change-group-description"}
+            onClose={() => {
+              setEditGroupDescription("");
+              setCurrModal(null);
+            }}
           >
             <Modal.Header>Change Group Description</Modal.Header>
             <Modal.Content>
               <Input placeholder={currGroup.group__description} />
             </Modal.Content>
             <Modal.Actions>
-              <Button primary icon='checkmark' labelPosition='right' content='Save Changes' onClick={ updateGroupDescription }/>
+              <Button
+                primary
+                icon="checkmark"
+                labelPosition="right"
+                content="Save Changes"
+                onClick={updateGroupDescription}
+              />
             </Modal.Actions>
           </Modal>
 
-          <div onClick={() => { setCurrModal("change-group-photo"); }}>
-            <Transition animation="fade" duration={500} visible={optionsExpanded === true} transitionOnMount={true} unmountOnHide={true}>
-              <div className="expand-item" style={{ width: "100%", height: "50px" }}>
-                <div style={{ width: "50%", height: "100%", float: "left", textAlign: "left", paddingTop: "14px", marginLeft: "10px", fontWeight: "400", color: "black" }}>
+          <div
+            onClick={() => {
+              setCurrModal("change-group-photo");
+            }}
+          >
+            <Transition
+              animation="fade"
+              duration={500}
+              visible={optionsExpanded === true}
+              transitionOnMount={true}
+              unmountOnHide={true}
+            >
+              <div
+                className="expand-item"
+                style={{ width: "100%", height: "50px" }}
+              >
+                <div
+                  style={{
+                    width: "50%",
+                    height: "100%",
+                    float: "left",
+                    textAlign: "left",
+                    paddingTop: "14px",
+                    marginLeft: "10px",
+                    fontWeight: "400",
+                    color: "black"
+                  }}
+                >
                   Edit Group Photo
                 </div>
-                <Icon size="large" color="blue" name="camera retro" style={{ float: "right", paddingTop: "14px", marginRight: "20px" }}/>
+                <Icon
+                  size="large"
+                  color="blue"
+                  name="camera retro"
+                  style={{
+                    float: "right",
+                    paddingTop: "14px",
+                    marginRight: "20px"
+                  }}
+                />
               </div>
             </Transition>
           </div>
 
-          <Modal size="small" open={currModal === "change-group-photo"}
-            onClose={() => { setEditGroupPhoto(null); setCurrModal(null); }}
+          <Modal
+            size="small"
+            open={currModal === "change-group-photo"}
+            onClose={() => {
+              setEditGroupPhoto(null);
+              setCurrModal(null);
+            }}
           >
             <Modal.Header>Change Group Photo</Modal.Header>
           </Modal>
-
         </div>
       );
     } else if (optionsExpanded === false) {
       return (
-        <div className="expand-wrapper" style={{ width: "100%", borderBottom: "0.1rem solid lightgray", height: "50px" }} onClick={() => { setOptionsExpanded(true); }}>
-          <div className="accordion-text" style={{ width: "50%", height: "100%", float: "left", textAlign: "left", paddingTop: "14px", marginLeft: "10px", fontWeight: "700", color: "gray" }}>
+        <div
+          className="expand-wrapper"
+          style={{
+            width: "100%",
+            borderBottom: "0.1rem solid lightgray",
+            height: "50px"
+          }}
+          onClick={() => {
+            setOptionsExpanded(true);
+          }}
+        >
+          <div
+            className="accordion-text"
+            style={{
+              width: "50%",
+              height: "100%",
+              float: "left",
+              textAlign: "left",
+              paddingTop: "14px",
+              marginLeft: "10px",
+              fontWeight: "700",
+              color: "gray"
+            }}
+          >
             Options
           </div>
-          <Icon size="large" color="grey" name="chevron left" style={{ float: "right", paddingTop: "14px", marginRight: "20px" }}/>
+          <Icon
+            size="large"
+            color="grey"
+            name="chevron left"
+            style={{ float: "right", paddingTop: "14px", marginRight: "20px" }}
+          />
         </div>
       );
     }
-  }
+  };
 
   const renderGroupSettings = () => {
     if (currGroup === null) {
@@ -404,147 +591,337 @@ const ChatListPage2 = () => {
 
     if (settingsExpanded === true) {
       return (
-        <div style={{ width: "100%", borderBottom: "0.1rem solid lightgray", height: "178px" }}>
-          <div className="expand-wrapper" style={{ width: "100%", height: "50px" }} onClick={() => { setSettingsExpanded(false); }}>
-            <div className="accordion-text" style={{ width: "50%", height: "100%", float: "left", textAlign: "left", paddingTop: "14px", marginLeft: "10px", fontWeight: "700", color: "gray" }}>
+        <div
+          style={{
+            width: "100%",
+            borderBottom: "0.1rem solid lightgray",
+            height: "178px"
+          }}
+        >
+          <div
+            className="expand-wrapper"
+            style={{ width: "100%", height: "50px" }}
+            onClick={() => {
+              setSettingsExpanded(false);
+            }}
+          >
+            <div
+              className="accordion-text"
+              style={{
+                width: "50%",
+                height: "100%",
+                float: "left",
+                textAlign: "left",
+                paddingTop: "14px",
+                marginLeft: "10px",
+                fontWeight: "700",
+                color: "gray"
+              }}
+            >
               Settings
             </div>
-            <Icon size="large" color="grey" name="chevron down" style={{ float: "right", paddingTop: "14px", marginRight: "20px" }}/>
+            <Icon
+              size="large"
+              color="grey"
+              name="chevron down"
+              style={{
+                float: "right",
+                paddingTop: "14px",
+                marginRight: "20px"
+              }}
+            />
           </div>
 
           <div style={{ width: "100%", height: "50px", marginBottom: "14px" }}>
-            <Transition animation="fade" duration={500} visible={settingsExpanded === true} transitionOnMount={true} unmountOnHide={true}>
+            <Transition
+              animation="fade"
+              duration={500}
+              visible={settingsExpanded === true}
+              transitionOnMount={true}
+              unmountOnHide={true}
+            >
               <div style={{ width: "100%", height: "50px" }}>
-                <Checkbox checked={ currGroup.pinned === true } toggle label="Pin Conversation to Top" onChange={ handlePinnedChange } style={{ paddingTop: "14px" }}/>
+                <Checkbox
+                  checked={currGroup.pinned === true}
+                  toggle
+                  label="Pin Conversation to Top"
+                  onChange={handlePinnedChange}
+                  style={{ paddingTop: "14px" }}
+                />
               </div>
             </Transition>
           </div>
 
           <div style={{ width: "100%", height: "50px" }}>
-            <Transition animation="fade" duration={500} visible={settingsExpanded === true} transitionOnMount={true} unmountOnHide={true}>
+            <Transition
+              animation="fade"
+              duration={500}
+              visible={settingsExpanded === true}
+              transitionOnMount={true}
+              unmountOnHide={true}
+            >
               <div style={{ width: "100%", height: "50px" }}>
-                <Button negative content="Leave Group" style={{ paddingTop: "14px" }} onClick={() => { setCurrModal("leave-group")}} />
+                <Button
+                  negative
+                  content="Leave Group"
+                  style={{ paddingTop: "14px" }}
+                  onClick={() => {
+                    setCurrModal("leave-group");
+                  }}
+                />
               </div>
             </Transition>
           </div>
 
-          <Modal size="tiny" open={currModal === "leave-group"}
-            onClose={() => { setCurrModal(null); }}
+          <Modal
+            size="tiny"
+            open={currModal === "leave-group"}
+            onClose={() => {
+              setCurrModal(null);
+            }}
           >
-            <Modal.Header>{"Leave Group: " + currGroup.group__name + "?"}</Modal.Header>
+            <Modal.Header>
+              {"Leave Group: " + currGroup.group__name + "?"}
+            </Modal.Header>
             <Modal.Content>
-              <p>Are you sure you want to leave the group {currGroup.group__name + "?"}</p>
+              <p>
+                Are you sure you want to leave the group{" "}
+                {currGroup.group__name + "?"}
+              </p>
             </Modal.Content>
             <Modal.Actions>
-              <Button primary icon='checkmark' labelPosition='right' content='Confirm' onClick={ handleLeaveRequest } />
+              <Button
+                primary
+                icon="checkmark"
+                labelPosition="right"
+                content="Confirm"
+                onClick={handleLeaveRequest}
+              />
             </Modal.Actions>
           </Modal>
         </div>
       );
     } else if (settingsExpanded === false) {
       return (
-        <div className="expand-wrapper" style={{ width: "100%", borderBottom: "0.1rem solid lightgray", height: "50px" }} onClick={() => { setSettingsExpanded(true); }}>
-          <div className="accordion-text" style={{ width: "50%", height: "100%", float: "left", textAlign: "left", paddingTop: "14px", marginLeft: "10px", fontWeight: "700", color: "gray" }}>
+        <div
+          className="expand-wrapper"
+          style={{
+            width: "100%",
+            borderBottom: "0.1rem solid lightgray",
+            height: "50px"
+          }}
+          onClick={() => {
+            setSettingsExpanded(true);
+          }}
+        >
+          <div
+            className="accordion-text"
+            style={{
+              width: "50%",
+              height: "100%",
+              float: "left",
+              textAlign: "left",
+              paddingTop: "14px",
+              marginLeft: "10px",
+              fontWeight: "700",
+              color: "gray"
+            }}
+          >
             Settings
           </div>
-          <Icon size="large" color="grey" name="chevron left" style={{ float: "right", paddingTop: "14px", marginRight: "20px" }}/>
+          <Icon
+            size="large"
+            color="grey"
+            name="chevron left"
+            style={{ float: "right", paddingTop: "14px", marginRight: "20px" }}
+          />
         </div>
       );
     }
-  }
-
+  };
 
   const renderGroupPeople = () => {
-    if(currGroup === null)  return null;
-    if(peopleExpanded === false){
+    if (currGroup === null) return null;
+    if (peopleExpanded === false) {
       return (
-        <div className="expand-wrapper" style={{ width: "100%", borderBottom: "0.1rem solid lightgray", height: "50px" }} onClick={() => { setPeopleExpanded(true); }}>
-          <div className="accordion-text" style={{ width: "50%", height: "100%", float: "left", textAlign: "left", paddingTop: "14px", marginLeft: "10px", fontWeight: "700", color: "gray" }}>
+        <div
+          className="expand-wrapper"
+          style={{
+            width: "100%",
+            borderBottom: "0.1rem solid lightgray",
+            height: "50px"
+          }}
+          onClick={() => {
+            setPeopleExpanded(true);
+          }}
+        >
+          <div
+            className="accordion-text"
+            style={{
+              width: "50%",
+              height: "100%",
+              float: "left",
+              textAlign: "left",
+              paddingTop: "14px",
+              marginLeft: "10px",
+              fontWeight: "700",
+              color: "gray"
+            }}
+          >
             People
           </div>
-          <Icon size="large" color="grey" name="chevron left" style={{ float: "right", paddingTop: "14px", marginRight: "20px" }}/>
+          <Icon
+            size="large"
+            color="grey"
+            name="chevron left"
+            style={{ float: "right", paddingTop: "14px", marginRight: "20px" }}
+          />
         </div>
       );
-    }else{
-
+    } else {
       return (
-        <div style={{ width: "100%", borderBottom: "0.1rem solid lightgray", height: "min-content" }}>
-          <div className="expand-wrapper" style={{ width: "100%", height: "50px" }} onClick={() => { setPeopleExpanded(false); }}>
-            <div className="accordion-text" style={{ width: "50%", height: "100%", float: "left", textAlign: "left", paddingTop: "14px", marginLeft: "10px", fontWeight: "700", color: "gray" }}>
+        <div
+          style={{
+            width: "100%",
+            borderBottom: "0.1rem solid lightgray",
+            height: "min-content"
+          }}
+        >
+          <div
+            className="expand-wrapper"
+            style={{ width: "100%", height: "50px" }}
+            onClick={() => {
+              setPeopleExpanded(false);
+            }}
+          >
+            <div
+              className="accordion-text"
+              style={{
+                width: "50%",
+                height: "100%",
+                float: "left",
+                textAlign: "left",
+                paddingTop: "14px",
+                marginLeft: "10px",
+                fontWeight: "700",
+                color: "gray"
+              }}
+            >
               People
             </div>
-            <Icon size="large" color="grey" name="chevron down" style={{ float: "right", paddingTop: "14px", marginRight: "20px" }}/>
+            <Icon
+              size="large"
+              color="grey"
+              name="chevron down"
+              style={{
+                float: "right",
+                paddingTop: "14px",
+                marginRight: "20px"
+              }}
+            />
           </div>
 
-          <div style={{ width: "100%", height: "50px" }} onClick={() => { setCurrModal("add-friends"); }}>
-            <Transition animation="fade" duration={500} visible={peopleExpanded === true} transitionOnMount={true} unmountOnHide={true}>
-              <div className="expand-item" style={{ width: "100%", height: "50px" }}>
-                <div style={{ width: "50%", height: "100%", float: "left", textAlign: "left", paddingTop: "14px", marginLeft: "10px", fontWeight: "400", color: "black" }}>
+          <div
+            style={{ width: "100%", height: "50px" }}
+            onClick={() => {
+              setCurrModal("add-friends");
+            }}
+          >
+            <Transition
+              animation="fade"
+              duration={500}
+              visible={peopleExpanded === true}
+              transitionOnMount={true}
+              unmountOnHide={true}
+            >
+              <div
+                className="expand-item"
+                style={{ width: "100%", height: "50px" }}
+              >
+                <div
+                  style={{
+                    width: "50%",
+                    height: "100%",
+                    float: "left",
+                    textAlign: "left",
+                    paddingTop: "14px",
+                    marginLeft: "10px",
+                    fontWeight: "400",
+                    color: "black"
+                  }}
+                >
                   Add People
                 </div>
-                <Icon size="large" color="blue" name="plus" style={{ float: "right", paddingTop: "14px", marginRight: "20px" }}/>
+                <Icon
+                  size="large"
+                  color="blue"
+                  name="plus"
+                  style={{
+                    float: "right",
+                    paddingTop: "14px",
+                    marginRight: "20px"
+                  }}
+                />
               </div>
             </Transition>
           </div>
 
-          <Modal size="tiny" open={currModal === "add-friends"}
-            onClose={() => { setAddingFriendList([]); setCurrModal(null); }}
+          <Modal
+            size="tiny"
+            open={currModal === "add-friends"}
+            onClose={() => {
+              setAddingFriendList([]);
+              setCurrModal(null);
+            }}
           >
             <Modal.Header>Add People</Modal.Header>
             <Modal.Content>
-
-            <Dropdown
-              fluid
-              multiple
-              onChange={(event, data)=>{
-                setAddingFriendList(data.value);
-              }}
-              onSearchChange={handleFriendSearchChange}
-              options={dropdownOptions}
-              placeholder='Search Friends'
-              search
-              searchQuery={friendSearchQuery}
-              selection
-            />
-
-
+              <Dropdown
+                fluid
+                multiple
+                onChange={(event, data) => {
+                  setAddingFriendList(data.value);
+                }}
+                onSearchChange={handleFriendSearchChange}
+                options={dropdownOptions}
+                placeholder="Search Friends"
+                search
+                searchQuery={friendSearchQuery}
+                selection
+              />
             </Modal.Content>
             <Modal.Actions>
-              <Button primary icon='checkmark' labelPosition='right' content='Add'
-              onClick={async () => {
-                const settings = {
-                  method: "POST",
-                  headers: {
-                    "Content-Type": "application/json"
-                  },
-                  credentials: "include",
-                  body: JSON.stringify({
-                    added_people: addingFriendList
-                  })
-                };
-                const response = await fetch(
-                  `http://18.219.112.140:8000/api/v1/add-to-group/`,
-                  settings
-                );
-                const result = await response.json();
-                if (result.status === "success") {
-
-                }
-              }}
-
-
+              <Button
+                primary
+                icon="checkmark"
+                labelPosition="right"
+                content="Add"
+                onClick={async () => {
+                  const settings = {
+                    method: "POST",
+                    headers: {
+                      "Content-Type": "application/json"
+                    },
+                    credentials: "include",
+                    body: JSON.stringify({
+                      added_people: addingFriendList
+                    })
+                  };
+                  const response = await fetch(
+                    `http://18.219.112.140:8000/api/v1/add-to-group/`,
+                    settings
+                  );
+                  const result = await response.json();
+                  if (result.status === "success") {
+                  }
+                }}
               />
             </Modal.Actions>
           </Modal>
-
-
         </div>
       );
     }
-  }
-
-
-
+  };
 
   return (
     <div>
