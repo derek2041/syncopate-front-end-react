@@ -12,7 +12,8 @@ import {
   List,
   Icon,
   Loader,
-  Modal
+  Modal,
+  Transition
 } from "semantic-ui-react";
 import "./ChatListPage2.css";
 import mainLogo from "./images/1x/Asset 23.png";
@@ -32,6 +33,7 @@ const ChatListPage2 = () => {
   const [editGroupName, setEditGroupName] = useState("");
   const [editGroupDescription, setEditGroupDescription] = useState("");
   const [editGroupPhoto, setEditGroupPhoto] = useState(null);
+  const [currModal, setCurrModal] = useState(null);
 
   const [refreshCount, setRefreshCount] = useState(0);
   const handleRefresh = () => setRefreshCount(i => i + 1);
@@ -295,15 +297,20 @@ const ChatListPage2 = () => {
             <Icon size="large" color="grey" name="chevron down" style={{ float: "right", paddingTop: "14px", marginRight: "20px" }}/>
           </div>
 
-          <Modal size="tiny" trigger={
+          <div onClick={() => { setCurrModal("change-group-name"); }}>
+            <Transition animation="fade" duration={100} visible={optionsExpanded === true} transitionOnMount={true} unmountOnHide={true}>
               <div className="expand-item" style={{ width: "100%", height: "50px" }}>
                 <div style={{ width: "50%", height: "100%", float: "left", textAlign: "left", paddingTop: "14px", marginLeft: "10px", fontWeight: "400", color: "black" }}>
                   Edit Group Name
                 </div>
                 <Icon size="large" name="heading" style={{ float: "right", paddingTop: "14px", marginRight: "20px" }}/>
               </div>
-            }
-            onClose={ () => { setEditGroupName(""); }}>
+            </Transition>
+          </div>
+
+          <Modal size="tiny" open={currModal === "change-group-name"}
+            onClose={ () => { setEditGroupName(""); setCurrModal(null); }}
+            onDimmerClick={ () => { setCurrModal(null); }}>
             <Modal.Header>Change Group Name</Modal.Header>
             <Modal.Content>
               <Input placeholder={currGroup.group__name} />
@@ -313,15 +320,20 @@ const ChatListPage2 = () => {
             </Modal.Actions>
           </Modal>
 
-          <Modal size="tiny" trigger={
+          <div onClick={() => { console.log("setting curr modal"); setCurrModal("change-group-description"); }}>
+            <Transition animation="fade" duration={1100} visible={optionsExpanded === true} transitionOnMount={true} unmountOnHide={true}>
               <div className="expand-item" style={{ width: "100%", height: "50px" }}>
                 <div style={{ width: "50%", height: "100%", float: "left", textAlign: "left", paddingTop: "14px", marginLeft: "10px", fontWeight: "400", color: "black" }}>
                   Edit Group Description
                 </div>
                 <Icon size="large" name="i cursor" style={{ float: "right", paddingTop: "14px", marginRight: "20px" }}/>
               </div>
-            }
-            onClose={ () => { setEditGroupDescription(""); }}>
+            </Transition>
+          </div>
+
+          <Modal size="tiny" open={currModal === "change-group-description"}
+            onClose={ () => { setEditGroupDescription(""); setCurrModal(null); }}
+            onDimmerClick={ () => { setCurrModal(null); }}>
             <Modal.Header>Change Group Description</Modal.Header>
             <Modal.Content>
               <Input placeholder={currGroup.group__description} />
@@ -331,15 +343,20 @@ const ChatListPage2 = () => {
             </Modal.Actions>
           </Modal>
 
-          <Modal size="small" trigger={
+          <div onClick={() => { setCurrModal("change-group-photo"); }}>
+            <Transition animation="fade" duration={2100} visible={optionsExpanded === true} transitionOnMount={true} unmountOnHide={true}>
               <div className="expand-item" style={{ width: "100%", height: "50px" }}>
                 <div style={{ width: "50%", height: "100%", float: "left", textAlign: "left", paddingTop: "14px", marginLeft: "10px", fontWeight: "400", color: "black" }}>
                   Edit Group Photo
                 </div>
                 <Icon size="large" name="camera retro" style={{ float: "right", paddingTop: "14px", marginRight: "20px" }}/>
               </div>
-            }
-          onClose={ () => { setEditGroupPhoto(null); }}>
+            </Transition>
+          </div>
+
+          <Modal size="small" open={currModal === "change-group-photo"}
+            onClose={() => { setEditGroupPhoto(null); setCurrModal(null); }}
+            onDimmerClick={() => { setCurrModal(null); }}>
             <Modal.Header>Change Group Photo</Modal.Header>
           </Modal>
 
