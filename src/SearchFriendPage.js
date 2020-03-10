@@ -362,12 +362,15 @@ const SearchFriendPage = () => {
 
   if (validSession === null) {
     return (
-      <div style={{ marginTop: "45vh" }}>
-        <Loader size="huge" active inline="centered"></Loader>
+      <div>
+        <NavigationBar />
+        <div style={{ marginTop: "40vh" }}>
+          <Loader size="huge" active inline="centered"></Loader>
+        </div>
       </div>
     );
   }
-  
+
   return (
     <div>
       <NavigationBar />

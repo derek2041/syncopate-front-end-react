@@ -25,7 +25,7 @@ const NavigationBar = () => {
       className="haha"
       fluid
       size="massive"
-      style={{ fontFamily: "Exo 2", width: "100%", height: "25%" }}
+      style={{ fontFamily: "Exo 2", width: "100%", height: "65px" }}
     >
       <Menu.Menu position="left">
         <Menu.Item
