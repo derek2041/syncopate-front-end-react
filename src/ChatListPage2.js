@@ -87,22 +87,6 @@ const ChatListPage2 = () => {
     console.log("friendquery", data.value);
   };
 
-
-  const compareWithFriendSearchQuery = checkName => {
-    if (friendSearchQuery === "") {
-      return true;
-    }
-
-    const search_query = friendSearchQuery.toLowerCase();
-    // logic to compare names
-    const name = search_query;
-    if (checkName.first_name.toLowerCase().startsWith(name)) {
-      return true;
-    } else {
-      return false;
-    }
-  };
-
   const compareWithSearchQuery = checkName => {
     if (searchQuery === "") {
       return true;
@@ -219,7 +203,7 @@ const ChatListPage2 = () => {
       if (curr_group.pinned === true) {
         resultJSX.push(
           <List.Item
-            className=""
+            className="select-group"
             key={identifier}
             style={{ height: "fit-content", minHeight: "80px" }}
             onClick={() => {
@@ -259,7 +243,7 @@ const ChatListPage2 = () => {
       } else {
         resultJSX.push(
           <List.Item
-            className=""
+            className="select-group"
             key={identifier}
             style={{ height: "fit-content", minHeight: "80px" }}
             onClick={() => {
@@ -337,7 +321,7 @@ const ChatListPage2 = () => {
           </div>
 
           <div onClick={() => { setCurrModal("change-group-name"); }}>
-            <Transition animation="fade" duration={100} visible={optionsExpanded === true} transitionOnMount={true} unmountOnHide={true}>
+            <Transition animation="fade" duration={500} visible={optionsExpanded === true} transitionOnMount={true} unmountOnHide={true}>
               <div className="expand-item" style={{ width: "100%", height: "50px" }}>
                 <div style={{ width: "50%", height: "100%", float: "left", textAlign: "left", paddingTop: "14px", marginLeft: "10px", fontWeight: "400", color: "black" }}>
                   Edit Group Name
@@ -349,7 +333,7 @@ const ChatListPage2 = () => {
 
           <Modal size="tiny" open={currModal === "change-group-name"}
             onClose={ () => { setEditGroupName(""); setCurrModal(null); }}
-            onDimmerClick={ () => { setCurrModal(null); }}>
+          >
             <Modal.Header>Change Group Name</Modal.Header>
             <Modal.Content>
               <Input placeholder={currGroup.group__name} />
@@ -360,7 +344,7 @@ const ChatListPage2 = () => {
           </Modal>
 
           <div onClick={() => { console.log("setting curr modal"); setCurrModal("change-group-description"); }}>
-            <Transition animation="fade" duration={1100} visible={optionsExpanded === true} transitionOnMount={true} unmountOnHide={true}>
+            <Transition animation="fade" duration={500} visible={optionsExpanded === true} transitionOnMount={true} unmountOnHide={true}>
               <div className="expand-item" style={{ width: "100%", height: "50px" }}>
                 <div style={{ width: "50%", height: "100%", float: "left", textAlign: "left", paddingTop: "14px", marginLeft: "10px", fontWeight: "400", color: "black" }}>
                   Edit Group Description
@@ -372,7 +356,7 @@ const ChatListPage2 = () => {
 
           <Modal size="tiny" open={currModal === "change-group-description"}
             onClose={ () => { setEditGroupDescription(""); setCurrModal(null); }}
-            onDimmerClick={ () => { setCurrModal(null); }}>
+          >
             <Modal.Header>Change Group Description</Modal.Header>
             <Modal.Content>
               <Input placeholder={currGroup.group__description} />
@@ -383,19 +367,19 @@ const ChatListPage2 = () => {
           </Modal>
 
           <div onClick={() => { setCurrModal("change-group-photo"); }}>
-            <Transition animation="fade" duration={2100} visible={optionsExpanded === true} transitionOnMount={true} unmountOnHide={true}>
+            <Transition animation="fade" duration={500} visible={optionsExpanded === true} transitionOnMount={true} unmountOnHide={true}>
               <div className="expand-item" style={{ width: "100%", height: "50px" }}>
                 <div style={{ width: "50%", height: "100%", float: "left", textAlign: "left", paddingTop: "14px", marginLeft: "10px", fontWeight: "400", color: "black" }}>
                   Edit Group Photo
                 </div>
-                <Icon size="large" name="camera retro" style={{ float: "right", paddingTop: "14px", marginRight: "20px" }}/>
+                <Icon size="large" color="blue" name="camera retro" style={{ float: "right", paddingTop: "14px", marginRight: "20px" }}/>
               </div>
             </Transition>
           </div>
 
           <Modal size="small" open={currModal === "change-group-photo"}
             onClose={() => { setEditGroupPhoto(null); setCurrModal(null); }}
-            onDimmerClick={() => { setCurrModal(null); }}>
+          >
             <Modal.Header>Change Group Photo</Modal.Header>
           </Modal>
 
@@ -429,22 +413,32 @@ const ChatListPage2 = () => {
           </div>
 
           <div style={{ width: "100%", height: "50px", marginBottom: "14px" }}>
-            <Checkbox checked={ currGroup.pinned === true } toggle label="Pin Conversation to Top" onChange={ handlePinnedChange } style={{ paddingTop: "14px" }}/>
+            <Transition animation="fade" duration={500} visible={settingsExpanded === true} transitionOnMount={true} unmountOnHide={true}>
+              <div style={{ width: "100%", height: "50px" }}>
+                <Checkbox checked={ currGroup.pinned === true } toggle label="Pin Conversation to Top" onChange={ handlePinnedChange } style={{ paddingTop: "14px" }}/>
+              </div>
+            </Transition>
           </div>
 
           <div style={{ width: "100%", height: "50px" }}>
-            <Modal size="tiny" trigger={
-                <Button negative content="Leave Group" style={{ paddingTop: "14px" }} />
-              }>
-              <Modal.Header>{"Leave Group: " + currGroup.group__name + "?"}</Modal.Header>
-              <Modal.Content>
-                <p>Are you sure you want to leave the group {currGroup.group__name + "?"}</p>
-              </Modal.Content>
-              <Modal.Actions>
-                <Button primary icon='checkmark' labelPosition='right' content='Confirm' onClick={ handleLeaveRequest } />
-              </Modal.Actions>
-            </Modal>
+            <Transition animation="fade" duration={500} visible={settingsExpanded === true} transitionOnMount={true} unmountOnHide={true}>
+              <div style={{ width: "100%", height: "50px" }}>
+                <Button negative content="Leave Group" style={{ paddingTop: "14px" }} onClick={() => { setCurrModal("leave-group")}} />
+              </div>
+            </Transition>
           </div>
+
+          <Modal size="tiny" open={currModal === "leave-group"}
+            onClose={() => { setCurrModal(null); }}
+          >
+            <Modal.Header>{"Leave Group: " + currGroup.group__name + "?"}</Modal.Header>
+            <Modal.Content>
+              <p>Are you sure you want to leave the group {currGroup.group__name + "?"}</p>
+            </Modal.Content>
+            <Modal.Actions>
+              <Button primary icon='checkmark' labelPosition='right' content='Confirm' onClick={ handleLeaveRequest } />
+            </Modal.Actions>
+          </Modal>
         </div>
       );
     } else if (settingsExpanded === false) {
@@ -474,7 +468,7 @@ const ChatListPage2 = () => {
     }else{
 
       return (
-        <div style={{ width: "100%", borderBottom: "0.1rem solid lightgray", height: "178px" }}>
+        <div style={{ width: "100%", borderBottom: "0.1rem solid lightgray", height: "min-content" }}>
           <div className="expand-wrapper" style={{ width: "100%", height: "50px" }} onClick={() => { setPeopleExpanded(false); }}>
             <div className="accordion-text" style={{ width: "50%", height: "100%", float: "left", textAlign: "left", paddingTop: "14px", marginLeft: "10px", fontWeight: "700", color: "gray" }}>
               People
@@ -482,14 +476,20 @@ const ChatListPage2 = () => {
             <Icon size="large" color="grey" name="chevron down" style={{ float: "right", paddingTop: "14px", marginRight: "20px" }}/>
           </div>
 
-          <Modal size="tiny" trigger={
+          <div style={{ width: "100%", height: "50px" }} onClick={() => { setCurrModal("add-friends"); }}>
+            <Transition animation="fade" duration={500} visible={peopleExpanded === true} transitionOnMount={true} unmountOnHide={true}>
               <div className="expand-item" style={{ width: "100%", height: "50px" }}>
                 <div style={{ width: "50%", height: "100%", float: "left", textAlign: "left", paddingTop: "14px", marginLeft: "10px", fontWeight: "400", color: "black" }}>
-                  Add people
+                  Add People
                 </div>
-                <Icon size="large" name="plus" style={{ float: "right", paddingTop: "14px", marginRight: "20px" }}/>
+                <Icon size="large" color="blue" name="plus" style={{ float: "right", paddingTop: "14px", marginRight: "20px" }}/>
               </div>
-            }>
+            </Transition>
+          </div>
+
+          <Modal size="tiny" open={currModal === "add-friends"}
+            onClose={() => { setAddingFriendList([]); setCurrModal(null); }}
+          >
             <Modal.Header>Add People</Modal.Header>
             <Modal.Content>
 
