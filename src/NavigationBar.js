@@ -19,6 +19,10 @@ const NavigationBar = () => {
     setMouseOver(setting);
   };
 
+  if (window.location.pathname === "/") {
+    return null;
+  }
+
   return (
     <Menu
       borderless
@@ -30,6 +34,8 @@ const NavigationBar = () => {
       <Menu.Menu position="left">
         <Menu.Item
           active={mouseOver === "profile"}
+          as={ Link }
+          to="/my-profile"
           icon="user outline"
           name="Profile"
           onMouseOver={() => {
@@ -38,13 +44,12 @@ const NavigationBar = () => {
           onMouseLeave={() => {
             handleMouseOver(null);
           }}
-          onClick={() => {
-            window.location.href = "/my-profile";
-          }}
         ></Menu.Item>
 
         <Menu.Item
           active={mouseOver === "chats"}
+          as={ Link }
+          to="/my-chats"
           icon="discussions"
           name="Chats"
           onMouseOver={() => {
@@ -53,13 +58,12 @@ const NavigationBar = () => {
           onMouseLeave={() => {
             handleMouseOver(null);
           }}
-          onClick={() => {
-            window.location.href = "/my-chats";
-          }}
         ></Menu.Item>
 
         <Menu.Item
           active={mouseOver === "friends"}
+          as={ Link }
+          to="/my-friends"
           icon="address book outline"
           name="Friends"
           onMouseOver={() => {
@@ -68,15 +72,14 @@ const NavigationBar = () => {
           onMouseLeave={() => {
             handleMouseOver(null);
           }}
-          onClick={() => {
-            window.location.href = "/my-friends";
-          }}
         ></Menu.Item>
       </Menu.Menu>
 
       <Menu.Menu position="right">
         <Menu.Item
           active={mouseOver === "add-friends"}
+          as={ Link }
+          to="/search-users"
           icon="add user"
           name="Add Friends"
           onMouseOver={() => {
@@ -85,13 +88,12 @@ const NavigationBar = () => {
           onMouseLeave={() => {
             handleMouseOver(null);
           }}
-          onClick={() => {
-            window.location.href = "/search-users";
-          }}
         ></Menu.Item>
 
         <Menu.Item
           active={mouseOver === "notifications"}
+          as={ Link }
+          to="/notifications"
           icon="bell outline"
           name="Notifications"
           onMouseOver={() => {
@@ -99,9 +101,6 @@ const NavigationBar = () => {
           }}
           onMouseLeave={() => {
             handleMouseOver(null);
-          }}
-          onClick={() => {
-            window.location.href = "/notifications";
           }}
         ></Menu.Item>
 

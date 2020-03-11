@@ -17,11 +17,14 @@ import SearchFriendPage from "./SearchFriendPage";
 import ChatListPage2 from "./ChatListPage2";
 import SearchUserPage from "./SearchUserPage";
 import ChangePassword from "./ChangePassword";
+import NavigationBar from "./NavigationBar";
 
 const App = () => {
   return (
     <div className="App">
       <Router>
+        <NavigationBar />
+        
         <Switch>
           <Route
             path="/register"

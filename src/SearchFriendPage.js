@@ -363,7 +363,7 @@ const SearchFriendPage = () => {
   if (validSession === null) {
     return (
       <div>
-        <NavigationBar />
+
         <div style={{ marginTop: "40vh" }}>
           <Loader size="huge" active inline="centered"></Loader>
         </div>
@@ -373,7 +373,7 @@ const SearchFriendPage = () => {
 
   return (
     <div>
-      <NavigationBar />
+
       <div style={{ whiteSpace: "nowrap" }}>
         <div id="friends-container">
           <div id="right-border">

@@ -144,7 +144,7 @@ const ProfilePage2 = () => {
   if (validSession === null) {
     return (
       <div>
-        <NavigationBar />
+
         <div style={{ marginTop: "40vh" }}>
           <Loader size="huge" active inline="centered"></Loader>
         </div>
@@ -155,7 +155,7 @@ const ProfilePage2 = () => {
   if (loadState === null) {
     return (
       <>
-        <NavigationBar />
+
         <div style={{ marginTop: "45vh" }}>
           <Loader size="huge" active inline="centered"></Loader>
         </div>
@@ -165,7 +165,7 @@ const ProfilePage2 = () => {
     console.log("url:" + avatarURL);
     return (
       <>
-        <NavigationBar />
+
         <div
           style={{
             maxWidth: "800px",
