@@ -757,6 +757,59 @@ const ChatListPage2 = () => {
     }
   };
 
+
+  const renderGroupMemberList = () => {
+    var resultJSX = []
+    currGroup.users.forEach((curr_user) => {
+      var currJSX = (
+        <div>
+          <Transition
+            animation="fade"
+            duration={500}
+            visible={peopleExpanded === true}
+            transitionOnMount={true}
+            unmountOnHide={true}
+          >
+
+            <div
+              className="expand-item"
+              style={{ width: "100%", height: "50px" }}
+            >
+              <div
+                style={{
+                  width: "50%",
+                  height: "100%",
+                  float: "left",
+                  textAlign: "left",
+                  paddingTop: "14px",
+                  marginLeft: "10px",
+                  fontWeight: "400",
+                  color: "black"
+                }}
+              >
+                { curr_user.user__first_name }
+              </div>
+              <Icon
+                size="normal"
+                name="ellipsis horizontal"
+                color="grey"
+                style={{
+                  float: "right",
+                  paddingTop: "14px",
+                  marginRight: "20px"
+                }}
+              />
+            </div>
+          </Transition>
+        </div>
+      );
+
+      resultJSX.push(currJSX);
+    });
+
+    return resultJSX;
+  }
+
   const renderGroupPeople = () => {
     if (currGroup === null) return null;
     if (peopleExpanded === false) {
@@ -935,6 +988,11 @@ const ChatListPage2 = () => {
               />
             </Modal.Actions>
           </Modal>
+          {renderGroupMemberList()}
+
+          <div>
+          </div>
+
         </div>
       );
     }
