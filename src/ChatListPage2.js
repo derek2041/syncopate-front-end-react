@@ -1016,7 +1016,8 @@ const ChatListPage2 = () => {
         style={{
           width: "25%",
           float: "left",
-          height: "93vh",
+          height: "calc(100vh - 65px)",
+          overflowY: "overlay",
           borderRight: "0.1rem solid lightgray"
         }}
       >
@@ -1049,13 +1050,13 @@ const ChatListPage2 = () => {
           </div>
         </div>
       </div>
-      <div style={{ width: "50%", float: "left", height: "93vh" }}>
+      <div style={{ width: "50%", float: "left", height: "calc(100vh - 65px)" }}>
         <div id="">
           <div>{renderChatInstance()}</div>
         </div>
       </div>
-      <div style={{ width: "25%", float: "right", height: "93vh" }}>
-        <div style={{ height: "100%", borderLeft: "0.1rem solid lightgray" }}>
+      <div style={{ width: "25%", float: "right", height: "calc(100vh - 65px)", overflowY: "overlay", borderLeft: "0.1rem solid lightgray" }}>
+        <div style={{ height: "100%" }}>
           {renderGroupInfo()}
           {renderGroupOptions()}
           {renderGroupSettings()}
