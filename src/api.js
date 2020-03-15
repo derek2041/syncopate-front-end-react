@@ -19,12 +19,29 @@ function subscribeToRoom(cb, room) {
   });
   socket.emit("subscribeToRoom", room);
 }
-export { subscribeToRoom };
+
+async function getGroupMessages(groupId) {
+
+
+  const response = await fetch(
+    `http://18.219.112.140:8000/api/v1/get-messages?group_id=${groupId}`,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      credentials: "include"
+    }
+  );
+
+  const result = await response.json();
+    debugger
+}
 
 function sendMessageToRoom(message) {
   socket.emit("new message", JSON.stringify(message));
 }
-export { sendMessageToRoom };
+export { subscribeToRoom, sendMessageToRoom, getGroupMessages};
 
 // import openSocket from 'socket.io-client';
 // const  socket = openSocket('http://localhost:8000');
