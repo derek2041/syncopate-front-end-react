@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { ChatFeed, ChatBubble, BubbleGroup, Message } from "react-chat-ui";
-import { subscribeToRoom, sendMessageToRoom } from "./api";
+import { subscribeToRoom, sendMessageToRoom, getGroupMessages} from "./api";
 import queryString from "query-string";
 import { Button, Search } from "semantic-ui-react";
 
@@ -41,43 +41,60 @@ const styles = {
 };
 
 class Chat extends React.Component {
-  constructor() {
-    super();
-    const user =
+  constructor(props) {
+    super(props);
+    const group = this.props.group 
+    const user = group && group.users.find(c => c.id === group.user_id) || {}
+
+    /*const user =
       queryString.parse(window.location.search).user ||
       localStorage.getItem("username") ||
-      prompt("Enter the username");
+      prompt("Enter the username");*/
     this.state = {
       messages: [],
-      curr_user: user,
+      curr_user: user.user__first_name,
       searchQuery: "",
       searchedUsers: [],
-      isLoading: false
+      isLoading: false,
+      group: group
     };
-    localStorage.setItem("username", user);
+
+    this.getMessages()
+    // localStorage.setItem("username", user);
 
     this.groupName = window.location.pathname.split("/").slice(-1)[0];
 
     this.authenticateUser()
       .then(isAuthorized => {
+        debugger
         console.log("IS AUTHORIZED: ", isAuthorized);
         if (isAuthorized) {
           console.log("successfully authenticated");
           subscribeToRoom((err, newMessage) => {
+            debugger
             if (err) {
               return console.error(err);
             }
-            if (newMessage.user !== this.state.curr_user) {
+           // if (newMessage.user !== this.state.curr_user) {
               this.pushMessage(
                 newMessage.user,
                 newMessage.message,
                 newMessage.image
               );
-            }
-          }, this.groupName);
+            //}
+          }, String(this.state.group.group__id));
         }
       })
       .catch(console.error);
+  }
+
+  async getMessages () {
+    this.setState({ isLoading: true })
+    const result = await getGroupMessages(this.state.group.group__id)
+    this.setState({
+      group_messages: result,
+      isLoading: false 
+    })
   }
 
   async authenticateUser() {
@@ -116,7 +133,7 @@ class Chat extends React.Component {
       message: input.value,
       user: this.state.curr_user
     });
-    this.pushMessage(this.state.curr_user, input.value);
+    //this.pushMessage(this.state.curr_user, input.value);
     input.value = "";
     return true;
   }
@@ -185,7 +202,7 @@ class Chat extends React.Component {
       image: result,
       user: this.state.curr_user
     });
-    this.pushMessage(this.state.curr_user, "", result);
+    //this.pushMessage(this.state.curr_user, "", result);
 
     e.target.value = "";
   };
@@ -196,23 +213,12 @@ class Chat extends React.Component {
       return <p>{item.email}</p>;
     };
 
+    if (isLoading) {
+      return "Loading..."
+    }
+
     return (
       <div className="container">
-        <h1 className="text-center">Welcome, {this.state.curr_user}!</h1>
-        <p className="text-center">Have fun!</p>
-        <div className="search-container">
-          <Search
-            onSearchChange={this.handleSearchChange}
-            value={searchQuery}
-            loading={isLoading}
-            results={searchedUsers}
-            onResultSelect={this.handleResultSelect}
-            resultRenderer={resultRenderer}
-          />
-        </div>
-        <Button onClick={() => (window.location.href = "/test-login")} primary>
-          Profile
-        </Button>
         <div className="chatfeed-wrapper">
           <ChatFeed
             chatBubble={customBubble}
@@ -254,9 +260,12 @@ class Chat extends React.Component {
 
 class ChatPage extends React.Component {
   render() {
+    if (!this.props.group) {
+      return <div>Please select a group.</div>
+    }
     return (
       <>
-        <Chat />
+        <Chat {...this.props} />
       </>
     );
   }

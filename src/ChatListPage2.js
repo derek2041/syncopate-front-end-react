@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+import ChatPage from "./ChatPage";
+
 import {
   Input,
   Checkbox,
@@ -307,7 +309,8 @@ const ChatListPage2 = () => {
   };
 
   const renderChatInstance = () => {
-    return null;
+    console.log(">>>", currGroup)
+    return <ChatPage key={Date.now()} group={currGroup} />
   };
 
   const renderGroupInfo = () => {
