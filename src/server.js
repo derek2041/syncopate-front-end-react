@@ -2,13 +2,45 @@ const io = require("socket.io")();
 const fs = require("fs");
 
 io.on("connection", socket => {
+  socket.on("unsubscribeFromRoom", room => {
+    console.log("Leaving room " + room);
+    socket.leave(room);
+    socket.disconnect(true);
+  });
+
   socket.on("subscribeToRoom", room => {
+    // try {
+    //   const foundRooms = Object.keys(socket.rooms);
+    //   console.log("Found rooms: " + foundRooms);
+    //   for (var i = 0; i < foundRooms.length - 1; i++) {
+    //     socket.leave(foundRooms[i]);
+    //   }
+    // } catch (e) {
+    //   console.log(e);
+    //   console.log("Could not leave previous rooms.");
+    // }
+    Object.keys(socket.rooms).forEach(iter => {
+      socket.leave(room);
+    });
+
     socket.join(room);
     console.log("Connecting client to room: ", room);
 
+    // socket.on("unsubscribeFromRoom", room => {
+    //   console.log("Leaving room " + room);
+    //   socket.leave(room);
+    // });
+
     socket.on("new message", function(message) {
-      console.log("Pushing " + message + " to clients.");
-      io.in(room).emit("push to clients", message);
+      let prevent_duplicates = new Set();
+
+      if ((JSON.stringify(Object.keys(socket.rooms)).includes(room)) && (!prevent_duplicates.has(room))) {
+        console.log(prevent_duplicates);
+        console.log("Pushing " + message + " from " + socket.id + " to clients in room " + room);
+        console.log("Joined Rooms: " + JSON.stringify(Object.keys(socket.rooms)));
+        io.in(room).emit("push to clients", message);
+        prevent_duplicates.add(room);
+      }
     });
   });
   // console.log("Connecting client to room: ", "1000");

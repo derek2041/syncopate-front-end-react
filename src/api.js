@@ -8,9 +8,13 @@ if (false && window.location.host.includes("localhost")) {
   domain = "18.219.112.140";
 }
 
-const socket = openSocket("http://" + domain + ":3001");
+// const socket = openSocket("http://" + domain + ":3001");
+// console.log(">>>>>>>>>>OPENING NEW SOCKET?????????????????");
+
+var socket = null;
 
 function subscribeToRoom(cb, room) {
+  socket = openSocket("http://" + domain + ":3001");
   socket.on("push to clients", newMessage => {
     try {
       newMessage = JSON.parse(newMessage);
@@ -18,6 +22,21 @@ function subscribeToRoom(cb, room) {
     cb(null, newMessage);
   });
   socket.emit("subscribeToRoom", room);
+}
+
+function unsubscribeFromRoom(room) {
+  // try {
+  //   const foundRooms = Object.keys(socket.rooms);
+  //   console.log("Found rooms: " + foundRooms);
+  // } catch (e) {
+  //   console.log(e);
+  //   console.log("Could not close socket.io session.");
+  // }
+  console.log("\n\n\n\n\n\n\n\n\n\n\n\nSENDING UNSUBSCRIBE EVENT\n\n\n\n\n\n\n\n\n\n\n");
+  socket.emit("unsubscribeFromRoom", room);
+  socket.disconnect();
+  socket = null;
+  // socket.leave(room);
 }
 
 async function getGroupMessages(groupId) {
@@ -41,7 +60,7 @@ async function getGroupMessages(groupId) {
 function sendMessageToRoom(message) {
   socket.emit("new message", JSON.stringify(message));
 }
-export { subscribeToRoom, sendMessageToRoom, getGroupMessages};
+export { subscribeToRoom, sendMessageToRoom, getGroupMessages, unsubscribeFromRoom };
 
 // import openSocket from 'socket.io-client';
 // const  socket = openSocket('http://localhost:8000');

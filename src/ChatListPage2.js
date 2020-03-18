@@ -21,6 +21,7 @@ import {
 import "./ChatListPage2.css";
 import mainLogo from "./images/1x/Asset 23.png";
 import heartSign from "./images/sign/animat-heart-color.gif";
+import { unsubscribeFromRoom } from "./api";
 
 import NavigationBar from "./NavigationBar";
 
@@ -229,6 +230,9 @@ const ChatListPage2 = () => {
             key={identifier}
             style={{ height: "fit-content", minHeight: "80px" }}
             onClick={() => {
+              if (currGroup !== null) {
+                unsubscribeFromRoom(currGroup.group__id);
+              }
               setCurrGroup(curr_group);
               window.history.pushState("", "", "/" + curr_group.group__id);
               console.log("Selected Group ID: ", curr_group.group__id);
@@ -269,6 +273,9 @@ const ChatListPage2 = () => {
             key={identifier}
             style={{ height: "fit-content", minHeight: "80px" }}
             onClick={() => {
+              if (currGroup !== null) {
+                unsubscribeFromRoom(currGroup.group__id);
+              }
               setCurrGroup(curr_group);
               window.history.pushState("", "", "/" + curr_group.group__id);
               console.log("Selected Group ID: ", curr_group.group__id);
@@ -309,8 +316,16 @@ const ChatListPage2 = () => {
   };
 
   const renderChatInstance = () => {
-    console.log(">>>", currGroup)
-    return <ChatPage key={Date.now()} group={currGroup} />
+    console.log(">>>", currGroup);
+    console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+
+    if (currGroup === null) {
+      console.log(">null<");
+      return <ChatPage key={-1} group={currGroup} />
+    } else {
+      console.log(">not null: " + currGroup.group__id.toString() + "<");
+      return <ChatPage key={currGroup.group__id.toString()} group={currGroup} />
+    }
   };
 
   const renderGroupInfo = () => {
