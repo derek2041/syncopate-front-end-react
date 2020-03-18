@@ -2,7 +2,7 @@ const io = require("socket.io")();
 const fs = require("fs");
 
 io.on("connection", socket => {
-  socket.on("unsubscribeFromRoom", room => {
+  socket.on("refreshSocketConnection", () => {
     socket.disconnect(true);
   });
 

@@ -24,8 +24,8 @@ function subscribeToRoom(cb, room) {
   socket.emit("subscribeToRoom", room);
 }
 
-function unsubscribeFromRoom() {
-  socket.emit("unsubscribeFromRoom");
+function refreshSocketConnection() {
+  socket.emit("refreshSocketConnection");
   socket.disconnect();
   socket = null;
 }
@@ -51,7 +51,7 @@ async function getGroupMessages(groupId) {
 function sendMessageToRoom(message) {
   socket.emit("new message", JSON.stringify(message));
 }
-export { subscribeToRoom, sendMessageToRoom, getGroupMessages, unsubscribeFromRoom };
+export { subscribeToRoom, sendMessageToRoom, getGroupMessages, refreshSocketConnection };
 
 // import openSocket from 'socket.io-client';
 // const  socket = openSocket('http://localhost:8000');
