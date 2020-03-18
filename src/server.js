@@ -2,7 +2,7 @@ const io = require("socket.io")();
 const fs = require("fs");
 
 io.on("connection", socket => {
-  socket.on("refreshSocketConnection", () => {
+  socket.on("killChatConnection", () => {
     socket.disconnect(true);
   });
 

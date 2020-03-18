@@ -21,7 +21,7 @@ import {
 import "./ChatListPage2.css";
 import mainLogo from "./images/1x/Asset 23.png";
 import heartSign from "./images/sign/animat-heart-color.gif";
-import { refreshSocketConnection } from "./api";
+import { killChatConnection } from "./api";
 
 import NavigationBar from "./NavigationBar";
 
@@ -231,7 +231,7 @@ const ChatListPage2 = () => {
             style={{ height: "fit-content", minHeight: "80px" }}
             onClick={() => {
               if (currGroup !== null && curr_group.group__id !== currGroup.group__id) {
-                refreshSocketConnection();
+                killChatConnection();
               }
               setCurrGroup(curr_group);
               window.history.pushState("", "", "/" + curr_group.group__id);
@@ -274,7 +274,7 @@ const ChatListPage2 = () => {
             style={{ height: "fit-content", minHeight: "80px" }}
             onClick={() => {
               if (currGroup !== null && curr_group.group__id !== currGroup.group__id) {
-                refreshSocketConnection();
+                killChatConnection();
               }
               setCurrGroup(curr_group);
               window.history.pushState("", "", "/" + curr_group.group__id);
