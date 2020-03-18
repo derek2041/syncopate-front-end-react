@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { ChatFeed, ChatBubble, BubbleGroup, Message } from "react-chat-ui";
-import { subscribeToRoom, sendMessageToRoom, getGroupMessages, unsubscribeFromRoom } from "./api";
+import { subscribeToRoom, sendMessageToRoom, getGroupMessages } from "./api";
 import queryString from "query-string";
 import { Button, Search } from "semantic-ui-react";
 
@@ -70,7 +70,6 @@ class Chat extends React.Component {
         console.log("IS AUTHORIZED: ", isAuthorized);
         if (isAuthorized) {
           console.log("successfully authenticated");
-          // unsubscribeFromRoom();
           subscribeToRoom((err, newMessage) => {
             debugger
             if (err) {
@@ -88,16 +87,6 @@ class Chat extends React.Component {
       })
       .catch(console.error);
   }
-
-  // componentDidUpdate(prevProps, prevState, snapshot) {
-  //   console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
-  //   console.log("PREV GID: " + prevProps.group.group__id);
-  //   console.log("CURR GID: " + this.state.group.group__id);
-  //   if (prevProps.group.group__id !== this.state.group.group__id) {
-  //     console.log("Unsubscribing from room: " + prevProps.group.group__id);
-  //     unsubscribeFromRoom(prevProps.group.group__id);
-  //   }
-  // }
 
   async getMessages () {
     this.setState({ isLoading: true })
