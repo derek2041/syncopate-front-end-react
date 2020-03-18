@@ -25,6 +25,10 @@ function subscribeToRoom(cb, room) {
 }
 
 function killChatConnection() {
+  if (socket === null) {
+    return;
+  }
+  
   socket.emit("killChatConnection");
   socket.disconnect();
   socket = null;
