@@ -24,19 +24,10 @@ function subscribeToRoom(cb, room) {
   socket.emit("subscribeToRoom", room);
 }
 
-function unsubscribeFromRoom(room) {
-  // try {
-  //   const foundRooms = Object.keys(socket.rooms);
-  //   console.log("Found rooms: " + foundRooms);
-  // } catch (e) {
-  //   console.log(e);
-  //   console.log("Could not close socket.io session.");
-  // }
-  console.log("\n\n\n\n\n\n\n\n\n\n\n\nSENDING UNSUBSCRIBE EVENT\n\n\n\n\n\n\n\n\n\n\n");
-  socket.emit("unsubscribeFromRoom", room);
+function unsubscribeFromRoom() {
+  socket.emit("unsubscribeFromRoom");
   socket.disconnect();
   socket = null;
-  // socket.leave(room);
 }
 
 async function getGroupMessages(groupId) {
