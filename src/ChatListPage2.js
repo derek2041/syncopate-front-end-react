@@ -83,8 +83,8 @@ const ChatListPage2 = () => {
       var temp_options = [];
       friendResult.friends.forEach(curr_friend => {
         temp_options.push({
-          text: curr_friend.first_name,
-          value: curr_friend.first_name
+          text: curr_friend.first_name + " " + curr_friend.last_name,
+          value: curr_friend.id
         });
       });
       setDropdownOptions(temp_options);
@@ -992,7 +992,8 @@ const ChatListPage2 = () => {
                     },
                     credentials: "include",
                     body: JSON.stringify({
-                      added_people: addingFriendList
+                      added_people: addingFriendList,
+                      group_id: currGroup.group__id
                     })
                   };
                   const response = await fetch(
@@ -1001,6 +1002,25 @@ const ChatListPage2 = () => {
                   );
                   const result = await response.json();
                   if (result.status === "success") {
+                    handleRefresh();
+                    var clonedCurrGroup = JSON.parse(JSON.stringify(currGroup));
+
+                    addingFriendList.forEach(friend_id => {
+                      friendList.forEach(curr_friend => {
+                        if (curr_friend.id === friend_id) {
+                          clonedCurrGroup.users.push({
+                            "user__id": curr_friend.id,
+                            "user__first_name": curr_friend.first_name,
+                            "user__last_name": curr_friend.last_name,
+                            "user__email": curr_friend.email,
+                            "user__profile_pic_url": curr_friend.profile_pic_url
+                          });
+                        }
+                      });
+                    });
+
+                    setCurrGroup(clonedCurrGroup);
+                    setCurrModal(null);
                   }
                 }}
               />
