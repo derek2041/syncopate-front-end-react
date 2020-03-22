@@ -1040,7 +1040,7 @@ const ChatListPage2 = () => {
     return (
       <div>
 
-        <div style={{ marginTop: "40vh", height: "calc(100vh - 65px)" }}>
+        <div style={{ paddingTop: "40vh", height: "calc(100vh - 65px)" }}>
           <Loader size="huge" active inline="centered"></Loader>
         </div>
       </div>

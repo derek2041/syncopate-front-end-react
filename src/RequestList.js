@@ -181,7 +181,7 @@ const RequestList = () => {
     return (
       <div>
 
-        <div style={{ marginTop: "40vh" }}>
+        <div style={{ paddingTop: "40vh", height: "calc(100vh - 65px)" }}>
           <Loader size="huge" active inline="centered"></Loader>
         </div>
       </div>

@@ -145,7 +145,7 @@ const ProfilePage2 = () => {
     return (
       <div>
 
-        <div style={{ marginTop: "40vh" }}>
+        <div style={{ paddingTop: "40vh", height: "calc(100vh - 65px)" }}>
           <Loader size="huge" active inline="centered"></Loader>
         </div>
       </div>
@@ -156,7 +156,7 @@ const ProfilePage2 = () => {
     return (
       <>
 
-        <div style={{ marginTop: "45vh" }}>
+        <div style={{ paddingTop: "40vh", height: "calc(100vh - 65px)" }}>
           <Loader size="huge" active inline="centered"></Loader>
         </div>
       </>
@@ -164,15 +164,14 @@ const ProfilePage2 = () => {
   } else if (loadState === true) {
     console.log("url:" + avatarURL);
     return (
-      <>
+      <div style={{ height: "calc(100vh - 65px)"}}>
 
         <div
           style={{
             maxWidth: "800px",
             margin: "0 auto",
-            marginTop: "75px",
+            transform: "translate(0px, 60px)",
             borderRadius: "50px",
-            marginBottom: "75px",
             boxShadow: "5px 7px 20px -4px"
           }}
         >
@@ -222,7 +221,7 @@ const ProfilePage2 = () => {
             </Button>
           </div>
         </div>
-      </>
+      </div>
     );
   }
 };
