@@ -779,6 +779,7 @@ const ChatListPage2 = () => {
   const renderGroupMemberList = () => {
     var resultJSX = []
     currGroup.users.forEach((curr_user) => {
+
       var currJSX = (
         <div>
           <Transition
@@ -819,6 +820,7 @@ const ChatListPage2 = () => {
                 onClick={() => {
                   console.log("setting remove friends");
                   setCurrModal("remove-friend");
+                  console.log(curr_user.user__id + "dsfsfsfsf");
                 }}
               />
               <Modal
@@ -847,37 +849,43 @@ const ChatListPage2 = () => {
                     labelPosition="right"
                     content="Yes"
                     onClick={async () => {
-                      const settings = {
-                        method: "POST",
-                        headers: {
-                          "Content-Type": "application/json"
-                        },
-                        credentials: "include",
-                        body: JSON.stringify({
-                          user__id: curr_user.user__id,
-                          group_id: currGroup.group__id
-                        })
-                      };
-                      const response = await fetch(
-                        `http://18.219.112.140:8000/api/v1/remove-friend-from-group/`,
-                        settings
-                      );
-                      const result = await response.json();
-                      if (result.status === "success") {
+                      // const settings = {
+                      //   method: "POST",
+                      //   headers: {
+                      //     "Content-Type": "application/json"
+                      //   },
+                      //   credentials: "include",
+                      //   body: JSON.stringify({
+                      //     user__id: curr_user.user__id,
+                      //     group_id: currGroup.group__id
+                      //   })
+                      // };
+                      // const response = await fetch(
+                      //   `http://18.219.112.140:8000/api/v1/remove-friend-from-group/`,
+                      //   settings
+                      // );
+                      // const result = await response.json();
+                      // if (result.status === "success") {
                         handleRefresh();
                         var clonedCurrGroup = JSON.parse(JSON.stringify(currGroup));
+                        console.log("kkzhiqiande");
+                        console.log(clonedCurrGroup);
 
+                        console.log(curr_user.user__id + curr_user.user__first_name);
+                        for(var i = 0; i < clonedCurrGroup.users.length; i++){
+                          console.log(clonedCurrGroup.users[i]);
+                          if(clonedCurrGroup.users[i] === curr_user.user__id){
 
-                        friendList.forEach(curr_friend => {
-                            if (curr_friend.id === curr_user.user__id) {
-                              clonedCurrGroup.users.remove();
-                            }
+                            clonedCurrGroup.users.remove(i);
+                          }
 
-                        });
+                        }
+                        console.log("kkxianzaide");
+                        console.log(clonedCurrGroup);
 
                         setCurrGroup(clonedCurrGroup);
                         setCurrModal(null);
-                      }
+                      // }
                     }}
                   />
                 </Modal.Actions>
