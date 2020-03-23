@@ -809,14 +809,81 @@ const ChatListPage2 = () => {
               </div>
               <Icon
                 size="normal"
-                name="ellipsis horizontal"
+                name="minus"
                 color="grey"
                 style={{
                   float: "right",
                   paddingTop: "14px",
                   marginRight: "20px"
                 }}
+                onClick={() => {
+                  console.log("setting remove friends");
+                  setCurrModal("remove-friend");
+                }}
               />
+              <Modal
+                size="tiny"
+                open={currModal === "remove-friend"}
+                onClose={() => {
+
+                  setCurrModal(null);
+                }}
+              >
+                <Modal.Header>Are you sure you want to delete the friend?</Modal.Header>
+
+                <Modal.Actions>
+                  <Button
+                    color='green'
+                    icon="reply"
+                    labelPosition="right"
+                    content="No"
+                    onClick={async () => {
+                        setCurrModal(null);
+                    }}
+                  />
+                  <Button
+                    color='red'
+                    icon="checkmark"
+                    labelPosition="right"
+                    content="Yes"
+                    onClick={async () => {
+                      const settings = {
+                        method: "POST",
+                        headers: {
+                          "Content-Type": "application/json"
+                        },
+                        credentials: "include",
+                        body: JSON.stringify({
+                          user__id: curr_user.user__id,
+                          group_id: currGroup.group__id
+                        })
+                      };
+                      const response = await fetch(
+                        `http://18.219.112.140:8000/api/v1/remove-friend-from-group/`,
+                        settings
+                      );
+                      const result = await response.json();
+                      if (result.status === "success") {
+                        handleRefresh();
+                        var clonedCurrGroup = JSON.parse(JSON.stringify(currGroup));
+
+
+                        friendList.forEach(curr_friend => {
+                            if (curr_friend.id === curr_user.user__id) {
+                              clonedCurrGroup.users.remove();
+                            }
+
+                        });
+
+                        setCurrGroup(clonedCurrGroup);
+                        setCurrModal(null);
+                      }
+                    }}
+                  />
+                </Modal.Actions>
+              </Modal>
+
+
             </div>
           </Transition>
         </div>
