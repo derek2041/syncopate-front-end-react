@@ -819,13 +819,13 @@ const ChatListPage2 = () => {
                 }}
                 onClick={() => {
                   console.log("setting remove friends");
-                  setCurrModal("remove-friend");
+                  setCurrModal("remove-friend" + curr_user.user__id);
                   console.log(curr_user.user__id + "dsfsfsfsf");
                 }}
               />
               <Modal
                 size="tiny"
-                open={currModal === "remove-friend"}
+                open={currModal === "remove-friend" + curr_user.user__id }
                 onClose={() => {
 
                   setCurrModal(null);
@@ -868,15 +868,15 @@ const ChatListPage2 = () => {
                       // if (result.status === "success") {
                         handleRefresh();
                         var clonedCurrGroup = JSON.parse(JSON.stringify(currGroup));
-                        console.log("kkzhiqiande");
                         console.log(clonedCurrGroup);
 
                         console.log(curr_user.user__id + curr_user.user__first_name);
                         for(var i = 0; i < clonedCurrGroup.users.length; i++){
                           console.log(clonedCurrGroup.users[i]);
-                          if(clonedCurrGroup.users[i] === curr_user.user__id){
-
-                            clonedCurrGroup.users.remove(i);
+                          if(clonedCurrGroup.users[i].user__id === curr_user.user__id){
+                            clonedCurrGroup.users.splice(i,1);
+                            break;
+                            // clonedCurrGroup.users.remove(i);
                           }
 
                         }
