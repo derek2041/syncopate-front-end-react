@@ -59,45 +59,56 @@ const Stats = () => {
       }, [refreshCount]);
       return(
 
-     <div>
-        <div className="topDiv">
-            <img
-            src={mainLogo}
-            style={{ marginTop: "10px", float: "center", height: "40px" }}
-            />
-            <h1>{`${loadedData.first_name} ${loadedData.last_name}'s stats`}</h1>
-            <div style={{ float: "center", maxWidth: "350px", margin: "0 auto" }}>
-            <h2
-                style={{
-                color: "rgba(0, 0, 0, .55)",
-                textAlign: "center",
-                float: "center",
-                marginTop: "17px",
-                marginLeft: "17px",
-                position: "relative"
-                }}
-            >
-                Number of Friends: {friendsCount}
-                
-                
-            </h2>
-            <h2
-                style={{
-                color: "rgba(0, 0, 0, .55)",
-                textAlign: "center",
-                float: "center",
-                marginTop: "17px",
-                marginLeft: "17px",
-                position: "relative"
-                }}
-            >
-                Total messages sent: {msgCount}
-                
-            </h2>
-            
+       <div style={{ height: "calc(100vh - 65px)"}}>
+
+          <div
+            style={{
+              maxWidth: "800px",
+              margin: "0 auto",
+              transform: "translate(0px, 60px)",
+              borderRadius: "50px",
+              boxShadow: "5px 7px 20px -4px"
+            }}
+          >
+          <div className="topDiv">
+              <img
+              src={mainLogo}
+              style={{ marginTop: "10px", float: "center", height: "40px" }}
+              />
+              <h1>{`${loadedData.first_name} ${loadedData.last_name}'s stats`}</h1>
+              <div style={{ float: "center", maxWidth: "350px", margin: "0 auto", paddingBottom: "50px" }}>
+              <h2
+                  style={{
+                  color: "rgba(0, 0, 0, .55)",
+                  textAlign: "center",
+                  float: "center",
+                  marginTop: "17px",
+                  marginLeft: "17px",
+                  position: "relative"
+                  }}
+              >
+                  Number of Friends: {friendsCount}
+                  
+                  
+              </h2>
+              <h2
+                  style={{
+                  color: "rgba(0, 0, 0, .55)",
+                  textAlign: "center",
+                  float: "center",
+                  marginTop: "17px",
+                  marginLeft: "17px",
+                  position: "relative"
+                  }}
+              >
+                  Total messages sent: {msgCount}
+                  
+              </h2>
+              
+          </div>
+        </div>
         </div>
       </div>        
-    </div>
       );
     };
 
