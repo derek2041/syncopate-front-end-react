@@ -1,0 +1,104 @@
+import React, { useState, useEffect } from "react";
+import { Input, Checkbox, Button, Message, Card } from "semantic-ui-react";
+import mainLogo from "./images/1x/Asset 22.png";
+const Stats = () => {
+    const [validSession, setValidSession] = useState(null);
+    const [msgCount, setMsgCount] = useState(null);
+    const [friendsCount, setFriendsCount] = useState(null);
+    const [loadedData, setLoadedData] = useState({});
+    const [userStatus, setUserStatus] = useState(null);
+    const [refreshCount, setRefreshCount] = useState(0);
+    const handleRefresh = () => setRefreshCount(i => i + 1);
+
+
+    useEffect(() => {
+        async function checkLoggedIn() {
+          const response = await fetch(
+            `http://18.219.112.140:8000/api/v1/check-logged-in/`,
+            { method: "GET", credentials: "include" }
+          );
+          const result = await response.json();
+    
+          if (result.status !== "success") {
+            window.location.href = "/";
+          } else if (result.status === "success"){
+            setValidSession(true);
+          }
+        }
+        async function identifyUser() {
+            const response = await fetch(
+              `http://18.219.112.140:8000/api/v1/identify/`,
+              { method: "GET", credentials: "include" }
+            );
+      
+            const result = await response.json();
+            setLoadedData(result);
+            setUserStatus(result.available);
+            console.log("identifyuser=", result);
+        }
+        async function fetchStats() {
+          const response = await fetch(
+            `http://18.219.112.140:8000/api/v1/stats/`,
+            { method: "GET", credentials: "include" }
+          );
+          const result = await response.json();
+          console.log(result);
+          
+          setMsgCount(result.messages_count);
+          setFriendsCount(result.friends_count);
+          
+        }
+        
+    
+        checkLoggedIn();
+        identifyUser();
+        fetchStats();
+        //setMsgCount(10);
+        //setFriendsCount(20);
+    
+      }, [refreshCount]);
+      return(
+
+     <div>
+        <div className="topDiv">
+            <img
+            src={mainLogo}
+            style={{ marginTop: "10px", float: "center", height: "40px" }}
+            />
+            <h1>{`${loadedData.first_name} ${loadedData.last_name}'s stats`}</h1>
+            <div style={{ float: "center", maxWidth: "350px", margin: "0 auto" }}>
+            <h2
+                style={{
+                color: "rgba(0, 0, 0, .55)",
+                textAlign: "center",
+                float: "center",
+                marginTop: "17px",
+                marginLeft: "17px",
+                position: "relative"
+                }}
+            >
+                Number of Friends: {friendsCount}
+                
+                
+            </h2>
+            <h2
+                style={{
+                color: "rgba(0, 0, 0, .55)",
+                textAlign: "center",
+                float: "center",
+                marginTop: "17px",
+                marginLeft: "17px",
+                position: "relative"
+                }}
+            >
+                Total messages sent: {msgCount}
+                
+            </h2>
+            
+        </div>
+      </div>        
+    </div>
+      );
+    };
+
+export default Stats;

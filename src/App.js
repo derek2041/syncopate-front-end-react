@@ -18,6 +18,7 @@ import ChatListPage2 from "./ChatListPage2";
 import SearchUserPage from "./SearchUserPage";
 import ChangePassword from "./ChangePassword";
 import NavigationBar from "./NavigationBar";
+import Stats from "./Stats";
 
 const App = () => {
   return (
@@ -132,6 +133,14 @@ const App = () => {
             exact
             render={() => {
               return <ChatListPage2 />;
+            }}
+          />
+
+          <Route
+            path="/stats"
+            exact
+            render={() => {
+              return <Stats />;
             }}
           />
 
