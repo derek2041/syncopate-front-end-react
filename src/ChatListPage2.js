@@ -779,6 +779,7 @@ const ChatListPage2 = () => {
   const renderGroupMemberList = () => {
     var resultJSX = []
     currGroup.users.forEach((curr_user) => {
+
       var currJSX = (
         <div>
           <Transition
@@ -809,14 +810,88 @@ const ChatListPage2 = () => {
               </div>
               <Icon
                 size="normal"
-                name="ellipsis horizontal"
+                name="minus"
                 color="grey"
                 style={{
                   float: "right",
                   paddingTop: "14px",
                   marginRight: "20px"
                 }}
+                onClick={() => {
+                  console.log("setting remove friends");
+                  setCurrModal("remove-friend" + curr_user.user__id);
+                  console.log(curr_user.user__id + "dsfsfsfsf");
+                }}
               />
+              <Modal
+                size="tiny"
+                open={currModal === "remove-friend" + curr_user.user__id }
+                onClose={() => {
+
+                  setCurrModal(null);
+                }}
+              >
+                <Modal.Header>Are you sure you want to delete the friend?</Modal.Header>
+
+                <Modal.Actions>
+                  <Button
+                    color='green'
+                    icon="reply"
+                    labelPosition="right"
+                    content="No"
+                    onClick={async () => {
+                        setCurrModal(null);
+                    }}
+                  />
+                  <Button
+                    color='red'
+                    icon="checkmark"
+                    labelPosition="right"
+                    content="Yes"
+                    onClick={async () => {
+                      // const settings = {
+                      //   method: "POST",
+                      //   headers: {
+                      //     "Content-Type": "application/json"
+                      //   },
+                      //   credentials: "include",
+                      //   body: JSON.stringify({
+                      //     user__id: curr_user.user__id,
+                      //     group_id: currGroup.group__id
+                      //   })
+                      // };
+                      // const response = await fetch(
+                      //   `http://18.219.112.140:8000/api/v1/remove-friend-from-group/`,
+                      //   settings
+                      // );
+                      // const result = await response.json();
+                      // if (result.status === "success") {
+                        handleRefresh();
+                        var clonedCurrGroup = JSON.parse(JSON.stringify(currGroup));
+                        console.log(clonedCurrGroup);
+
+                        console.log(curr_user.user__id + curr_user.user__first_name);
+                        for(var i = 0; i < clonedCurrGroup.users.length; i++){
+                          console.log(clonedCurrGroup.users[i]);
+                          if(clonedCurrGroup.users[i].user__id === curr_user.user__id){
+                            clonedCurrGroup.users.splice(i,1);
+                            break;
+                            // clonedCurrGroup.users.remove(i);
+                          }
+
+                        }
+                        console.log("kkxianzaide");
+                        console.log(clonedCurrGroup);
+
+                        setCurrGroup(clonedCurrGroup);
+                        setCurrModal(null);
+                      // }
+                    }}
+                  />
+                </Modal.Actions>
+              </Modal>
+
+
             </div>
           </Transition>
         </div>
