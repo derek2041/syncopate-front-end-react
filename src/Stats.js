@@ -1,16 +1,17 @@
 import React, { useState, useEffect } from "react";
 import { Button, Loader } from "semantic-ui-react";
 import mainLogo from "./images/1x/Asset 22.png";
+import "./Stats.css"
 const Stats = () => {
     const [validSession, setValidSession] = useState(null);
     const [msgCount, setMsgCount] = useState(null);
     const [friendsCount, setFriendsCount] = useState(null);
+    const [topTen, setTopTen] = useState([]);
     const [loadedData, setLoadedData] = useState({});
     const [userStatus, setUserStatus] = useState(null);
     const [refreshCount, setRefreshCount] = useState(0);
     const handleRefresh = () => setRefreshCount(i => i + 1);
-
-
+    
     useEffect(() => {
         async function checkLoggedIn() {
           const response = await fetch(
@@ -46,6 +47,7 @@ const Stats = () => {
           
           setMsgCount(result.messages_count);
           setFriendsCount(result.friends_count);
+          setTopTen(result.top_ten);
           
         }
         
@@ -53,9 +55,11 @@ const Stats = () => {
         checkLoggedIn();
         identifyUser();
         fetchStats();
-        //setMsgCount(10);
-        //setFriendsCount(20);
-    
+        //used for testing
+        /*setMsgCount(10);
+        setFriendsCount(20);
+        const test = ["Mathew", "Mark", "Luke", "John", "Joe", "Abby", "Jill", "Mike", "Mitch", "Noah"];
+        setTopTen(test);*/
       }, [refreshCount]);
       
       if (validSession === null) {
@@ -116,6 +120,21 @@ const Stats = () => {
                   Total messages sent: {msgCount}
                   
               </h2>
+              <h2>{`Top friends`}</h2>
+              <ol                   
+                  style={{
+                  color: "rgba(0, 0, 0, .55)",
+                  textAlign: "center",
+                  float: "center",
+                  marginTop: "17px",
+                  marginLeft: "17px",
+                  position: "relative"
+                  
+                  }}
+              >
+                { topTen.map(questionlist =>
+                <li key={questionlist.key}><span>{questionlist}</span></li>)}
+              </ol>
               
           </div>
         </div>
