@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Input, Checkbox, Button, Message, Card } from "semantic-ui-react";
+import { Button, Loader } from "semantic-ui-react";
 import mainLogo from "./images/1x/Asset 22.png";
 const Stats = () => {
     const [validSession, setValidSession] = useState(null);
@@ -57,6 +57,18 @@ const Stats = () => {
         //setFriendsCount(20);
     
       }, [refreshCount]);
+      
+      if (validSession === null) {
+        return (
+          <div>
+
+            <div style={{ paddingTop: "40vh", height: "calc(100vh - 65px)" }}>
+              <Loader size="huge" active inline="centered"></Loader>
+            </div>
+          </div>
+        );
+      }
+
       return(
 
        <div style={{ height: "calc(100vh - 65px)"}}>
