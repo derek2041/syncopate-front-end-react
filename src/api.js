@@ -36,20 +36,20 @@ function killChatConnection() {
 
 async function getGroupMessages(groupId) {
 
-
+  // TODO Fix the authentication
   const response = await fetch(
-    `http://18.219.112.140:8000/api/v1/get-messages?group_id=${groupId}`,
+    `http://18.219.112.140:8000/api/v1/get-messages/`,
     {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      credentials: "include"
+      method: "POST",
+      credentials: "include",
+      body: JSON.stringify({
+        group_id: groupId || window.location.pathname.split("/").slice(-1)[0]
+      })
     }
   );
 
   const result = await response.json();
-    debugger
+  return result.messages
 }
 
 function sendMessageToRoom(message) {
