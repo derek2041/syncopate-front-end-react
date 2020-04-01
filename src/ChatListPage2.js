@@ -228,7 +228,7 @@ const ChatListPage2 = () => {
           <List.Item
             className="select-group"
             key={identifier}
-            style={{ height: "fit-content", minHeight: "80px" }}
+            style={{ height: "fit-content", minHeight: "80px", backgroundColor: "	#B0E0E6"}}
             onClick={() => {
               if (currGroup !== null && curr_group.group__id !== currGroup.group__id) {
                 killChatConnection();
