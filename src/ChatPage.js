@@ -157,7 +157,8 @@ class Chat extends React.Component {
     }
     sendMessageToRoom({
       message: input.value,
-      user: this.state.curr_user
+      user: this.state.curr_user,
+      group: this.state.group
     });
     //this.pushMessage(this.state.curr_user, input.value);
     input.value = "";
