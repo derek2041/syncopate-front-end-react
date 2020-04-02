@@ -126,11 +126,63 @@ const ChatListPage2 = () => {
   };
 
   const updateGroupName = async () => {
-    return;
+    const settings = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      credentials: "include",
+      body: JSON.stringify({
+        group_id: currGroup.group__id,
+        name: editGroupName
+      })
+    };
+    const response = await fetch(
+      `http://18.219.112.140:8000/api/v1/edit-group-name/`,
+      settings
+    );
+
+    const result = await response.json();
+
+    if (result.status === "success") {
+      handleRefresh();
+      var clonedCurrGroup = JSON.parse(JSON.stringify(currGroup));
+
+      clonedCurrGroup.group__name = editGroupName;
+      setCurrGroup(clonedCurrGroup);
+      setEditGroupName("");
+      setCurrModal(null);
+    }
   };
 
   const updateGroupDescription = async () => {
-    return;
+    const settings = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      credentials: "include",
+      body: JSON.stringify({
+        group_id: currGroup.group__id,
+        description: editGroupDescription
+      })
+    };
+    const response = await fetch(
+      `http://18.219.112.140:8000/api/v1/edit-group-description/`,
+      settings
+    );
+
+    const result = await response.json();
+
+    if (result.status === "success") {
+      handleRefresh();
+      var clonedCurrGroup = JSON.parse(JSON.stringify(currGroup));
+
+      clonedCurrGroup.group__description = editGroupDescription;
+      setCurrGroup(clonedCurrGroup);
+      setEditGroupDescription("");
+      setCurrModal(null);
+    }
   };
 
   const handleLeaveRequest = async () => {
@@ -145,7 +197,7 @@ const ChatListPage2 = () => {
       })
     };
     const response = await fetch(
-      `http://18.219.112.140:8000/api/v1/leave-group/`,
+      `http://18.219.112.140:8000/api/v1/leave/`,
       settings
     );
 
@@ -153,6 +205,7 @@ const ChatListPage2 = () => {
 
     if (result.status === "success") {
       handleRefresh();
+      setCurrModal(null);
       setCurrGroup(null);
     }
   };
@@ -228,7 +281,7 @@ const ChatListPage2 = () => {
           <List.Item
             className="select-group"
             key={identifier}
-            style={{ height: "fit-content", minHeight: "80px" }}
+            style={{ height: "fit-content", minHeight: "80px", background: "rgba(236, 236, 236, 0.9)" }}
             onClick={() => {
               if (currGroup !== null && curr_group.group__id !== currGroup.group__id) {
                 killChatConnection();
@@ -444,7 +497,9 @@ const ChatListPage2 = () => {
           >
             <Modal.Header>Change Group Name</Modal.Header>
             <Modal.Content>
-              <Input placeholder={currGroup.group__name} />
+              <Input placeholder={currGroup.group__name} style={{ width: "100%" }} onChange={(event, data) => {
+                setEditGroupName(data.value);
+              }}/>
             </Modal.Content>
             <Modal.Actions>
               <Button
@@ -511,7 +566,9 @@ const ChatListPage2 = () => {
           >
             <Modal.Header>Change Group Description</Modal.Header>
             <Modal.Content>
-              <Input placeholder={currGroup.group__description} />
+              <Input placeholder={currGroup.group__description} style={{ width: "100%" }} onChange={(event, data) => {
+                setEditGroupDescription(data.value);
+              }}/>
             </Modal.Content>
             <Modal.Actions>
               <Button
@@ -726,6 +783,15 @@ const ChatListPage2 = () => {
             </Modal.Content>
             <Modal.Actions>
               <Button
+                secondary
+                icon="reply"
+                labelPosition="right"
+                content="No"
+                onClick={() => {
+                  setCurrModal(null);
+                }}
+              />
+              <Button
                 primary
                 icon="checkmark"
                 labelPosition="right"
@@ -809,9 +875,9 @@ const ChatListPage2 = () => {
                 { curr_user.user__first_name }
               </div>
               <Icon
-                size="normal"
+                size="large"
                 name="minus"
-                color="grey"
+                color="red"
                 style={{
                   float: "right",
                   paddingTop: "14px",
@@ -831,41 +897,42 @@ const ChatListPage2 = () => {
                   setCurrModal(null);
                 }}
               >
-                <Modal.Header>Are you sure you want to delete the friend?</Modal.Header>
+                <Modal.Header>Are you sure you want to remove {curr_user.user__first_name + " " + curr_user.user__last_name + " from this group?"}</Modal.Header>
 
                 <Modal.Actions>
                   <Button
-                    color='green'
+                    secondary
                     icon="reply"
                     labelPosition="right"
                     content="No"
-                    onClick={async () => {
-                        setCurrModal(null);
+                    onClick={() => {
+                      setCurrModal(null);
                     }}
                   />
                   <Button
-                    color='red'
+                    primary
                     icon="checkmark"
                     labelPosition="right"
                     content="Yes"
                     onClick={async () => {
-                      // const settings = {
-                      //   method: "POST",
-                      //   headers: {
-                      //     "Content-Type": "application/json"
-                      //   },
-                      //   credentials: "include",
-                      //   body: JSON.stringify({
-                      //     user__id: curr_user.user__id,
-                      //     group_id: currGroup.group__id
-                      //   })
-                      // };
-                      // const response = await fetch(
-                      //   `http://18.219.112.140:8000/api/v1/remove-friend-from-group/`,
-                      //   settings
-                      // );
-                      // const result = await response.json();
-                      // if (result.status === "success") {
+                      const settings = {
+                        method: "POST",
+                        headers: {
+                          "Content-Type": "application/json"
+                        },
+                        credentials: "include",
+                        body: JSON.stringify({
+                          user_id: curr_user.user__id,
+                          group_id: currGroup.group__id
+                        })
+                      };
+                      const response = await fetch(
+                        `http://18.219.112.140:8000/api/v1/boot/`,
+                        settings
+                      );
+                      const result = await response.json();
+
+                      if (result.status === "success") {
                         handleRefresh();
                         var clonedCurrGroup = JSON.parse(JSON.stringify(currGroup));
                         console.log(clonedCurrGroup);
@@ -885,7 +952,7 @@ const ChatListPage2 = () => {
 
                         setCurrGroup(clonedCurrGroup);
                         setCurrModal(null);
-                      // }
+                      }
                     }}
                   />
                 </Modal.Actions>
