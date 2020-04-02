@@ -40,6 +40,16 @@ const styles = {
   }
 };
 
+const getUniqueIdForUser = username => {
+  if (getUniqueIdForUser._users[username]) {
+    return getUniqueIdForUser._users[username]
+  }
+  const newId = getUniqueIdForUser._users[username] = ++getUniqueIdForUser._last_id
+  return newId
+}
+getUniqueIdForUser._users = {}
+getUniqueIdForUser._last_id = 0
+
 class Chat extends React.Component {
   constructor(props) {
     super(props);
@@ -156,10 +166,13 @@ class Chat extends React.Component {
 
   pushMessage(recipient, message, image) {
     const prevState = this.state;
+     const isYou = recipient == this.state.curr_user
     const newMessage = new Message({
-      id: recipient == this.state.curr_user ? 0 : 1,
+//        id: recipient == this.state.curr_user ? 0 : 1,
+      id: isYou ? 0 : getUniqueIdForUser(recipient),
       message,
-      senderName: recipient == this.state.curr_user ? "You" : recipient
+  //    senderName: recipient == this.state.curr_user ? "You" : recipient
+      senderName: isYou ? "You" : recipient
     });
     newMessage.image = image;
     prevState.messages.push(newMessage);
