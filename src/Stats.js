@@ -59,7 +59,7 @@ const Stats = () => {
         //used for testing
         /*setMsgCount(10);
         setFriendsCount(20);
-        const test = [{name:"Mathew ABC", profile_pic:"https://images.pexels.com/photos/20787/pexels-photo.jpg?auto=compress&cs=tinysrgb&h=350", message_count: 50}, {name:"Mark Abc", profile_pic:"https://gpluseurope.com/wp-content/uploads/Mauro-profile-picture.jpg" ,message_count: 15}, {name:"Ron ABC", profile_pic: "https://gpluseurope.com/wp-content/uploads/Mauro-profile-picture.jpg", message_count: 10}];
+        const test = [{name:"Mathew ABC", profile_pic:"z3ADqpMsDo0Gpw-VKJrJuZSABb1wYvPSSrunVg6HBqAqEBg469qkvOTvL1iE7MKPGbhmhvG3a4cIXoqPyZe3hq_5GIX6VSL-8yM-CT3jelP1OFzERx59keNNrKGr2GnJPCHNdnDsJ311LvSKzYtFZPxnqnOEsw-VrNU1CbHCYzY.jpeg", message_count: 50}, {name:"Mark Abc", profile_pic:"https://gpluseurope.com/wp-content/uploads/Mauro-profile-picture.jpg" ,message_count: 15}, {name:"Ron ABC", profile_pic: "https://gpluseurope.com/wp-content/uploads/Mauro-profile-picture.jpg", message_count: 10}];
         setTopTen(test);*/
       }, [refreshCount]);
       
@@ -131,7 +131,7 @@ const Stats = () => {
               >
                 { topTen.map(list =>
                 <li key={list.key}>
-                  <div style={{paddingRight: "55px"}}><img src={list.profile_pic} alt="new" width="100" height="80"/></div>
+                  <div style={{paddingRight: "55px"}}><img id="rounded" src={"http://18.219.112.140/images/avatars/" + list.profile_pic} alt="Profile Pic"/></div>
                   <div style={{paddingRight: "55px"}}><span>{list.name}</span></div>      
                   <div style={{paddingRight: "55px", paddingBottom: "20px"}}><span2>Messages Sent: {list.message_count}</span2></div>
                   </li>)}
