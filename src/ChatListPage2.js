@@ -915,23 +915,24 @@ const ChatListPage2 = () => {
                     labelPosition="right"
                     content="Yes"
                     onClick={async () => {
-                      // const settings = {
-                      //   method: "POST",
-                      //   headers: {
-                      //     "Content-Type": "application/json"
-                      //   },
-                      //   credentials: "include",
-                      //   body: JSON.stringify({
-                      //     user__id: curr_user.user__id,
-                      //     group_id: currGroup.group__id
-                      //   })
-                      // };
-                      // const response = await fetch(
-                      //   `http://18.219.112.140:8000/api/v1/remove-friend-from-group/`,
-                      //   settings
-                      // );
-                      // const result = await response.json();
-                      // if (result.status === "success") {
+                      const settings = {
+                        method: "POST",
+                        headers: {
+                          "Content-Type": "application/json"
+                        },
+                        credentials: "include",
+                        body: JSON.stringify({
+                          user_id: curr_user.user__id,
+                          group_id: currGroup.group__id
+                        })
+                      };
+                      const response = await fetch(
+                        `http://18.219.112.140:8000/api/v1/boot/`,
+                        settings
+                      );
+                      const result = await response.json();
+
+                      if (result.status === "success") {
                         handleRefresh();
                         var clonedCurrGroup = JSON.parse(JSON.stringify(currGroup));
                         console.log(clonedCurrGroup);
@@ -951,7 +952,7 @@ const ChatListPage2 = () => {
 
                         setCurrGroup(clonedCurrGroup);
                         setCurrModal(null);
-                      // }
+                      }
                     }}
                   />
                 </Modal.Actions>

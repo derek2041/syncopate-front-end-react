@@ -99,6 +99,22 @@ class Chat extends React.Component {
 
   async authenticateUser() {
     // TODO Fix the authentication
+    const fetch_user = await fetch(
+      `http://18.219.112.140:8000/api/v1/identify/`,
+      {
+        method: "POST",
+        credentials: "include"
+      }
+    );
+    const result_user = await fetch_user.json();
+
+    if (result_user.id !== null) {
+      this.setState({
+        curr_user: result_user.first_name
+      });
+    }
+
+
     const response = await fetch(
       `http://18.219.112.140:8000/api/v1/get-messages/`,
       {
@@ -227,13 +243,14 @@ class Chat extends React.Component {
             showSenderName
           />
 
-          <form onSubmit={e => this.onMessageSubmit(e)}>
+          <form onSubmit={e => this.onMessageSubmit(e)} style={{ textAlign: "left" }}>
             <input
               ref={m => {
                 this.message = m;
               }}
               placeholder="Type a message..."
               className="message-input"
+              style={{ width: "75%", marginLeft: "20px" }}
             />
             <button
               type="button"
@@ -241,7 +258,7 @@ class Chat extends React.Component {
                 document.querySelector("#message-attachment").click()
               }
               className="ui primary button"
-              id="upload-file-btn"
+              style={{ marginLeft: "20px" }}
             >
               Upload file
             </button>
