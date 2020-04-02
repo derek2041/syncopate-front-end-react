@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Button, Loader } from "semantic-ui-react";
 import mainLogo from "./images/1x/Asset 22.png";
 import "./Stats.css"
+
 const Stats = () => {
     const [validSession, setValidSession] = useState(null);
     const [msgCount, setMsgCount] = useState(null);
@@ -58,7 +59,7 @@ const Stats = () => {
         //used for testing
         /*setMsgCount(10);
         setFriendsCount(20);
-        const test = ["Mathew", "Mark", "Luke", "John", "Joe", "Abby", "Jill", "Mike", "Mitch", "Noah"];
+        const test = [{name:"Mathew ABC", profile_pic:"https://images.pexels.com/photos/20787/pexels-photo.jpg?auto=compress&cs=tinysrgb&h=350", message_count: 50}, {name:"Mark Abc", profile_pic:"https://gpluseurope.com/wp-content/uploads/Mauro-profile-picture.jpg" ,message_count: 15}, {name:"Ron ABC", profile_pic: "https://gpluseurope.com/wp-content/uploads/Mauro-profile-picture.jpg", message_count: 10}];
         setTopTen(test);*/
       }, [refreshCount]);
       
@@ -72,11 +73,8 @@ const Stats = () => {
           </div>
         );
       }
-
       return(
-
        <div style={{ height: "calc(100vh - 65px)"}}>
-
           <div
             style={{
               maxWidth: "800px",
@@ -129,11 +127,14 @@ const Stats = () => {
                   marginTop: "17px",
                   marginLeft: "17px",
                   position: "relative"
-                  
                   }}
               >
-                { topTen.map(questionlist =>
-                <li key={questionlist.key}><span>{questionlist}</span></li>)}
+                { topTen.map(list =>
+                <li key={list.key}>
+                  <div style={{paddingRight: "55px"}}><img src={list.profile_pic} alt="new" width="100" height="80"/></div>
+                  <div style={{paddingRight: "55px"}}><span>{list.name}</span></div>      
+                  <div style={{paddingRight: "55px", paddingBottom: "20px"}}><span2>Messages Sent: {list.message_count}</span2></div>
+                  </li>)}
               </ol>
               
           </div>
