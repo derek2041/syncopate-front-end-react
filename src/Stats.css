@@ -6,3 +6,8 @@ li span2{
     position: relative;
     left: 0;
 }
+img {
+  border-radius: 10px;
+  width: 160px;
+  height: 120px;
+}
