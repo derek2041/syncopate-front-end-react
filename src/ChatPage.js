@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { ChatFeed, ChatBubble, BubbleGroup, Message } from "react-chat-ui";
-import { subscribeToRoom, sendMessageToRoom, getGroupMessages } from "./api";
+import { subscribeToRoom, sendMessageToRoom } from "./api";
 import queryString from "query-string";
 import { Button, Search } from "semantic-ui-react";
 
@@ -66,23 +66,21 @@ class Chat extends React.Component {
       detailed_curr_user: null,
       searchQuery: "",
       searchedUsers: [],
-      isLoading: false,
+      isLoading: true,
       group: group
     };
 
-    this.getMessages()
+    // this.getMessages()
     // localStorage.setItem("username", user);
 
     this.groupName = window.location.pathname.split("/").slice(-1)[0];
 
     this.authenticateUser()
       .then(isAuthorized => {
-        debugger
         console.log("IS AUTHORIZED: ", isAuthorized);
         if (isAuthorized) {
           console.log("successfully authenticated");
           subscribeToRoom((err, newMessage) => {
-            debugger
             if (err) {
               return console.error(err);
             }
@@ -99,9 +97,29 @@ class Chat extends React.Component {
       .catch(console.error);
   }
 
+  componentDidMount() {
+    this.getMessages();
+  }
+
   async getMessages () {
-    this.setState({ isLoading: true })
-    const result = await getGroupMessages(this.state.group.group__id)
+    this.setState({ isLoading: true });
+    const settings = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      credentials: "include",
+      body: JSON.stringify({
+        group_id: this.state.group.group__id
+      })
+    };
+    const response = await fetch(
+      `http://18.219.112.140:8000/api/v1/get-messages/`,
+      settings
+    );
+
+    const result = await response.json();
+
     this.setState({
       group_messages: result,
       isLoading: false
@@ -157,6 +175,7 @@ class Chat extends React.Component {
     if (!input.value) {
       return false;
     }
+    console.log("what is in state messages?: " + JSON.stringify(this.state.messages));
     sendMessageToRoom({
       message: input.value,
       content: input.value,

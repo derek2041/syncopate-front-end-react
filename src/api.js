@@ -34,6 +34,7 @@ function killChatConnection() {
   socket = null;
 }
 
+/*
 async function getGroupMessages(groupId) {
 
 
@@ -60,12 +61,13 @@ async function getGroupMessages(groupId) {
    // debugger
   return result.messages
 }
+*/
 
 function sendMessageToRoom(message) {
   console.log("Sending message: " + JSON.stringify(message));
   socket.emit("new message", message);
 }
-export { subscribeToRoom, sendMessageToRoom, getGroupMessages, killChatConnection };
+export { subscribeToRoom, sendMessageToRoom, killChatConnection };
 
 // import openSocket from 'socket.io-client';
 // const  socket = openSocket('http://localhost:8000');
