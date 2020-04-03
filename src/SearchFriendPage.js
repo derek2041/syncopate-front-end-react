@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import {
   Input,
   Checkbox,
@@ -290,6 +291,8 @@ const SearchFriendPage = () => {
               </div>
 
               <Button
+                as={ Link }
+                to="/my-chats"
                 primary
                 style={{
                   float: "left",
@@ -300,9 +303,6 @@ const SearchFriendPage = () => {
                   fontSize: "18px"
                 }}
                 content="Chat"
-                onClick={async () => {
-                  window.location.href = "/chat/t1";
-                }}
               ></Button>
 
               <Button
