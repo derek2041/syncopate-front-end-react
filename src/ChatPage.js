@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { ChatFeed, ChatBubble, BubbleGroup, Message } from "react-chat-ui";
-import { subscribeToRoom, sendMessageToRoom, getGroupMessages } from "./api";
+import { subscribeToRoom, sendMessageToRoom } from "./api";
 import queryString from "query-string";
-import { Button, Search } from "semantic-ui-react";
+import { Button, Search, Loader } from "semantic-ui-react";
 
 const customBubble = props => {
   console.log(props);
@@ -62,26 +62,25 @@ class Chat extends React.Component {
       prompt("Enter the username");*/
     this.state = {
       messages: [],
-      curr_user: user.user__first_name,
+      curr_user: null,
+      detailed_curr_user: null,
       searchQuery: "",
       searchedUsers: [],
-      isLoading: false,
+      isLoading: true,
       group: group
     };
 
-    this.getMessages()
+    // this.getMessages()
     // localStorage.setItem("username", user);
 
     this.groupName = window.location.pathname.split("/").slice(-1)[0];
 
     this.authenticateUser()
       .then(isAuthorized => {
-        debugger
         console.log("IS AUTHORIZED: ", isAuthorized);
         if (isAuthorized) {
           console.log("successfully authenticated");
           subscribeToRoom((err, newMessage) => {
-            debugger
             if (err) {
               return console.error(err);
             }
@@ -98,17 +97,13 @@ class Chat extends React.Component {
       .catch(console.error);
   }
 
-  async getMessages () {
-    this.setState({ isLoading: true })
-    const result = await getGroupMessages(this.state.group.group__id)
-    this.setState({
-      group_messages: result,
-      isLoading: false
-    })
+  componentDidMount() {
+    this.getMessages();
+    // this.identifyUser().then(this.getMessages());
+    // this.getMessages();
   }
 
-  async authenticateUser() {
-    // TODO Fix the authentication
+  async identifyUser() {
     const fetch_user = await fetch(
       `http://18.219.112.140:8000/api/v1/identify/`,
       {
@@ -120,11 +115,68 @@ class Chat extends React.Component {
 
     if (result_user.id !== null) {
       this.setState({
-        curr_user: result_user.first_name
+        curr_user: result_user.first_name,
+        detailed_curr_user: result_user
       });
     }
 
+    return true;
+  }
 
+  async getMessages () {
+    this.setState({ isLoading: true });
+
+    const waiting = await this.identifyUser();
+
+    const settings = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      credentials: "include",
+      body: JSON.stringify({
+        group_id: this.state.group.group__id
+      })
+    };
+    const response = await fetch(
+      `http://18.219.112.140:8000/api/v1/get-messages/`,
+      settings
+    );
+
+    const result = await response.json();
+
+    var parsed_messages = [];
+    var raw_messages = result.messages;
+
+    raw_messages.forEach((curr_raw_message) => {
+      console.log("curr_user: " + this.state.curr_user);
+      console.log("owner_user: " + curr_raw_message.user__first_name);
+      if (curr_raw_message.rich_content === true) {
+        var assigned_id = getUniqueIdForUser(curr_raw_message.user__first_name);
+        if (curr_raw_message.user__first_name === this.state.curr_user) {
+          parsed_messages.push({id: 0, message: "", senderName: "You", image: curr_raw_message.content});
+        } else {
+          parsed_messages.push({id: assigned_id, message: "", senderName: curr_raw_message.user__first_name, image: curr_raw_message.content});
+        }
+      } else {
+        var assigned_id = getUniqueIdForUser(curr_raw_message.user__first_name);
+        if (curr_raw_message.user__first_name === this.state.curr_user) {
+          parsed_messages.push({id: 0, message: curr_raw_message.content, senderName: "You"})
+        } else {
+          parsed_messages.push({id: assigned_id, message: curr_raw_message.content, senderName: curr_raw_message.user__first_name})
+        }
+      }
+    });
+
+    this.setState({
+      messages: parsed_messages,
+      group_messages: result,
+      isLoading: false
+    })
+  }
+
+  async authenticateUser() {
+    // TODO Fix the authentication
     const response = await fetch(
       `http://18.219.112.140:8000/api/v1/get-messages/`,
       {
@@ -155,9 +207,14 @@ class Chat extends React.Component {
     if (!input.value) {
       return false;
     }
+    console.log("what is in state messages?: " + JSON.stringify(this.state.messages));
     sendMessageToRoom({
       message: input.value,
-      user: this.state.curr_user
+      content: input.value,
+      user: this.state.curr_user,
+      group_id: this.state.group.group__id,
+      user_info: this.state.detailed_curr_user,
+      rich_content: false
     });
     //this.pushMessage(this.state.curr_user, input.value);
     input.value = "";
@@ -229,7 +286,11 @@ class Chat extends React.Component {
     sendMessageToRoom({
       message: "",
       image: result,
-      user: this.state.curr_user
+      content: result,
+      user: this.state.curr_user,
+      group_id: this.state.group.group__id,
+      user_info: this.state.detailed_curr_user,
+      rich_content: true
     });
     //this.pushMessage(this.state.curr_user, "", result);
 
@@ -243,7 +304,11 @@ class Chat extends React.Component {
     };
 
     if (isLoading) {
-      return "Loading..."
+      return (
+        <div style={{ transform: "translate(0px, 40vh)" }}>
+          <Loader size="large" active inline="centered"></Loader>
+        </div>
+      );
     }
 
     return (

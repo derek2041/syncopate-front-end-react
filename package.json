@@ -5,6 +5,7 @@
   "dependencies": {
     "faker": "^4.1.0",
     "js-levenshtein": "^1.1.6",
+    "node-fetch": "^2.6.0",
     "prettier": "^1.19.1",
     "query-string": "^6.10.1",
     "react": "^16.12.0",
