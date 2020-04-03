@@ -14,7 +14,7 @@ if (false && window.location.host.includes("localhost")) {
 var socket = null;
 
 function subscribeToRoom(cb, room) {
-  socket = openSocket("http://" + domain + ":3001");
+  socket = openSocket("http://" + domain + ":3002");
   socket.on("push to clients", newMessage => {
     try {
       newMessage = JSON.parse(newMessage);
@@ -28,7 +28,7 @@ function killChatConnection() {
   if (socket === null) {
     return;
   }
-  
+
   socket.emit("killChatConnection");
   socket.disconnect();
   socket = null;
@@ -62,7 +62,8 @@ async function getGroupMessages(groupId) {
 }
 
 function sendMessageToRoom(message) {
-  socket.emit("new message", JSON.stringify(message));
+  console.log("Sending message: " + JSON.stringify(message));
+  socket.emit("new message", message);
 }
 export { subscribeToRoom, sendMessageToRoom, getGroupMessages, killChatConnection };
 

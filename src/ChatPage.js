@@ -63,6 +63,7 @@ class Chat extends React.Component {
     this.state = {
       messages: [],
       curr_user: user.user__first_name,
+      detailed_curr_user: null,
       searchQuery: "",
       searchedUsers: [],
       isLoading: false,
@@ -120,7 +121,8 @@ class Chat extends React.Component {
 
     if (result_user.id !== null) {
       this.setState({
-        curr_user: result_user.first_name
+        curr_user: result_user.first_name,
+        detailed_curr_user: result_user
       });
     }
 
@@ -157,7 +159,10 @@ class Chat extends React.Component {
     }
     sendMessageToRoom({
       message: input.value,
-      user: this.state.curr_user
+      content: input.value,
+      user: this.state.curr_user,
+      group_id: this.state.group.group__id,
+      user_info: this.state.detailed_curr_user
     });
     //this.pushMessage(this.state.curr_user, input.value);
     input.value = "";
@@ -229,7 +234,10 @@ class Chat extends React.Component {
     sendMessageToRoom({
       message: "",
       image: result,
-      user: this.state.curr_user
+      content: result,
+      user: this.state.curr_user,
+      group_id: this.state.group.group__id,
+      user_info: this.state.detailed_curr_user
     });
     //this.pushMessage(this.state.curr_user, "", result);
 
