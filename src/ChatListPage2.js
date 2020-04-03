@@ -29,15 +29,27 @@ var faker = require("faker");
 const levenshtein = require("js-levenshtein");
 
 const ChatListPage2 = () => {
+
+  // Session and current group data
   const [validSession, setValidSession] = useState(null);
   const [currGroup, setCurrGroup] = useState(null);
+
+  // Lists
   const [groupList, setGroupList] = useState(null);
   const [friendList, setFriendList] = useState(null);
+
+  // Options and Search
   const [dropdownOptions, setDropdownOptions] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [friendSearchQuery, setFriendSearchQuery] = useState("");
   const [optionsExpanded, setOptionsExpanded] = useState(false);
   const [settingsExpanded, setSettingsExpanded] = useState(false);
+
+  // Create Group
+  const [newGroupName, setNewGroupName] = useState("");
+  const [newGroupDescription, setNewGroupDescription] = useState("");
+
+  // Edit Group
   const [peopleExpanded, setPeopleExpanded] = useState(false);
   const [editGroupName, setEditGroupName] = useState("");
   const [editGroupDescription, setEditGroupDescription] = useState("");
@@ -45,6 +57,7 @@ const ChatListPage2 = () => {
   const [addingFriendList, setAddingFriendList] = useState([]);
   const [currModal, setCurrModal] = useState(null);
 
+  // Refresh handlers
   const [refreshCount, setRefreshCount] = useState(0);
   const handleRefresh = () => setRefreshCount(i => i + 1);
 
@@ -151,6 +164,34 @@ const ChatListPage2 = () => {
       clonedCurrGroup.group__name = editGroupName;
       setCurrGroup(clonedCurrGroup);
       setEditGroupName("");
+      setCurrModal(null);
+    }
+  };
+  
+  const createNewGroup = async () => {
+    const settings = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      credentials: "include",
+      body: JSON.stringify({
+        name: newGroupName,
+        description: newGroupDescription,
+        dm: false
+      })
+    };
+    const response = await fetch(
+      `http://18.219.112.140:8000/api/v1/create-group/`,
+      settings
+    );
+
+    const result = await response.json();
+
+    if (result.status === "success") {
+      handleRefresh();
+      setNewGroupName("");
+      setNewGroupDescription("");
       setCurrModal(null);
     }
   };
@@ -1226,6 +1267,47 @@ const ChatListPage2 = () => {
                 />
               </List.Item>
               {renderList()}
+              <div
+                onClick={() => {
+                  setCurrModal("create-group");
+                }}
+              >
+                  <Button
+                    primary
+                    icon="plus"
+                    labelPosition="right"
+                    content="Create new group"
+                  />
+              </div>
+
+              <Modal
+                size="tiny"
+                open={currModal === "create-group"}
+                onClose={() => {
+                  setNewGroupName("");
+                  setNewGroupDescription("");
+                  setCurrModal(null);
+                }}
+              >
+                <Modal.Header>Create New Group</Modal.Header>
+                <Modal.Content>
+                  <Input placeholder="Group Name" style={{ width: "100%" }} onChange={(event, data) => {
+                    setNewGroupName(data.value);
+                  }}/>
+                  <Input placeholder="Group Description" style={{ width: "100%" }} onChange={(event, data) => {
+                    setNewGroupDescription(data.value);
+                  }}/>
+                </Modal.Content>
+                <Modal.Actions>
+                  <Button
+                    primary
+                    icon="checkmark"
+                    labelPosition="right"
+                    content="Save Changes"
+                    onClick={createNewGroup}
+                  />
+                </Modal.Actions>
+              </Modal>
             </List>
           </div>
         </div>
