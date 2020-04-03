@@ -202,10 +202,20 @@ const ProfilePage2 = () => {
             </div>
           </div>
 
-          <div style={{ height: "60px" }}>{renderStatus()}</div>
+         <div style={{ height: "60px" }}>{renderStatus()}</div>
+	 
+	 <div style={{ paddingBottom: "20px" }}>
+            <a
+              id="change-password-link"
+              href="/stats"
+              style={{ fontSize: "15px" }}
+            >
+              Stats
+            </a>
+          </div>
 
           <div style={{ paddingBottom: "20px" }}>
-            <a
+	    <a
               id="change-password-link"
               href="/change-password"
               style={{ fontSize: "15px" }}
