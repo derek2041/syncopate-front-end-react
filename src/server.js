@@ -11,7 +11,7 @@ io.on("connection", socket => {
     socket.join(room);
     console.log("Connecting client to room: ", room);
 
-    socket.on("new message", async function(message) {
+    socket.on("new message", async function(message, rich_content) {
       console.log("Debugging Message: " + JSON.stringify(message));
       console.log(message.user_info);
       const settings = {
@@ -24,7 +24,7 @@ io.on("connection", socket => {
           user_id: message.user_info.id,
           group_id: message.group_id,
           content: message.content,
-          rich_content: false,
+          rich_content: message.rich_content,
           rich_content_url: "useless",
         })
       };

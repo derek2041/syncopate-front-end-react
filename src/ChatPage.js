@@ -120,7 +120,29 @@ class Chat extends React.Component {
 
     const result = await response.json();
 
+    var parsed_messages = [];
+    var raw_messages = result.messages;
+
+    raw_messages.forEach((curr_raw_message) => {
+      if (curr_raw_message.rich_content === true) {
+        var assigned_id = getUniqueIdForUser(curr_raw_message.user__first_name);
+        if (curr_raw_message.user__first_name === this.state.curr_user) {
+          parsed_messages.push({id: 0, message: "", senderName: "You", image: curr_raw_message.content});
+        } else {
+          parsed_messages.push({id: assigned_id, message: "", senderName: curr_raw_message.user__first_name, image: curr_raw_message.content});
+        }
+      } else {
+        var assigned_id = getUniqueIdForUser(curr_raw_message.user__first_name);
+        if (curr_raw_message.user__first_name === this.state.curr_user) {
+          parsed_messages.push({id: 0, message: curr_raw_message.content, senderName: "You"})
+        } else {
+          parsed_messages.push({id: assigned_id, message: curr_raw_message.content, senderName: curr_raw_message.user__first_name})
+        }
+      }
+    });
+
     this.setState({
+      messages: parsed_messages,
       group_messages: result,
       isLoading: false
     })
@@ -181,7 +203,8 @@ class Chat extends React.Component {
       content: input.value,
       user: this.state.curr_user,
       group_id: this.state.group.group__id,
-      user_info: this.state.detailed_curr_user
+      user_info: this.state.detailed_curr_user,
+      rich_content: false
     });
     //this.pushMessage(this.state.curr_user, input.value);
     input.value = "";
@@ -256,7 +279,8 @@ class Chat extends React.Component {
       content: result,
       user: this.state.curr_user,
       group_id: this.state.group.group__id,
-      user_info: this.state.detailed_curr_user
+      user_info: this.state.detailed_curr_user,
+      rich_content: true
     });
     //this.pushMessage(this.state.curr_user, "", result);
 
