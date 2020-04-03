@@ -62,12 +62,52 @@ async function getGroupMessages(groupId) {
   return result.messages
 }
 */
+async function addGroupUser (userId, groupId) {
+    const settings = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      credentials: "include",
+      body: JSON.stringify({
+        group_id: groupId,
+	user_id: userId
+      })
+    };
+    const response = await fetch(
+      `http://18.219.112.140:8000/api/v1/add-user/`,
+      settings
+    );
 
+    const result = await response.json();
+return result;
+}
+async function createGroup (name, desc, dm) {
+    const settings = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      credentials: "include",
+      body: JSON.stringify({
+	name,
+	desc,
+	dm
+      })
+    };
+    const response = await fetch(
+      `http://18.219.112.140:8000/api/v1/create-group/`,
+      settings
+    );
+
+    const result = await response.json();
+return result;
+}
 function sendMessageToRoom(message) {
   console.log("Sending message: " + JSON.stringify(message));
   socket.emit("new message", message);
 }
-export { subscribeToRoom, sendMessageToRoom, killChatConnection };
+export { subscribeToRoom, sendMessageToRoom, killChatConnection, addGroupUser, createGroup };
 
 // import openSocket from 'socket.io-client';
 // const  socket = openSocket('http://localhost:8000');
