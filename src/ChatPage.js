@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { ChatFeed, ChatBubble, BubbleGroup, Message } from "react-chat-ui";
 import { subscribeToRoom, sendMessageToRoom } from "./api";
 import queryString from "query-string";
-import { Button, Search } from "semantic-ui-react";
+import { Button, Search, Loader } from "semantic-ui-react";
 
 const customBubble = props => {
   console.log(props);
@@ -62,7 +62,7 @@ class Chat extends React.Component {
       prompt("Enter the username");*/
     this.state = {
       messages: [],
-      curr_user: user.user__first_name,
+      curr_user: null,
       detailed_curr_user: null,
       searchQuery: "",
       searchedUsers: [],
@@ -99,10 +99,35 @@ class Chat extends React.Component {
 
   componentDidMount() {
     this.getMessages();
+    // this.identifyUser().then(this.getMessages());
+    // this.getMessages();
+  }
+
+  async identifyUser() {
+    const fetch_user = await fetch(
+      `http://18.219.112.140:8000/api/v1/identify/`,
+      {
+        method: "POST",
+        credentials: "include"
+      }
+    );
+    const result_user = await fetch_user.json();
+
+    if (result_user.id !== null) {
+      this.setState({
+        curr_user: result_user.first_name,
+        detailed_curr_user: result_user
+      });
+    }
+
+    return true;
   }
 
   async getMessages () {
     this.setState({ isLoading: true });
+
+    const waiting = await this.identifyUser();
+
     const settings = {
       method: "POST",
       headers: {
@@ -124,6 +149,8 @@ class Chat extends React.Component {
     var raw_messages = result.messages;
 
     raw_messages.forEach((curr_raw_message) => {
+      console.log("curr_user: " + this.state.curr_user);
+      console.log("owner_user: " + curr_raw_message.user__first_name);
       if (curr_raw_message.rich_content === true) {
         var assigned_id = getUniqueIdForUser(curr_raw_message.user__first_name);
         if (curr_raw_message.user__first_name === this.state.curr_user) {
@@ -150,23 +177,6 @@ class Chat extends React.Component {
 
   async authenticateUser() {
     // TODO Fix the authentication
-    const fetch_user = await fetch(
-      `http://18.219.112.140:8000/api/v1/identify/`,
-      {
-        method: "POST",
-        credentials: "include"
-      }
-    );
-    const result_user = await fetch_user.json();
-
-    if (result_user.id !== null) {
-      this.setState({
-        curr_user: result_user.first_name,
-        detailed_curr_user: result_user
-      });
-    }
-
-
     const response = await fetch(
       `http://18.219.112.140:8000/api/v1/get-messages/`,
       {
@@ -294,7 +304,11 @@ class Chat extends React.Component {
     };
 
     if (isLoading) {
-      return "Loading..."
+      return (
+        <div style={{ transform: "translate(0px, 40vh)" }}>
+          <Loader size="large" active inline="centered"></Loader>
+        </div>
+      );
     }
 
     return (
