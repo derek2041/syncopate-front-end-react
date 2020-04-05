@@ -167,7 +167,7 @@ const ChatListPage2 = () => {
       setCurrModal(null);
     }
   };
-  
+
   const createNewGroup = async () => {
     const settings = {
       method: "POST",
@@ -310,6 +310,53 @@ const ChatListPage2 = () => {
 
     var resultJSX = [];
     var identifier = 0;
+
+    resultJSX.push(
+      <>
+        <div
+          style={{ paddingTop: "10px", paddingBottom: "10px" }}
+          onClick={() => {
+            setCurrModal("create-group");
+          }}
+        >
+            <Button
+              primary
+              icon="plus"
+              labelPosition="right"
+              content="New group"
+            />
+        </div>
+
+        <Modal
+          size="tiny"
+          open={currModal === "create-group"}
+          onClose={() => {
+            setNewGroupName("");
+            setNewGroupDescription("");
+            setCurrModal(null);
+          }}
+        >
+          <Modal.Header>Create New Group</Modal.Header>
+          <Modal.Content>
+            <Input placeholder="Group Name" style={{ width: "100%", paddingBottom: "20px" }} onChange={(event, data) => {
+              setNewGroupName(data.value);
+            }}/>
+            <Input placeholder="Group Description" style={{ width: "100%" }} onChange={(event, data) => {
+              setNewGroupDescription(data.value);
+            }}/>
+          </Modal.Content>
+          <Modal.Actions>
+            <Button
+              primary
+              icon="checkmark"
+              labelPosition="right"
+              content="Create Group"
+              onClick={createNewGroup}
+            />
+          </Modal.Actions>
+        </Modal>
+      </>
+    );
 
     groupList.forEach(curr_group => {
       if (!compareWithSearchQuery(curr_group)) {
@@ -1257,7 +1304,7 @@ const ChatListPage2 = () => {
                   Recent Chats
                 </h1>
               </div>
-              <List.Item style={{ height: "70px" }}>
+              <List.Item style={{ height: "70px", borderBottom: "1px solid rgba(34,36,38,.15)" }}>
                 <Input
                   icon="search"
                   className="search-input"
@@ -1267,47 +1314,6 @@ const ChatListPage2 = () => {
                 />
               </List.Item>
               {renderList()}
-              <div
-                onClick={() => {
-                  setCurrModal("create-group");
-                }}
-              >
-                  <Button
-                    primary
-                    icon="plus"
-                    labelPosition="right"
-                    content="Create new group"
-                  />
-              </div>
-
-              <Modal
-                size="tiny"
-                open={currModal === "create-group"}
-                onClose={() => {
-                  setNewGroupName("");
-                  setNewGroupDescription("");
-                  setCurrModal(null);
-                }}
-              >
-                <Modal.Header>Create New Group</Modal.Header>
-                <Modal.Content>
-                  <Input placeholder="Group Name" style={{ width: "100%" }} onChange={(event, data) => {
-                    setNewGroupName(data.value);
-                  }}/>
-                  <Input placeholder="Group Description" style={{ width: "100%" }} onChange={(event, data) => {
-                    setNewGroupDescription(data.value);
-                  }}/>
-                </Modal.Content>
-                <Modal.Actions>
-                  <Button
-                    primary
-                    icon="checkmark"
-                    labelPosition="right"
-                    content="Save Changes"
-                    onClick={createNewGroup}
-                  />
-                </Modal.Actions>
-              </Modal>
             </List>
           </div>
         </div>

@@ -14,7 +14,7 @@ if (false && window.location.host.includes("localhost")) {
 var socket = null;
 
 function subscribeToRoom(cb, room) {
-  socket = openSocket("http://" + domain + ":3001");
+  socket = openSocket("http://" + domain + ":3002");
   socket.on("push to clients", newMessage => {
     try {
       newMessage = JSON.parse(newMessage);
