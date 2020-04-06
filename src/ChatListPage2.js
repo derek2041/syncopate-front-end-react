@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import ChatPage from "./ChatPage";
+import ChatPage2 from "./ChatPage2";
 
 import {
   Input,
@@ -480,10 +480,10 @@ const ChatListPage2 = () => {
 
     if (currGroup === null) {
       console.log(">null<");
-      return <ChatPage key={-1} group={currGroup} />
+      return <ChatPage2 key={-1} currGroup={currGroup} currUser={currUser} />
     } else {
       console.log(">not null: " + currGroup.group__id.toString() + "<");
-      return <ChatPage key={currGroup.group__id.toString()} group={currGroup} />
+      return <ChatPage2 key={currGroup.group__id.toString()} currGroup={currGroup} currUser={currUser} />
     }
   };
 
