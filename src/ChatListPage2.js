@@ -33,6 +33,7 @@ const ChatListPage2 = () => {
   // Session and current group data
   const [validSession, setValidSession] = useState(null);
   const [currGroup, setCurrGroup] = useState(null);
+  const [currUser, setCurrUser] = useState(null);
 
   // Lists
   const [groupList, setGroupList] = useState(null);
@@ -76,6 +77,22 @@ const ChatListPage2 = () => {
       }
     }
 
+    async function identifyUser() {
+      const fetch_user = await fetch(
+        `http://18.219.112.140:8000/api/v1/identify/`,
+        {
+          method: "POST",
+          credentials: "include"
+        }
+      );
+
+      const result_user = await fetch_user.json();
+
+      if (result_user.id !== null) {
+        setCurrUser(result_user);
+      }
+    }
+
     async function fetchList() {
       const response = await fetch(
         `http://18.219.112.140:8000/api/v1/get-user-group/`,
@@ -105,6 +122,7 @@ const ChatListPage2 = () => {
     }
 
     checkLoggedIn();
+    identifyUser();
     fetchList();
 
   }, [refreshCount]);
@@ -1266,7 +1284,7 @@ const ChatListPage2 = () => {
     }
   };
 
-  if (validSession === null) {
+  if (validSession === null || currUser === null) {
     return (
       <div>
 
