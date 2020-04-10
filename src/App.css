@@ -58,11 +58,6 @@ body {
   text-align: center;
 }
 
-.light-theme {
-  background-color: #fff;
-  color: #444444;
-}
-
 nav {
   display: flex;
   text-align: center;
@@ -78,8 +73,18 @@ nav {
   max-width: 600px;
   font-size: 1.2rem;
   line-height: 1.1;
-  height: 90vh;
 }
+
+
+body:not(.dark-theme) {
+  background-color: #fff;
+  color: #444444;
+}
+
+body:not(.dark-theme) nav {
+  background-color: #2185d0;
+}
+
 
 .dark-theme {
   background-color: #1f1b24;
@@ -94,7 +99,32 @@ nav {
   color: red;
 }
 
-.button-container {
-  display: flex;
-  margin: 0 auto;
+
+.dark-theme .ui.massive.borderless.fluid {
+    background: black;
+    border-bottom: 1px solid #444;
+}
+
+.dark-theme .ui.massive.borderless.fluid * {
+    color: #fff;
+}
+
+.dark-theme .app-wrapper > div > div {
+    background: black;
+    border-color: #444 !important;
+}
+
+
+.dark-theme input {
+    background: #000 !important;
+    color: #fff;
+    border-color: #444 !important;
+}
+
+.dark-theme .search.icon {
+    color: #fff !important;
+}
+
+.ui.modal > div {
+    background: #000 !important;
 }

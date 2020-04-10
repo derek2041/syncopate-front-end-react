@@ -21,13 +21,12 @@ import NavigationBar from "./NavigationBar";
 import Stats from "./Stats";
 
 const App = () => {
-  const [darkTheme, setDarkTheme] = React.useState(false)
   return (
     <div className="App">
-       <div className={darkTheme ? 'dark-theme' : 'light-theme'}>
+       <div className="app-wrapper">
       <nav>
-        <div className='button-container'>
-          <button onClick={() => setDarkTheme(prevTheme => !prevTheme)}>
+        <div className='text-center button-container'>
+          <button className="ui warning button"  onClick={() => window.document.body.classList.toggle("dark-theme") }>
             Toggle Theme
           </button>
         </div>

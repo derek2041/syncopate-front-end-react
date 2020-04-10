@@ -162,6 +162,12 @@ const ChatListPage = () => {
 
       console.log(curr_group);
 
+      const $images = curr_group.users.map(user => {
+          return <img key={user.user__id + user.user__profile_pic_url} src={`/images/avatars/${user.user__profile_pic_url}`} />
+      })
+
+      const $imagesContainer = <div className="avatar-group" data-group-count={curr_group.users.length}>{$images}</div>
+
       if (curr_group.pinned === true) {
         resultJSX.push(
           <List.Item
@@ -183,6 +189,7 @@ const ChatListPage = () => {
                   height: "75%"
                 }}
               >
+	        {$imagesContainer}
                 {curr_group.group__name}
                 <p
                   style={{
@@ -223,6 +230,7 @@ const ChatListPage = () => {
                   height: "75%"
                 }}
               >
+	        {$imagesContainer}
                 {curr_group.group__name}
                 <p
                   style={{
