@@ -27,7 +27,7 @@ const ChatPage2 = ({ currGroup, currUser }) => {
           </div>
         );
       } else {
-        const formattedMessage = {"id": 0, "message": message.content, "senderName": "You"};
+        const formattedMessage = {id: 0, message: message.content, senderName: "You"};
         return (
           <div
             className={`message-item-wrapper ${
@@ -50,7 +50,7 @@ const ChatPage2 = ({ currGroup, currUser }) => {
           </div>
         );
       } else {
-        const formattedMessage = {"id": message.user, "message": message.content, "senderName": message.user__first_name};
+        const formattedMessage = {id: message.user, message: message.content, senderName: message.user__first_name};
         console.log("formatted message:");
         console.log(formattedMessage);
         return (
@@ -133,7 +133,15 @@ const ChatPage2 = ({ currGroup, currUser }) => {
 
       const result = await response.json();
 
-      setMessages(result.messages);
+      var parsed_messages = [];
+      var raw_messages = result.messages;
+      raw_messages.forEach((curr_raw_message) => {
+        curr_raw_message.senderName = curr_raw_message.user__first_name;
+        curr_raw_message.message = curr_raw_message.content;
+        parsed_messages.push(curr_raw_message);
+      });
+
+      setMessages(parsed_messages);
     }
 
     getMessages();
