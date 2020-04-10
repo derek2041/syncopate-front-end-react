@@ -21,8 +21,18 @@ import NavigationBar from "./NavigationBar";
 import Stats from "./Stats";
 
 const App = () => {
+  const [darkTheme, setDarkTheme] = React.useState(false)
   return (
     <div className="App">
+       <div className={darkTheme ? 'dark-theme' : 'light-theme'}>
+      <nav>
+        <div className='button-container'>
+          <button onClick={() => setDarkTheme(prevTheme => !prevTheme)}>
+            Toggle Theme
+          </button>
+        </div>
+      </nav>
+
       <Router>
         <NavigationBar />
         
@@ -157,6 +167,7 @@ const App = () => {
         </Switch>
       </Router>
     </div>
+    </div> 
   );
 };
 
