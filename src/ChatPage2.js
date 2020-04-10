@@ -6,11 +6,12 @@ import { Button, Search, Loader } from "semantic-ui-react";
 
 const ChatPage2 = ({ currGroup, currUser }) => {
   const [messages, setMessages] = useState(null);
+  const [messagesHasFetched, setMessagesHasFetched] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [searchedUsers, setSearchedUsers] = useState([]);
 
 
-  const customBubble = ({ message }) => {
+  const CustomBubble = ({ message }) => {
     console.log("props.message");
     console.log(message);
     console.log("currUser id: " + currUser.id);
@@ -50,7 +51,7 @@ const ChatPage2 = ({ currGroup, currUser }) => {
           </div>
         );
       } else {
-        const formattedMessage = {id: message.user, message: message.content, senderName: message.user__first_name};
+        const formattedMessage = {id: message.user, message: message.content, senderName: message.user__first_name + " " + message.user__last_name};
         console.log("formatted message:");
         console.log(formattedMessage);
         return (
@@ -70,11 +71,10 @@ const ChatPage2 = ({ currGroup, currUser }) => {
     const raw_text = document.getElementById("chat-text").value;
     e.preventDefault();
 
-    console.log("what is in state messages?: " + JSON.stringify(this.state.messages));
     sendMessageToRoom({
       content: raw_text,
       user: currUser,
-      group_id: null,
+      group_id: currGroup.group__id,
       rich_content: false
     });
     //this.pushMessage(this.state.curr_user, input.value);
@@ -111,6 +111,45 @@ const ChatPage2 = ({ currGroup, currUser }) => {
   }
 
   useEffect(() => {
+    if (messagesHasFetched === false) {
+      return;
+    }
+
+    subscribeToRoom((err, new_received_msg) => {
+      if (err) {
+        return console.error(err);
+      }
+
+      var curr_messages = messages;
+
+      if (currUser.id === new_received_msg.user.id) {
+        curr_messages.push({
+          user: new_received_msg.user.id,
+          content: new_received_msg.content,
+          user__first_name: new_received_msg.user.first_name,
+          user__last_name: new_received_msg.user.last_name,
+          rich_content: new_received_msg.rich_content,
+          senderName: new_received_msg.user.first_name + " " + new_received_msg.user.last_name,
+          id: 0
+        });
+      } else {
+        curr_messages.push({
+          user: new_received_msg.user.id,
+          content: new_received_msg.content,
+          user__first_name: new_received_msg.user.first_name,
+          user__last_name: new_received_msg.user.last_name,
+          rich_content: new_received_msg.rich_content,
+          senderName: new_received_msg.user.first_name + " " + new_received_msg.user.last_name,
+          id: new_received_msg.user.id
+        });
+      }
+      console.log("Check for updated messages?");
+      console.log(curr_messages);
+      setMessages(curr_messages);
+    }, currGroup.group__id);
+  }, [messagesHasFetched]);
+
+  useEffect(() => {
     async function getMessages() {
       if (currGroup === null) {
         return;
@@ -133,15 +172,23 @@ const ChatPage2 = ({ currGroup, currUser }) => {
 
       const result = await response.json();
 
+      // it appears that you have to ALSO add senderName as well as id, otherwise
+      // the name won't show in the ChatBubble component and will also not group properly (respectively)
       var parsed_messages = [];
       var raw_messages = result.messages;
       raw_messages.forEach((curr_raw_message) => {
-        curr_raw_message.senderName = curr_raw_message.user__first_name;
-        curr_raw_message.message = curr_raw_message.content;
+        curr_raw_message.senderName = curr_raw_message.user__first_name + " " + curr_raw_message.user__last_name;
+        curr_raw_message.message_id = curr_raw_message.id;
+        if (curr_raw_message.user === currUser.id) {
+          curr_raw_message.id = 0;
+        } else {
+          curr_raw_message.id = curr_raw_message.user;
+        }
         parsed_messages.push(curr_raw_message);
       });
 
       setMessages(parsed_messages);
+      setMessagesHasFetched(true);
     }
 
     getMessages();
@@ -167,7 +214,7 @@ const ChatPage2 = ({ currGroup, currUser }) => {
     <div className="container">
       <div className="chatfeed-wrapper">
         <ChatFeed
-          chatBubble={customBubble}
+          chatBubble={CustomBubble}
           maxHeight={250}
           messages={messages} // Boolean: list of message objects
           showSenderName

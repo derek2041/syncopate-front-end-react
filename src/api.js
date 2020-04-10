@@ -34,34 +34,6 @@ function killChatConnection() {
   socket = null;
 }
 
-/*
-async function getGroupMessages(groupId) {
-
-
-  const response = await fetch(
-//    `http://18.219.112.140:8000/api/v1/get-messages?group_id=${groupId}`,
-       `http://18.219.112.140:8000/api/v1/get-messages/`,
-    {
-//      method: "GET",
-//      headers: {
-//        "Content-Type": "application/json"
-//      },
-//      credentials: "include"
-
-        method: "POST",
-        credentials: "include",
-        body: JSON.stringify({
-	persistent: true,
-          group_id: groupId || window.location.pathname.split("/").slice(-1)[0]
-      })
-    }
-  );
-
-  const result = await response.json();
-   // debugger
-  return result.messages
-}
-*/
 async function addGroupUser (userId, groupId) {
     const settings = {
       method: "POST",
@@ -82,6 +54,7 @@ async function addGroupUser (userId, groupId) {
     const result = await response.json();
 return result;
 }
+
 async function createGroup (name, desc, dm) {
     const settings = {
       method: "POST",
@@ -103,6 +76,7 @@ async function createGroup (name, desc, dm) {
     const result = await response.json();
 return result;
 }
+
 function sendMessageToRoom(message) {
   console.log("Sending message: " + JSON.stringify(message));
   socket.emit("new message", message);

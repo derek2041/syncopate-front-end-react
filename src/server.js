@@ -11,9 +11,9 @@ io.on("connection", socket => {
     socket.join(room);
     console.log("Connecting client to room: ", room);
 
-    socket.on("new message", async function(message, rich_content) {
+    socket.on("new message", async (message) => {
       console.log("Debugging Message: " + JSON.stringify(message));
-      console.log(message.user_info);
+      console.log(message.user.first_name);
       const settings = {
         method: "POST",
         headers: {
@@ -21,8 +21,8 @@ io.on("connection", socket => {
         },
         credentials: "include",
         body: JSON.stringify({
-          user_id: message.user_info.id,
-          group_id: message.group_id,
+          user_id: message.user.id,
+          group_id: room,
           content: message.content,
           rich_content: message.rich_content,
           rich_content_url: "useless",
