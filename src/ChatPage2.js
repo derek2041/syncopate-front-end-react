@@ -4,68 +4,69 @@ import { subscribeToRoom, sendMessageToRoom } from "./api";
 import queryString from "query-string";
 import { Button, Search, Loader } from "semantic-ui-react";
 
+const CustomBubble = ({ message }) => {
+  const curr_user_id = localStorage.getItem("user_id");
+  console.log("props.message");
+  console.log(message);
+  console.log("currUser id: " + curr_user_id);
+  console.log(">>>>>>>>>>>>>message uid: " + message.user);
+  if (curr_user_id == message.user) {
+    if (message.rich_content) {
+      return (
+        <div
+          className={`message-item-wrapper ${
+            "message-right"
+          }`}
+        >
+          <img src={message.content} />
+        </div>
+      );
+    } else {
+      const formattedMessage = {id: 0, message: message.content, senderName: "You"};
+      return (
+        <div
+          className={`message-item-wrapper ${
+            "message-right"
+          }`}
+        >
+          <ChatBubble message={formattedMessage} />
+        </div>
+      );
+    }
+  } else {
+    if (message.rich_content) {
+      return (
+        <div
+          className={`message-item-wrapper ${
+            "message-left"
+          }`}
+        >
+          <img src={message.content} />
+        </div>
+      );
+    } else {
+      const formattedMessage = {id: message.user, message: message.content, senderName: message.user__first_name + " " + message.user__last_name};
+      console.log("formatted message:");
+      console.log(formattedMessage);
+      return (
+        <div
+          className={`message-item-wrapper ${
+            "message-left"
+          }`}
+        >
+          <ChatBubble message={formattedMessage} />
+        </div>
+      );
+    }
+  }
+};
+
+
 const ChatPage2 = ({ currGroup, currUser }) => {
   const [messages, setMessages] = useState(null);
   const [messagesHasFetched, setMessagesHasFetched] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [searchedUsers, setSearchedUsers] = useState([]);
-
-
-  const CustomBubble = ({ message }) => {
-    console.log("props.message");
-    console.log(message);
-    console.log("currUser id: " + currUser.id);
-    console.log(">>>>>>>>>>>>>message uid: " + message.user);
-    if (currUser.id === message.user) {
-      if (message.rich_content) {
-        return (
-          <div
-            className={`message-item-wrapper ${
-              "message-right"
-            }`}
-          >
-            <img src={message.content} />
-          </div>
-        );
-      } else {
-        const formattedMessage = {id: 0, message: message.content, senderName: "You"};
-        return (
-          <div
-            className={`message-item-wrapper ${
-              "message-right"
-            }`}
-          >
-            <ChatBubble message={formattedMessage} />
-          </div>
-        );
-      }
-    } else {
-      if (message.rich_content) {
-        return (
-          <div
-            className={`message-item-wrapper ${
-              "message-left"
-            }`}
-          >
-            <img src={message.content} />
-          </div>
-        );
-      } else {
-        const formattedMessage = {id: message.user, message: message.content, senderName: message.user__first_name + " " + message.user__last_name};
-        console.log("formatted message:");
-        console.log(formattedMessage);
-        return (
-          <div
-            className={`message-item-wrapper ${
-              "message-left"
-            }`}
-          >
-            <ChatBubble message={formattedMessage} />
-          </div>
-        );
-      }
-    }
-  };
 
   const onMessageSubmit = (e) => {
     const raw_text = document.getElementById("chat-text").value;
@@ -187,6 +188,7 @@ const ChatPage2 = ({ currGroup, currUser }) => {
         parsed_messages.push(curr_raw_message);
       });
 
+      localStorage.setItem("user_id", currUser.id);
       setMessages(parsed_messages);
       setMessagesHasFetched(true);
     }
