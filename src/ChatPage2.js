@@ -4,25 +4,25 @@ import { subscribeToRoom, sendMessageToRoom } from "./api";
 import queryString from "query-string";
 import { Button, Search, Loader } from "semantic-ui-react";
 
-const CustomBubble = ({ message }) => {
+const CustomBubble = (props) => {
   const curr_user_id = localStorage.getItem("user_id");
-  console.log("props.message");
-  console.log(message);
+  console.log("props");
+  console.log(props);
   console.log("currUser id: " + curr_user_id);
-  console.log(">>>>>>>>>>>>>message uid: " + message.user);
-  if (curr_user_id == message.user) {
-    if (message.rich_content) {
+  console.log(">>>>>>>>>>>>>message uid: " + props.message.user);
+  if (curr_user_id == props.message.user) {
+    if (props.message.rich_content) {
       return (
         <div
           className={`message-item-wrapper ${
             "message-right"
           }`}
         >
-          <img src={message.content} />
+          <img src={props.message.content} />
         </div>
       );
     } else {
-      const formattedMessage = {id: 0, message: message.content, senderName: "You"};
+      const formattedMessage = {id: 0, message: props.message.content, senderName: "You"};
       return (
         <div
           className={`message-item-wrapper ${
@@ -34,18 +34,18 @@ const CustomBubble = ({ message }) => {
       );
     }
   } else {
-    if (message.rich_content) {
+    if (props.message.rich_content) {
       return (
         <div
           className={`message-item-wrapper ${
             "message-left"
           }`}
         >
-          <img src={message.content} />
+          <img src={props.message.content} />
         </div>
       );
     } else {
-      const formattedMessage = {id: message.user, message: message.content, senderName: message.user__first_name + " " + message.user__last_name};
+      const formattedMessage = {id: props.message.user, message: props.message.content, senderName: props.message.user__first_name + " " + props.message.user__last_name};
       console.log("formatted message:");
       console.log(formattedMessage);
       return (
@@ -67,6 +67,9 @@ const ChatPage2 = ({ currGroup, currUser }) => {
   const [messagesHasFetched, setMessagesHasFetched] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [searchedUsers, setSearchedUsers] = useState([]);
+
+  const [refreshCount, setRefreshCount] = useState(0);
+  const refreshSocket = () => setRefreshCount(i => i + 1);
 
   const onMessageSubmit = (e) => {
     const raw_text = document.getElementById("chat-text").value;
@@ -147,6 +150,7 @@ const ChatPage2 = ({ currGroup, currUser }) => {
       console.log("Check for updated messages?");
       console.log(curr_messages);
       setMessages(curr_messages);
+      refreshSocket();
     }, currGroup.group__id);
   }, [messagesHasFetched]);
 
@@ -216,6 +220,7 @@ const ChatPage2 = ({ currGroup, currUser }) => {
     <div className="container">
       <div className="chatfeed-wrapper">
         <ChatFeed
+          key={refreshCount}
           chatBubble={CustomBubble}
           maxHeight={250}
           messages={messages} // Boolean: list of message objects
