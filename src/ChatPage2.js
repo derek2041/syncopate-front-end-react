@@ -132,6 +132,7 @@ const ChatPage2 = ({ currGroup, currUser }) => {
           content: new_received_msg.content,
           user__first_name: new_received_msg.user.first_name,
           user__last_name: new_received_msg.user.last_name,
+          user__profile_pic_url: new_received_msg.user.profile_pic_url,
           rich_content: new_received_msg.rich_content,
           senderName: new_received_msg.user.first_name + " " + new_received_msg.user.last_name,
           id: 0
@@ -142,6 +143,7 @@ const ChatPage2 = ({ currGroup, currUser }) => {
           content: new_received_msg.content,
           user__first_name: new_received_msg.user.first_name,
           user__last_name: new_received_msg.user.last_name,
+          user__profile_pic_url: new_received_msg.user.profile_pic_url,
           rich_content: new_received_msg.rich_content,
           senderName: new_received_msg.user.first_name + " " + new_received_msg.user.last_name,
           id: new_received_msg.user.id
