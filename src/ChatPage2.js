@@ -69,7 +69,7 @@ const ChatPage2 = ({ currGroup, currUser }) => {
   const [searchedUsers, setSearchedUsers] = useState([]);
 
   const [refreshCount, setRefreshCount] = useState(0);
-  const refreshSocket = () => setRefreshCount(i => i + 1);
+  const refreshChatFeed = () => setRefreshCount(i => i + 1);
 
   const onMessageSubmit = (e) => {
     const raw_text = document.getElementById("chat-text").value;
@@ -150,7 +150,7 @@ const ChatPage2 = ({ currGroup, currUser }) => {
       console.log("Check for updated messages?");
       console.log(curr_messages);
       setMessages(curr_messages);
-      refreshSocket();
+      refreshChatFeed(); // manually refresh ChatFeed with key prop and refreshCount bc it won't refresh itself even though the messages state is clearly updating...
     }, currGroup.group__id);
   }, [messagesHasFetched]);
 
