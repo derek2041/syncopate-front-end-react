@@ -10,8 +10,111 @@ const ChatPage2 = ({ currGroup, currUser }) => {
   const [searchedUsers, setSearchedUsers] = useState([]);
 
 
+  const customBubble = ({ message }) => {
+    console.log("props.message");
+    console.log(message);
+    console.log("currUser id: " + currUser.id);
+    console.log(">>>>>>>>>>>>>message uid: " + message.user);
+    if (currUser.id === message.user) {
+      if (message.rich_content) {
+        return (
+          <div
+            className={`message-item-wrapper ${
+              "message-right"
+            }`}
+          >
+            <img src={message.content} />
+          </div>
+        );
+      } else {
+        const formattedMessage = {"id": 0, "message": message.content, "senderName": "You"};
+        return (
+          <div
+            className={`message-item-wrapper ${
+              "message-right"
+            }`}
+          >
+            <ChatBubble message={formattedMessage} />
+          </div>
+        );
+      }
+    } else {
+      if (message.rich_content) {
+        return (
+          <div
+            className={`message-item-wrapper ${
+              "message-left"
+            }`}
+          >
+            <img src={message.content} />
+          </div>
+        );
+      } else {
+        const formattedMessage = {"id": message.user, "message": message.content, "senderName": message.user__first_name};
+        console.log("formatted message:");
+        console.log(formattedMessage);
+        return (
+          <div
+            className={`message-item-wrapper ${
+              "message-left"
+            }`}
+          >
+            <ChatBubble message={formattedMessage} />
+          </div>
+        );
+      }
+    }
+  };
+
+  const onMessageSubmit = (e) => {
+    const raw_text = document.getElementById("chat-text").value;
+    e.preventDefault();
+
+    console.log("what is in state messages?: " + JSON.stringify(this.state.messages));
+    sendMessageToRoom({
+      content: raw_text,
+      user: currUser,
+      group_id: null,
+      rich_content: false
+    });
+    //this.pushMessage(this.state.curr_user, input.value);
+    document.getElementById("chat-text").value = "";
+  }
+
+  const sendAttachmentImage = async (e) => {
+    e.persist();
+    const toBase64 = file =>
+      new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = error => reject(error);
+      });
+
+    const file = e.target.files[0];
+    if (!file) return;
+    const result = await toBase64(file).catch(e => Error(e));
+    if (result instanceof Error) {
+      console.log("Error: ", result.message);
+      return;
+    }
+
+    sendMessageToRoom({
+      content: result,
+      user: currUser,
+      group_id: currGroup.group__id,
+      rich_content: true
+    });
+    //this.pushMessage(this.state.curr_user, "", result);
+
+    e.target.value = "";
+  }
+
   useEffect(() => {
     async function getMessages() {
+      if (currGroup === null) {
+        return;
+      }
       const settings = {
         method: "POST",
         headers: {
@@ -19,7 +122,7 @@ const ChatPage2 = ({ currGroup, currUser }) => {
         },
         credentials: "include",
         body: JSON.stringify({
-          group_id: this.state.group.group__id
+          group_id: currGroup.group__id
         })
       };
 
@@ -32,7 +135,9 @@ const ChatPage2 = ({ currGroup, currUser }) => {
 
       setMessages(result.messages);
     }
-  });
+
+    getMessages();
+  }, [currGroup]);
 
   // if currGroup is null
   if (currGroup === null) {
@@ -56,15 +161,13 @@ const ChatPage2 = ({ currGroup, currUser }) => {
         <ChatFeed
           chatBubble={customBubble}
           maxHeight={250}
-          messages={this.state.messages} // Boolean: list of message objects
+          messages={messages} // Boolean: list of message objects
           showSenderName
         />
 
-        <form onSubmit={e => this.onMessageSubmit(e)} style={{ textAlign: "left" }}>
+        <form onSubmit={e => onMessageSubmit(e)} style={{ textAlign: "left" }}>
           <input
-            ref={m => {
-              this.message = m;
-            }}
+            id="chat-text"
             placeholder="Type a message..."
             className="message-input"
             style={{ width: "75%", marginLeft: "20px" }}
@@ -83,7 +186,7 @@ const ChatPage2 = ({ currGroup, currUser }) => {
             type="file"
             id="message-attachment"
             style={{ display: "none" }}
-            onChange={e => this.sendAttachmentImage(e)}
+            onChange={e => sendAttachmentImage(e)}
           />
         </form>
       </div>
