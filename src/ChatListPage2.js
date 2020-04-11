@@ -104,6 +104,11 @@ const ChatListPage2 = () => {
 
       setGroupList(result);
 
+      if (currGroup === null && result !== null && result.length > 0) { // if user is in at LEAST one group
+        // set current selected group on UI to first group in list
+        setCurrGroup(result[0]);
+      }
+
       const response2 = await fetch(
         `http://18.219.112.140:8000/api/v1/load-friends/`,
         { method: "POST", credentials: "include" }
@@ -332,7 +337,7 @@ const ChatListPage2 = () => {
     resultJSX.push(
       <>
         <div
-          style={{ paddingTop: "10px", paddingBottom: "10px" }}
+          style={{ paddingTop: "10px", paddingBottom: "10px", borderBottom: "1px solid rgba(34, 36, 38, 0.15)" }}
           onClick={() => {
             setCurrModal("create-group");
           }}
@@ -476,7 +481,7 @@ const ChatListPage2 = () => {
 
   const renderChatInstance = () => {
     return (
-      <ChatPage2 currGroup={currGroup} currUser={currUser} />
+      <ChatPage2 currGroup={currGroup} currUser={currUser} noGroups={ groupList !== null && groupList.length === 0}/>
     )
   };
 

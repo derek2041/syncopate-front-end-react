@@ -1,8 +1,16 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, useRef } from "react";
 import { ChatFeed, ChatBubble, BubbleGroup, Message } from "react-chat-ui";
 import { subscribeToRoom, sendMessageToRoom } from "./api";
 import queryString from "query-string";
 import { Button, Search, Loader } from "semantic-ui-react";
+
+function usePrevious(value) {
+  const ref = useRef();
+  useEffect(() => {
+    ref.current = value;
+  });
+  return ref.current;
+}
 
 const CustomBubble = (props) => {
   const curr_user_id = localStorage.getItem("user_id");
@@ -62,7 +70,9 @@ const CustomBubble = (props) => {
 };
 
 
-const ChatPage2 = ({ currGroup, currUser }) => {
+const ChatPage2 = ({ currGroup, currUser, noGroups }) => {
+
+  const prevGroup = usePrevious(currGroup);
   const [messages, setMessages] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [searchedUsers, setSearchedUsers] = useState([]);
@@ -163,6 +173,18 @@ const ChatPage2 = ({ currGroup, currUser }) => {
       if (currGroup === null) {
         return;
       }
+
+      console.log("Prev group:")
+      console.log(prevGroup);
+
+      console.log("Curr group:")
+      console.log(currGroup);
+      if (prevGroup !== null && prevGroup !== undefined && prevGroup.group__id === currGroup.group__id) {
+        return;
+      }
+      setMessages(null);
+
+
       const settings = {
         method: "POST",
         headers: {
@@ -203,24 +225,33 @@ const ChatPage2 = ({ currGroup, currUser }) => {
       doSubscriptionRoutine(parsed_messages);
     }
 
-    setMessages(null);
     getMessages();
 
   }, [currGroup]);
 
   return useMemo(() => {
-    // if currGroup is null
-    if (currGroup === null) {
+    if (noGroups) {
       return (
-        <div>Please select a group.</div>
+        <div style={{ transform: "translate(0px, 40vh)" }}>
+          <h1>It looks like you're not in any groups!</h1>
+        </div>
       );
     }
+
+    // // if currGroup is null
+    // if (currGroup === null) {
+    //   return (
+    //     <div style={{ transform: "translate(0px, 40vh)" }}>
+    //       <h1>It looks like you're not in any groups!</h1>
+    //     </div>
+    //   );
+    // }
 
     // if messages have not yet been fetched
     if (messages === null) {
       return (
         <div style={{ transform: "translate(0px, 40vh)" }}>
-          <Loader size="large" active inline="centered"></Loader>
+          <Loader size="huge" active inline="centered"></Loader>
         </div>
       );
     }
@@ -264,7 +295,7 @@ const ChatPage2 = ({ currGroup, currUser }) => {
         </div>
       </div>
     );
-  }, [currGroup, currUser, messages, refreshCount]);
+  }, [noGroups, messages, refreshCount]);
 }
 
 export default ChatPage2;
