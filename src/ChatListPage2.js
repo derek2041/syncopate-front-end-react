@@ -268,9 +268,19 @@ const ChatListPage2 = () => {
     const result = await response.json();
 
     if (result.status === "success") {
-      handleRefresh();
       setCurrModal(null);
-      setCurrGroup(null);
+
+      if (groupList && groupList.length > 1) {
+        if (currGroup.group__id === groupList[0].group__id) {
+          setCurrGroup(groupList[1]);
+        } else {
+          setCurrGroup(groupList[0]);
+        }
+      } else {
+        setCurrGroup(null);
+      }
+
+      handleRefresh();
     }
   };
 
