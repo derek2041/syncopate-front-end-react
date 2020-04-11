@@ -475,16 +475,9 @@ const ChatListPage2 = () => {
   };
 
   const renderChatInstance = () => {
-    console.log(">>>", currGroup);
-    console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-
-    if (currGroup === null) {
-      console.log(">null<");
-      return <ChatPage2 key={-1} currGroup={currGroup} currUser={currUser} />
-    } else {
-      console.log(">not null: " + currGroup.group__id.toString() + "<");
-      return <ChatPage2 key={currGroup.group__id.toString()} currGroup={currGroup} currUser={currUser} />
-    }
+    return (
+      <ChatPage2 currGroup={currGroup} currUser={currUser} />
+    )
   };
 
   const renderGroupInfo = () => {
