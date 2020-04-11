@@ -130,6 +130,16 @@ const ChatPage2 = ({ currGroup, currUser, noGroups }) => {
 
   useEffect(() => {
     function doSubscriptionRoutine(parsedMessages) {
+      // doSubscriptionRoutine only executes _once_ every time
+      // the user selects a new chat room.
+
+      // remember that all the work regarding socket.io events is
+      // taken over by the callback function we pass into subscribeToRoom.
+      // that's why we need the parsedMessages from the API fetch since we
+      // will be appending new socket.io messages to that chat history (parsedMessages) array.
+      // once we append a message (which means we received a socket.io message update event),
+      // we call refreshChatFeed() to do a soft reload of the messages (soft == no Loader, but render logic still occurs)
+
       subscribeToRoom((err, new_received_msg) => {
         if (err) {
           return console.error(err);
@@ -169,7 +179,7 @@ const ChatPage2 = ({ currGroup, currUser, noGroups }) => {
       }, currGroup.group__id);
     }
 
-    async function getMessages(subscriptionCallback) {
+    async function getMessages() {
       if (currGroup === null) {
         return;
       }
@@ -179,9 +189,17 @@ const ChatPage2 = ({ currGroup, currUser, noGroups }) => {
 
       console.log("Curr group:")
       console.log(currGroup);
+
+      // if the currGroup itself did not update from previous render, do NOT continue the message fetch routine.
+      // this conditional check stops actions such as pinning/unpinning, editing group name,
+      // etc. from doing a hard reload of the chat window.
       if (prevGroup !== null && prevGroup !== undefined && prevGroup.group__id === currGroup.group__id) {
         return;
       }
+
+      // otherwise, we want to continue with the hard reload of the chat window, so
+      // we begin by setting messages to null, which brings our Loader back
+      // into the chat window
       setMessages(null);
 
 
@@ -218,10 +236,18 @@ const ChatPage2 = ({ currGroup, currUser, noGroups }) => {
         parsed_messages.push(curr_raw_message);
       });
 
+      // store user_id in localStorage. all it does is help CustomBubble parse messages
       localStorage.setItem("user_id", currUser.id);
       setMessages(parsed_messages);
       console.log("Messages right before subscriptionCallback is fired:");
       console.log(parsed_messages);
+
+      // we're done fetching chat history from the API, now we
+      // trigger our socket.io subscription routine, which will
+      // prepare an array that contains all chat history messages PLUS
+      // any new messages received through socket.io events.
+      // we pass in parsed_messages instead of the state because the state
+      // has not actually updated yet
       doSubscriptionRoutine(parsed_messages);
     }
 
@@ -229,6 +255,12 @@ const ChatPage2 = ({ currGroup, currUser, noGroups }) => {
 
   }, [currGroup]);
 
+  // wrapping the render logic in the useMemo hook will cause the render routine to bail out
+  // if none of the listed dependencies in the dependency array has changed.
+  // this is the big optimization that stopped actions in the parent component such as
+  // expanding/collapsing the Options/Settings/People panels as well as typing in the
+  // edit modals from causing the ChatFeed component to run through all the render logic
+  // with all the ChatBubbles all over again
   return useMemo(() => {
     if (noGroups) {
       return (

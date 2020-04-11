@@ -268,16 +268,17 @@ const ChatListPage2 = () => {
     const result = await response.json();
 
     if (result.status === "success") {
-      setCurrModal(null);
+      // now we want to actually leave the chat in the User Interface
+      setCurrModal(null); // kill the leave chat confirmation modal
 
-      if (groupList && groupList.length > 1) {
-        if (currGroup.group__id === groupList[0].group__id) {
-          setCurrGroup(groupList[1]);
+      if (groupList && groupList.length > 1) { // if the groupList contains more than just the currently selected chat
+        if (currGroup.group__id === groupList[0].group__id) { // if the user is trying to leave the chat we would swap to by default
+          setCurrGroup(groupList[1]); // set it to the second chat in the list instead of the first one
         } else {
-          setCurrGroup(groupList[0]);
+          setCurrGroup(groupList[0]); // set it to the first chat in the list by default
         }
       } else {
-        setCurrGroup(null);
+        setCurrGroup(null); // there are no chats left to swap to (0 groups remaining)
       }
 
       handleRefresh();
@@ -490,6 +491,11 @@ const ChatListPage2 = () => {
   };
 
   const renderChatInstance = () => {
+    // added a noGroups prop so ChatPage component can differentiate between
+    // "still fetching group data" and "this user is actually in 0 groups"
+    // in hindsight, we should be setting currGroup by default to undefined for "not yet fetched"
+    // and null for "we've fetched, but found no groups". but that would be too much logic
+    // to change right now (both in this component and the child component)
     return (
       <ChatPage2 currGroup={currGroup} currUser={currUser} noGroups={ groupList !== null && groupList.length === 0}/>
     )
