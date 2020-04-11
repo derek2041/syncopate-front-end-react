@@ -260,7 +260,8 @@ const ChatPage2 = ({ currGroup, currUser, noGroups }) => {
   // this is the big optimization that stopped actions in the parent component such as
   // expanding/collapsing the Options/Settings/People panels as well as typing in the
   // edit modals from causing the ChatFeed component to run through all the render logic
-  // with all the ChatBubbles all over again
+  // with all the ChatBubbles all over again. Note that this issue was not performing soft reloads,
+  // but rather, this entire component was resetting (where refreshCount even started back at 0).
   return useMemo(() => {
     if (noGroups) {
       return (
