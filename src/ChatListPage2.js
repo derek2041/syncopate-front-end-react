@@ -274,6 +274,7 @@ const ChatListPage2 = () => {
 
       handleRefresh();
     } else {
+      // all other refresh request events are handled here (just a simple handleRefresh())
       console.log("Part 2");
       handleRefresh();
     }
@@ -318,7 +319,14 @@ const ChatListPage2 = () => {
       } else {
         setCurrGroup(null); // there are no chats left to swap to (0 groups remaining)
       }
-
+      // tell other connected clients in this chat to re-fetch group list data
+      sendMustRefreshEvent({
+        action: "other"
+      });
+      // kill the socket connection since this user is LEAVING
+      killChatConnection();
+      // we use handleRefresh() here because the socket connection is already dead and thus, will not receive the
+      // propagate refresh event that would typically internally trigger handleRefresh();
       handleRefresh();
     }
   };
