@@ -70,7 +70,7 @@ const CustomBubble = (props) => {
 };
 
 
-const ChatPage2 = ({ currGroup, currUser, bootCallback, noGroups }) => {
+const ChatPage2 = ({ currGroup, currUser, refreshCallback, noGroups }) => {
 
   const prevGroup = usePrevious(currGroup);
   const [messages, setMessages] = useState(null);
@@ -176,7 +176,7 @@ const ChatPage2 = ({ currGroup, currUser, bootCallback, noGroups }) => {
         console.log(curr_messages);
         setMessages(curr_messages);
         refreshChatFeed(); // manually refresh ChatFeed with key prop and refreshCount bc it won't refresh itself even though the messages state is clearly updating...
-      }, bootCallback, currGroup.group__id);
+      }, refreshCallback, currGroup.group__id);
     }
 
     async function getMessages() {

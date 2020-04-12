@@ -21,7 +21,7 @@ import {
 import "./ChatListPage2.css";
 import mainLogo from "./images/1x/Asset 23.png";
 import heartSign from "./images/sign/animat-heart-color.gif";
-import { killChatConnection, sendBootRequestToRoom } from "./api";
+import { killChatConnection, sendMustRefreshEvent } from "./api";
 
 import NavigationBar from "./NavigationBar";
 
@@ -193,7 +193,9 @@ const ChatListPage2 = () => {
     if (result.status === "success") {
       setEditGroupName("");
       setCurrModal(null);
-      handleRefresh();
+      sendMustRefreshEvent({
+        action: "other"
+      });
     }
   };
 
@@ -247,15 +249,17 @@ const ChatListPage2 = () => {
     if (result.status === "success") {
       setEditGroupDescription("");
       setCurrModal(null);
-      handleRefresh();
+      sendMustRefreshEvent({
+        action: "other"
+      });
     }
   };
 
-  const handleBootedFromChatEvent = (event_data) => {
+  const handleRefreshRequestEvent = (event_data) => {
     console.log("Part");
     console.log(event_data);
     console.log(currUser);
-    if (event_data.user.user__id === currUser.id) {
+    if (event_data.action === "boot" && event_data.user.user__id === currUser.id) {
       console.log("Part 1");
       killChatConnection();
       if (groupList && groupList.length > 1) { // if the groupList contains more than just the currently selected chat
@@ -525,7 +529,7 @@ const ChatListPage2 = () => {
     // and null for "we've fetched, but found no groups". but that would be too much logic
     // to change right now (both in this component and the child component)
     return (
-      <ChatPage2 currGroup={currGroup} currUser={currUser} bootCallback={handleBootedFromChatEvent} noGroups={ groupList !== null && groupList.length === 0}/>
+      <ChatPage2 currGroup={currGroup} currUser={currUser} refreshCallback={handleRefreshRequestEvent} noGroups={ groupList !== null && groupList.length === 0}/>
     )
   };
 
@@ -1085,7 +1089,8 @@ const ChatListPage2 = () => {
                         for(var i = 0; i < currGroup.users.length; i++){
                           console.log(currGroup.users[i]);
                           if(currGroup.users[i].user__id === curr_user.user__id){
-                            sendBootRequestToRoom({
+                            sendMustRefreshEvent({
+                              action: "boot",
                               user: currGroup.users[i]
                             });
                             break;

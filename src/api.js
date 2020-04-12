@@ -13,11 +13,11 @@ if (false && window.location.host.includes("localhost")) {
 
 var socket = null;
 
-function subscribeToRoom(cb, bootCallback, room) {
+function subscribeToRoom(cb, refreshCallback, room) {
   socket = openSocket("http://" + domain + ":3002");
 
-  socket.on("boot confirmed", event_data => {
-    bootCallback(event_data);
+  socket.on("propagate refresh", event_data => {
+    refreshCallback(event_data);
   });
 
   socket.on("push to clients", newMessage => {
@@ -87,12 +87,12 @@ function sendMessageToRoom(message) {
   socket.emit("new message", message);
 }
 
-function sendBootRequestToRoom(event_data) {
-  console.log("Sending boot request: " + JSON.stringify(event_data));
-  socket.emit("boot request", event_data);
+function sendMustRefreshEvent(event_data) {
+  console.log("Sending must refresh event: " + JSON.stringify(event_data));
+  socket.emit("refresh request", event_data);
 }
 
-export { subscribeToRoom, sendMessageToRoom, sendBootRequestToRoom, killChatConnection, addGroupUser, createGroup };
+export { subscribeToRoom, sendMessageToRoom, sendMustRefreshEvent, killChatConnection, addGroupUser, createGroup };
 
 // import openSocket from 'socket.io-client';
 // const  socket = openSocket('http://localhost:8000');
