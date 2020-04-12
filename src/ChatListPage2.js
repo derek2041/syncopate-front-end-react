@@ -191,10 +191,6 @@ const ChatListPage2 = () => {
     const result = await response.json();
 
     if (result.status === "success") {
-      var clonedCurrGroup = JSON.parse(JSON.stringify(currGroup));
-
-      clonedCurrGroup.group__name = editGroupName;
-      setCurrGroup(clonedCurrGroup);
       setEditGroupName("");
       setCurrModal(null);
       handleRefresh();
@@ -249,10 +245,6 @@ const ChatListPage2 = () => {
     const result = await response.json();
 
     if (result.status === "success") {
-      var clonedCurrGroup = JSON.parse(JSON.stringify(currGroup));
-
-      clonedCurrGroup.group__description = editGroupDescription;
-      setCurrGroup(clonedCurrGroup);
       setEditGroupDescription("");
       setCurrModal(null);
       handleRefresh();
@@ -279,22 +271,6 @@ const ChatListPage2 = () => {
       handleRefresh();
     } else {
       console.log("Part 2");
-      var clonedCurrGroup = JSON.parse(JSON.stringify(currGroup));
-      console.log(clonedCurrGroup);
-
-      for(var i = 0; i < clonedCurrGroup.users.length; i++){
-        console.log(clonedCurrGroup.users[i]);
-        if(clonedCurrGroup.users[i].user__id === event_data.user.user__id){
-          clonedCurrGroup.users.splice(i,1);
-          break;
-          // clonedCurrGroup.users.remove(i);
-        }
-
-      }
-      console.log("kkxianzaide");
-      console.log(clonedCurrGroup);
-
-      setCurrGroup(clonedCurrGroup);
       handleRefresh();
     }
   };
@@ -380,15 +356,6 @@ const ChatListPage2 = () => {
     const result = await response.json();
 
     if (result.status === "success") {
-      var clonedCurrGroup = JSON.parse(JSON.stringify(currGroup));
-
-      if (data.checked === true) {
-        clonedCurrGroup.pinned = true;
-        setCurrGroup(clonedCurrGroup);
-      } else if (data.checked === false) {
-        clonedCurrGroup.pinned = false;
-        setCurrGroup(clonedCurrGroup);
-      }
       handleRefresh();
 
       // setCurrGroup(null);
@@ -1114,27 +1081,20 @@ const ChatListPage2 = () => {
                       const result = await response.json();
 
                       if (result.status === "success") {
-                        var clonedCurrGroup = JSON.parse(JSON.stringify(currGroup));
-                        console.log(clonedCurrGroup);
-
                         console.log(curr_user.user__id + curr_user.user__first_name);
-                        for(var i = 0; i < clonedCurrGroup.users.length; i++){
-                          console.log(clonedCurrGroup.users[i]);
-                          if(clonedCurrGroup.users[i].user__id === curr_user.user__id){
+                        for(var i = 0; i < currGroup.users.length; i++){
+                          console.log(currGroup.users[i]);
+                          if(currGroup.users[i].user__id === curr_user.user__id){
                             sendBootRequestToRoom({
-                              user: clonedCurrGroup.users[i]
+                              user: currGroup.users[i]
                             });
-
-                            clonedCurrGroup.users.splice(i,1);
                             break;
                             // clonedCurrGroup.users.remove(i);
                           }
 
                         }
                         console.log("kkxianzaide");
-                        console.log(clonedCurrGroup);
 
-                        setCurrGroup(clonedCurrGroup);
                         setCurrModal(null);
                         handleRefresh();
                       }
@@ -1329,23 +1289,6 @@ const ChatListPage2 = () => {
                   );
                   const result = await response.json();
                   if (result.status === "success") {
-                    var clonedCurrGroup = JSON.parse(JSON.stringify(currGroup));
-
-                    addingFriendList.forEach(friend_id => {
-                      friendList.forEach(curr_friend => {
-                        if (curr_friend.id === friend_id) {
-                          clonedCurrGroup.users.push({
-                            "user__id": curr_friend.id,
-                            "user__first_name": curr_friend.first_name,
-                            "user__last_name": curr_friend.last_name,
-                            "user__email": curr_friend.email,
-                            "user__profile_pic_url": curr_friend.profile_pic_url
-                          });
-                        }
-                      });
-                    });
-
-                    setCurrGroup(clonedCurrGroup);
                     setCurrModal(null);
                     handleRefresh();
                   }
