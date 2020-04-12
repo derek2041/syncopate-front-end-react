@@ -59,7 +59,11 @@ const ChatListPage2 = () => {
 
   // Refresh handlers
   const [refreshCount, setRefreshCount] = useState(0);
-  const handleRefresh = () => setRefreshCount(i => i + 1);
+  const handleRefresh = () => {
+    console.log("CLP2 Refresh Count:");
+    console.log(refreshCount + 1);
+    setRefreshCount(i => i + 1);
+  }
 
   useEffect(() => {
     async function checkLoggedIn() {
@@ -102,6 +106,17 @@ const ChatListPage2 = () => {
       result.sort((a, b) => (a.pinned === true && b.pinned === false ? -1 : 1));
 
       setGroupList(result);
+
+      if (currGroup !== null) {
+        // purpose of this is to update displayed information for currGroup (on right hand panel)
+        // instead of relying on a fake clonedCurrGroup that may have outdated information
+        for (var i = 0; i < result.length; i++) {
+          if (result[i].group__id === currGroup.group__id) {
+            setCurrGroup(result[i]);
+            break;
+          }
+        }
+      }
 
       if (currGroup === null && result !== null && result.length > 0) { // if user is in at LEAST one group
         // set current selected group on UI to first group in list
@@ -269,11 +284,7 @@ const ChatListPage2 = () => {
 
       for(var i = 0; i < clonedCurrGroup.users.length; i++){
         console.log(clonedCurrGroup.users[i]);
-        if(clonedCurrGroup.users[i].user__id === event_data.user.id){
-          sendBootRequestToRoom({
-            user: clonedCurrGroup.users[i]
-          });
-
+        if(clonedCurrGroup.users[i].user__id === event_data.user.user__id){
           clonedCurrGroup.users.splice(i,1);
           break;
           // clonedCurrGroup.users.remove(i);
@@ -456,6 +467,7 @@ const ChatListPage2 = () => {
               if (currGroup !== null && curr_group.group__id !== currGroup.group__id) {
                 killChatConnection();
               }
+              handleRefresh();
               setCurrGroup(curr_group);
               window.history.pushState("", "", "/" + curr_group.group__id);
               console.log("Selected Group ID: ", curr_group.group__id);
@@ -499,6 +511,7 @@ const ChatListPage2 = () => {
               if (currGroup !== null && curr_group.group__id !== currGroup.group__id) {
                 killChatConnection();
               }
+              handleRefresh();
               setCurrGroup(curr_group);
               window.history.pushState("", "", "/" + curr_group.group__id);
               console.log("Selected Group ID: ", curr_group.group__id);
