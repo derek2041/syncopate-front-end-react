@@ -1295,7 +1295,9 @@ const ChatListPage2 = () => {
                   const result = await response.json();
                   if (result.status === "success") {
                     setCurrModal(null);
-                    handleRefresh();
+                    sendMustRefreshEvent({
+                      action: "other"
+                    });
                   }
                 }}
               />
