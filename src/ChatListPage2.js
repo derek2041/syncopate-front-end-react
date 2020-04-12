@@ -21,7 +21,7 @@ import {
 import "./ChatListPage2.css";
 import mainLogo from "./images/1x/Asset 23.png";
 import heartSign from "./images/sign/animat-heart-color.gif";
-import { killChatConnection } from "./api";
+import { killChatConnection, sendBootRequestToRoom } from "./api";
 
 import NavigationBar from "./NavigationBar";
 
@@ -29,7 +29,6 @@ var faker = require("faker");
 const levenshtein = require("js-levenshtein");
 
 const ChatListPage2 = () => {
-
   // Session and current group data
   const [validSession, setValidSession] = useState(null);
   const [currGroup, setCurrGroup] = useState(null);
@@ -132,10 +131,6 @@ const ChatListPage2 = () => {
 
   }, [refreshCount]);
 
-  const leaveGroup = () => {
-    handleRefresh();
-  };
-
   const handleSearchChange = (event, data) => {
     setSearchQuery(data.value);
     console.log(data.value);
@@ -181,13 +176,13 @@ const ChatListPage2 = () => {
     const result = await response.json();
 
     if (result.status === "success") {
-      handleRefresh();
       var clonedCurrGroup = JSON.parse(JSON.stringify(currGroup));
 
       clonedCurrGroup.group__name = editGroupName;
       setCurrGroup(clonedCurrGroup);
       setEditGroupName("");
       setCurrModal(null);
+      handleRefresh();
     }
   };
 
@@ -212,10 +207,10 @@ const ChatListPage2 = () => {
     const result = await response.json();
 
     if (result.status === "success") {
-      handleRefresh();
       setNewGroupName("");
       setNewGroupDescription("");
       setCurrModal(null);
+      handleRefresh();
     }
   };
 
@@ -239,15 +234,67 @@ const ChatListPage2 = () => {
     const result = await response.json();
 
     if (result.status === "success") {
-      handleRefresh();
       var clonedCurrGroup = JSON.parse(JSON.stringify(currGroup));
 
       clonedCurrGroup.group__description = editGroupDescription;
       setCurrGroup(clonedCurrGroup);
       setEditGroupDescription("");
       setCurrModal(null);
+      handleRefresh();
     }
   };
+
+  const handleBootedFromChatEvent = (event_data) => {
+    console.log("Part");
+    console.log(event_data);
+    console.log(currUser);
+    if (event_data.user.user__id === currUser.id) {
+      console.log("Part 1");
+      killChatConnection();
+      if (groupList && groupList.length > 1) { // if the groupList contains more than just the currently selected chat
+        if (currGroup.group__id === groupList[0].group__id) { // if the user is trying to leave the chat we would swap to by default
+          setCurrGroup(groupList[1]); // set it to the second chat in the list instead of the first one
+        } else {
+          setCurrGroup(groupList[0]); // set it to the first chat in the list by default
+        }
+      } else {
+        setCurrGroup(null); // there are no chats left to swap to (0 groups remaining)
+      }
+
+      handleRefresh();
+    } else {
+      console.log("Part 2");
+      var clonedCurrGroup = JSON.parse(JSON.stringify(currGroup));
+      console.log(clonedCurrGroup);
+
+      for(var i = 0; i < clonedCurrGroup.users.length; i++){
+        console.log(clonedCurrGroup.users[i]);
+        if(clonedCurrGroup.users[i].user__id === event_data.user.id){
+          sendBootRequestToRoom({
+            user: clonedCurrGroup.users[i]
+          });
+
+          clonedCurrGroup.users.splice(i,1);
+          break;
+          // clonedCurrGroup.users.remove(i);
+        }
+
+      }
+      console.log("kkxianzaide");
+      console.log(clonedCurrGroup);
+
+      setCurrGroup(clonedCurrGroup);
+      handleRefresh();
+    }
+  };
+
+  const handleChatNameUpdateEvent = () => {
+    return;
+  }
+
+  const handleChatDescriptionUpdateEvent = () => {
+    return;
+  }
 
   const handleLeaveRequest = async () => {
     const settings = {
@@ -322,7 +369,6 @@ const ChatListPage2 = () => {
     const result = await response.json();
 
     if (result.status === "success") {
-      handleRefresh();
       var clonedCurrGroup = JSON.parse(JSON.stringify(currGroup));
 
       if (data.checked === true) {
@@ -332,6 +378,8 @@ const ChatListPage2 = () => {
         clonedCurrGroup.pinned = false;
         setCurrGroup(clonedCurrGroup);
       }
+      handleRefresh();
+
       // setCurrGroup(null);
     }
   };
@@ -497,7 +545,7 @@ const ChatListPage2 = () => {
     // and null for "we've fetched, but found no groups". but that would be too much logic
     // to change right now (both in this component and the child component)
     return (
-      <ChatPage2 currGroup={currGroup} currUser={currUser} noGroups={ groupList !== null && groupList.length === 0}/>
+      <ChatPage2 currGroup={currGroup} currUser={currUser} bootCallback={handleBootedFromChatEvent} noGroups={ groupList !== null && groupList.length === 0}/>
     )
   };
 
@@ -1053,7 +1101,6 @@ const ChatListPage2 = () => {
                       const result = await response.json();
 
                       if (result.status === "success") {
-                        handleRefresh();
                         var clonedCurrGroup = JSON.parse(JSON.stringify(currGroup));
                         console.log(clonedCurrGroup);
 
@@ -1061,6 +1108,10 @@ const ChatListPage2 = () => {
                         for(var i = 0; i < clonedCurrGroup.users.length; i++){
                           console.log(clonedCurrGroup.users[i]);
                           if(clonedCurrGroup.users[i].user__id === curr_user.user__id){
+                            sendBootRequestToRoom({
+                              user: clonedCurrGroup.users[i]
+                            });
+
                             clonedCurrGroup.users.splice(i,1);
                             break;
                             // clonedCurrGroup.users.remove(i);
@@ -1072,6 +1123,7 @@ const ChatListPage2 = () => {
 
                         setCurrGroup(clonedCurrGroup);
                         setCurrModal(null);
+                        handleRefresh();
                       }
                     }}
                   />
@@ -1264,7 +1316,6 @@ const ChatListPage2 = () => {
                   );
                   const result = await response.json();
                   if (result.status === "success") {
-                    handleRefresh();
                     var clonedCurrGroup = JSON.parse(JSON.stringify(currGroup));
 
                     addingFriendList.forEach(friend_id => {
@@ -1283,6 +1334,7 @@ const ChatListPage2 = () => {
 
                     setCurrGroup(clonedCurrGroup);
                     setCurrModal(null);
+                    handleRefresh();
                   }
                 }}
               />

@@ -11,6 +11,10 @@ io.on("connection", socket => {
     socket.join(room);
     console.log("Connecting client to room: ", room);
 
+    socket.on("boot request", event_data => {
+      io.in(room).emit("boot confirmed", event_data);
+    });
+
     socket.on("new message", async (message) => {
       console.log("Debugging Message: " + JSON.stringify(message));
       console.log(message.user.first_name);

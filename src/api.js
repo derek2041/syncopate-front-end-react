@@ -13,8 +13,13 @@ if (false && window.location.host.includes("localhost")) {
 
 var socket = null;
 
-function subscribeToRoom(cb, room) {
+function subscribeToRoom(cb, bootCallback, room) {
   socket = openSocket("http://" + domain + ":3002");
+
+  socket.on("boot confirmed", event_data => {
+    bootCallback(event_data);
+  });
+
   socket.on("push to clients", newMessage => {
     try {
       newMessage = JSON.parse(newMessage);
@@ -81,7 +86,13 @@ function sendMessageToRoom(message) {
   console.log("Sending message: " + JSON.stringify(message));
   socket.emit("new message", message);
 }
-export { subscribeToRoom, sendMessageToRoom, killChatConnection, addGroupUser, createGroup };
+
+function sendBootRequestToRoom(event_data) {
+  console.log("Sending boot request: " + JSON.stringify(event_data));
+  socket.emit("boot request", event_data);
+}
+
+export { subscribeToRoom, sendMessageToRoom, sendBootRequestToRoom, killChatConnection, addGroupUser, createGroup };
 
 // import openSocket from 'socket.io-client';
 // const  socket = openSocket('http://localhost:8000');
