@@ -106,6 +106,9 @@ const ChatListPage2 = () => {
       result.sort((a, b) => (a.pinned === true && b.pinned === false ? -1 : 1));
 
       setGroupList(result);
+      console.log("Setting Group List we're working with: " + Date() + JSON.stringify(result));
+      console.log(result);
+      debugger;
 
       if (currGroup !== null) {
         // purpose of this is to update displayed information for currGroup (on right hand panel)
@@ -262,15 +265,10 @@ const ChatListPage2 = () => {
     if (event_data.action === "boot" && event_data.user.user__id === currUser.id) {
       console.log("Part 1");
       killChatConnection();
-      if (groupList && groupList.length > 1) { // if the groupList contains more than just the currently selected chat
-        if (currGroup.group__id === groupList[0].group__id) { // if the user is trying to leave the chat we would swap to by default
-          setCurrGroup(groupList[1]); // set it to the second chat in the list instead of the first one
-        } else {
-          setCurrGroup(groupList[0]); // set it to the first chat in the list by default
-        }
-      } else {
-        setCurrGroup(null); // there are no chats left to swap to (0 groups remaining)
-      }
+      console.log("Group list we're working with: " + Date() + JSON.stringify(groupList));
+      console.log(groupList);
+      debugger;
+      setCurrGroup(null);
 
       handleRefresh();
     } else {
@@ -278,6 +276,17 @@ const ChatListPage2 = () => {
       console.log("Part 2");
       handleRefresh();
     }
+  };
+
+  /*
+    Callback function reserved for child component ChatPage2.js to request an update/refresh when
+    the error is caught while trying to parse messages.
+
+    Expect this to be called when the user clicks on a group they have unknowingly been removed from.
+  */
+  const resetCurrGroup = () => {
+    setCurrGroup(null);
+    handleRefresh();
   };
 
   const handleChatNameUpdateEvent = () => {
@@ -537,7 +546,7 @@ const ChatListPage2 = () => {
     // and null for "we've fetched, but found no groups". but that would be too much logic
     // to change right now (both in this component and the child component)
     return (
-      <ChatPage2 currGroup={currGroup} currUser={currUser} refreshCallback={handleRefreshRequestEvent} noGroups={ groupList !== null && groupList.length === 0}/>
+      <ChatPage2 currGroup={currGroup} currUser={currUser} resetGroupCallback={resetCurrGroup} refreshCallback={handleRefreshRequestEvent} noGroups={ groupList !== null && groupList.length === 0}/>
     )
   };
 

@@ -84,12 +84,20 @@ return result;
 
 function sendMessageToRoom(message) {
   console.log("Sending message: " + JSON.stringify(message));
-  socket.emit("new message", message);
+  try {
+    socket.emit("new message", message);
+  } catch (err) {
+    window.location.href = "/my-chats";
+  }
 }
 
 function sendMustRefreshEvent(event_data) {
   console.log("Sending must refresh event: " + JSON.stringify(event_data));
-  socket.emit("refresh request", event_data);
+  try {
+    socket.emit("refresh request", event_data);
+  } catch (err) {
+    window.location.href = "/my-chats";
+  }
 }
 
 export { subscribeToRoom, sendMessageToRoom, sendMustRefreshEvent, killChatConnection, addGroupUser, createGroup };

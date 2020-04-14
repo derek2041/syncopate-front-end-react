@@ -70,7 +70,7 @@ const CustomBubble = (props) => {
 };
 
 
-const ChatPage2 = ({ currGroup, currUser, refreshCallback, noGroups }) => {
+const ChatPage2 = ({ currGroup, currUser, resetGroupCallback, refreshCallback, noGroups }) => {
 
   const prevGroup = usePrevious(currGroup);
   const [messages, setMessages] = useState(null);
@@ -225,16 +225,35 @@ const ChatPage2 = ({ currGroup, currUser, refreshCallback, noGroups }) => {
       // the name won't show in the ChatBubble component and will also not group properly (respectively)
       var parsed_messages = [];
       var raw_messages = result.messages;
-      raw_messages.forEach((curr_raw_message) => {
-        curr_raw_message.senderName = curr_raw_message.user__first_name + " " + curr_raw_message.user__last_name;
-        curr_raw_message.message_id = curr_raw_message.id;
-        if (curr_raw_message.user === currUser.id) {
-          curr_raw_message.id = 0;
-        } else {
-          curr_raw_message.id = curr_raw_message.user;
-        }
-        parsed_messages.push(curr_raw_message);
-      });
+
+      try {
+        raw_messages.forEach((curr_raw_message) => {
+          curr_raw_message.senderName = curr_raw_message.user__first_name + " " + curr_raw_message.user__last_name;
+          curr_raw_message.message_id = curr_raw_message.id;
+          if (curr_raw_message.user === currUser.id) {
+            curr_raw_message.id = 0;
+          } else {
+            curr_raw_message.id = curr_raw_message.user;
+          }
+          parsed_messages.push(curr_raw_message);
+        });
+      } catch (error) {
+        // temporary fix for a hard-to-reproduce bug where leaving/kicked from a room would
+        // crash the application because result.messages is not iterable (i.e. result.messages was set to "User is not in group"
+        // instead of a list of messages)
+
+        // if this occurs often enough, it may be worth further investigating the cause and issuing a fix that doesn't fallback
+        // on a refresh of the entire page
+        console.log("Prev group:")
+        console.log(prevGroup);
+
+        console.log("Curr group:")
+        console.log(currGroup);
+        
+        resetGroupCallback();
+        debugger;
+      }
+
 
       // store user_id in localStorage. all it does is help CustomBubble parse messages
       localStorage.setItem("user_id", currUser.id);
@@ -266,7 +285,7 @@ const ChatPage2 = ({ currGroup, currUser, refreshCallback, noGroups }) => {
     if (noGroups) {
       return (
         <div style={{ transform: "translate(0px, 40vh)" }}>
-          <h1>It looks like you're not in any groups!</h1>
+          <h1>We couldn't find any groups!</h1>
         </div>
       );
     }
