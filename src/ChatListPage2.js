@@ -319,21 +319,16 @@ const ChatListPage2 = () => {
       // now we want to actually leave the chat in the User Interface
       setCurrModal(null); // kill the leave chat confirmation modal
 
-      if (groupList && groupList.length > 1) { // if the groupList contains more than just the currently selected chat
-        if (currGroup.group__id === groupList[0].group__id) { // if the user is trying to leave the chat we would swap to by default
-          setCurrGroup(groupList[1]); // set it to the second chat in the list instead of the first one
-        } else {
-          setCurrGroup(groupList[0]); // set it to the first chat in the list by default
-        }
-      } else {
-        setCurrGroup(null); // there are no chats left to swap to (0 groups remaining)
-      }
       // tell other connected clients in this chat to re-fetch group list data
       sendMustRefreshEvent({
         action: "other"
       });
       // kill the socket connection since this user is LEAVING
       killChatConnection();
+
+      setCurrGroup(null);
+      
+
       // we use handleRefresh() here because the socket connection is already dead and thus, will not receive the
       // propagate refresh event that would typically internally trigger handleRefresh();
       handleRefresh();
@@ -378,8 +373,6 @@ const ChatListPage2 = () => {
 
     if (result.status === "success") {
       handleRefresh();
-
-      // setCurrGroup(null);
     }
   };
 
