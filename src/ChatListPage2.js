@@ -466,6 +466,15 @@ const ChatListPage2 = () => {
 
 
           />
+          <Icon
+            size="normal"
+            color="grey"
+            name="archive"
+            style={{
+              float: "right",
+              marginRight: "5px"
+            }}
+          />
             <div className="">
               <p
                 style={{
@@ -517,11 +526,20 @@ const ChatListPage2 = () => {
             name="trash alternate outline"
             style={{
               float: "right",
+
             }}
             onClick={handleLeaveRequest}
-
-
           />
+          <Icon
+            size="normal"
+            color="grey"
+            name="archive"
+            style={{
+              float: "right",
+              marginRight: "5px"
+            }}
+          />
+
             <div className="">
               <p
                 style={{
