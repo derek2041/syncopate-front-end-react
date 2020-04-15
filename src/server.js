@@ -11,9 +11,13 @@ io.on("connection", socket => {
     socket.join(room);
     console.log("Connecting client to room: ", room);
 
-    socket.on("new message", async function(message, rich_content) {
+    socket.on("refresh request", event_data => {
+      io.in(room).emit("propagate refresh", event_data);
+    });
+
+    socket.on("new message", async (message) => {
       console.log("Debugging Message: " + JSON.stringify(message));
-      console.log(message.user_info);
+      console.log(message.user.first_name);
       const settings = {
         method: "POST",
         headers: {
@@ -21,8 +25,8 @@ io.on("connection", socket => {
         },
         credentials: "include",
         body: JSON.stringify({
-          user_id: message.user_info.id,
-          group_id: message.group_id,
+          user_id: message.user.id,
+          group_id: room,
           content: message.content,
           rich_content: message.rich_content,
           rich_content_url: "useless",
@@ -43,6 +47,6 @@ io.on("connection", socket => {
   });
 });
 
-const port = 3001;
+const port = 3002;
 io.listen(port);
 console.log("listening on port ", port);

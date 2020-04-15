@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import ChatPage from "./ChatPage";
+import ChatPage2 from "./ChatPage2";
 
 import {
   Input,
@@ -21,7 +21,7 @@ import {
 import "./ChatListPage2.css";
 import mainLogo from "./images/1x/Asset 23.png";
 import heartSign from "./images/sign/animat-heart-color.gif";
-import { killChatConnection } from "./api";
+import { killChatConnection, sendMustRefreshEvent } from "./api";
 
 import NavigationBar from "./NavigationBar";
 
@@ -29,10 +29,10 @@ var faker = require("faker");
 const levenshtein = require("js-levenshtein");
 
 const ChatListPage2 = () => {
-
   // Session and current group data
   const [validSession, setValidSession] = useState(null);
   const [currGroup, setCurrGroup] = useState(null);
+  const [currUser, setCurrUser] = useState(null);
 
   // Lists
   const [groupList, setGroupList] = useState(null);
@@ -59,7 +59,11 @@ const ChatListPage2 = () => {
 
   // Refresh handlers
   const [refreshCount, setRefreshCount] = useState(0);
-  const handleRefresh = () => setRefreshCount(i => i + 1);
+  const handleRefresh = () => {
+    console.log("CLP2 Refresh Count:");
+    console.log(refreshCount + 1);
+    setRefreshCount(i => i + 1);
+  }
 
   useEffect(() => {
     async function checkLoggedIn() {
@@ -76,6 +80,22 @@ const ChatListPage2 = () => {
       }
     }
 
+    async function identifyUser() {
+      const fetch_user = await fetch(
+        `http://18.219.112.140:8000/api/v1/identify/`,
+        {
+          method: "POST",
+          credentials: "include"
+        }
+      );
+
+      const result_user = await fetch_user.json();
+
+      if (result_user.id !== null) {
+        setCurrUser(result_user);
+      }
+    }
+
     async function fetchList() {
       const response = await fetch(
         `http://18.219.112.140:8000/api/v1/get-user-group/`,
@@ -86,6 +106,25 @@ const ChatListPage2 = () => {
       result.sort((a, b) => (a.pinned === true && b.pinned === false ? -1 : 1));
 
       setGroupList(result);
+      console.log("Setting Group List we're working with: " + Date() + JSON.stringify(result));
+      console.log(result);
+      debugger;
+
+      if (currGroup !== null) {
+        // purpose of this is to update displayed information for currGroup (on right hand panel)
+        // instead of relying on a fake clonedCurrGroup that may have outdated information
+        for (var i = 0; i < result.length; i++) {
+          if (result[i].group__id === currGroup.group__id) {
+            setCurrGroup(result[i]);
+            break;
+          }
+        }
+      }
+
+      if (currGroup === null && result !== null && result.length > 0) { // if user is in at LEAST one group
+        // set current selected group on UI to first group in list
+        setCurrGroup(result[0]);
+      }
 
       const response2 = await fetch(
         `http://18.219.112.140:8000/api/v1/load-friends/`,
@@ -105,13 +144,10 @@ const ChatListPage2 = () => {
     }
 
     checkLoggedIn();
+    identifyUser();
     fetchList();
 
   }, [refreshCount]);
-
-  const leaveGroup = () => {
-    handleRefresh();
-  };
 
   const handleSearchChange = (event, data) => {
     setSearchQuery(data.value);
@@ -158,16 +194,14 @@ const ChatListPage2 = () => {
     const result = await response.json();
 
     if (result.status === "success") {
-      handleRefresh();
-      var clonedCurrGroup = JSON.parse(JSON.stringify(currGroup));
-
-      clonedCurrGroup.group__name = editGroupName;
-      setCurrGroup(clonedCurrGroup);
       setEditGroupName("");
       setCurrModal(null);
+      sendMustRefreshEvent({
+        action: "other"
+      });
     }
   };
-  
+
   const createNewGroup = async () => {
     const settings = {
       method: "POST",
@@ -189,10 +223,10 @@ const ChatListPage2 = () => {
     const result = await response.json();
 
     if (result.status === "success") {
-      handleRefresh();
       setNewGroupName("");
       setNewGroupDescription("");
       setCurrModal(null);
+      handleRefresh();
     }
   };
 
@@ -216,15 +250,52 @@ const ChatListPage2 = () => {
     const result = await response.json();
 
     if (result.status === "success") {
-      handleRefresh();
-      var clonedCurrGroup = JSON.parse(JSON.stringify(currGroup));
-
-      clonedCurrGroup.group__description = editGroupDescription;
-      setCurrGroup(clonedCurrGroup);
       setEditGroupDescription("");
       setCurrModal(null);
+      sendMustRefreshEvent({
+        action: "other"
+      });
     }
   };
+
+  const handleRefreshRequestEvent = (event_data) => {
+    console.log("Part");
+    console.log(event_data);
+    console.log(currUser);
+    if (event_data.action === "boot" && event_data.user.user__id === currUser.id) {
+      console.log("Part 1");
+      killChatConnection();
+      console.log("Group list we're working with: " + Date() + JSON.stringify(groupList));
+      console.log(groupList);
+      debugger;
+      setCurrGroup(null);
+
+      handleRefresh();
+    } else {
+      // all other refresh request events are handled here (just a simple handleRefresh())
+      console.log("Part 2");
+      handleRefresh();
+    }
+  };
+
+  /*
+    Callback function reserved for child component ChatPage2.js to request an update/refresh when
+    the error is caught while trying to parse messages.
+
+    Expect this to be called when the user clicks on a group they have unknowingly been removed from.
+  */
+  const resetCurrGroup = () => {
+    setCurrGroup(null);
+    handleRefresh();
+  };
+
+  const handleChatNameUpdateEvent = () => {
+    return;
+  }
+
+  const handleChatDescriptionUpdateEvent = () => {
+    return;
+  }
 
   const handleLeaveRequest = async () => {
     const settings = {
@@ -245,9 +316,22 @@ const ChatListPage2 = () => {
     const result = await response.json();
 
     if (result.status === "success") {
-      handleRefresh();
-      setCurrModal(null);
+      // now we want to actually leave the chat in the User Interface
+      setCurrModal(null); // kill the leave chat confirmation modal
+
+      // tell other connected clients in this chat to re-fetch group list data
+      sendMustRefreshEvent({
+        action: "other"
+      });
+      // kill the socket connection since this user is LEAVING
+      killChatConnection();
+
       setCurrGroup(null);
+      
+
+      // we use handleRefresh() here because the socket connection is already dead and thus, will not receive the
+      // propagate refresh event that would typically internally trigger handleRefresh();
+      handleRefresh();
     }
   };
 
@@ -289,16 +373,6 @@ const ChatListPage2 = () => {
 
     if (result.status === "success") {
       handleRefresh();
-      var clonedCurrGroup = JSON.parse(JSON.stringify(currGroup));
-
-      if (data.checked === true) {
-        clonedCurrGroup.pinned = true;
-        setCurrGroup(clonedCurrGroup);
-      } else if (data.checked === false) {
-        clonedCurrGroup.pinned = false;
-        setCurrGroup(clonedCurrGroup);
-      }
-      // setCurrGroup(null);
     }
   };
 
@@ -310,6 +384,53 @@ const ChatListPage2 = () => {
 
     var resultJSX = [];
     var identifier = 0;
+
+    resultJSX.push(
+      <>
+        <div
+          style={{ paddingTop: "10px", paddingBottom: "10px", borderBottom: "1px solid rgba(34, 36, 38, 0.15)" }}
+          onClick={() => {
+            setCurrModal("create-group");
+          }}
+        >
+            <Button
+              primary
+              icon="plus"
+              labelPosition="right"
+              content="New group"
+            />
+        </div>
+
+        <Modal
+          size="tiny"
+          open={currModal === "create-group"}
+          onClose={() => {
+            setNewGroupName("");
+            setNewGroupDescription("");
+            setCurrModal(null);
+          }}
+        >
+          <Modal.Header>Create New Group</Modal.Header>
+          <Modal.Content>
+            <Input placeholder="Group Name" style={{ width: "100%", paddingBottom: "20px" }} onChange={(event, data) => {
+              setNewGroupName(data.value);
+            }}/>
+            <Input placeholder="Group Description" style={{ width: "100%" }} onChange={(event, data) => {
+              setNewGroupDescription(data.value);
+            }}/>
+          </Modal.Content>
+          <Modal.Actions>
+            <Button
+              primary
+              icon="checkmark"
+              labelPosition="right"
+              content="Create Group"
+              onClick={createNewGroup}
+            />
+          </Modal.Actions>
+        </Modal>
+      </>
+    );
 
     groupList.forEach(curr_group => {
       if (!compareWithSearchQuery(curr_group)) {
@@ -327,6 +448,7 @@ const ChatListPage2 = () => {
               if (currGroup !== null && curr_group.group__id !== currGroup.group__id) {
                 killChatConnection();
               }
+              handleRefresh();
               setCurrGroup(curr_group);
               window.history.pushState("", "", "/" + curr_group.group__id);
               console.log("Selected Group ID: ", curr_group.group__id);
@@ -370,6 +492,7 @@ const ChatListPage2 = () => {
               if (currGroup !== null && curr_group.group__id !== currGroup.group__id) {
                 killChatConnection();
               }
+              handleRefresh();
               setCurrGroup(curr_group);
               window.history.pushState("", "", "/" + curr_group.group__id);
               console.log("Selected Group ID: ", curr_group.group__id);
@@ -410,16 +533,14 @@ const ChatListPage2 = () => {
   };
 
   const renderChatInstance = () => {
-    console.log(">>>", currGroup);
-    console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-
-    if (currGroup === null) {
-      console.log(">null<");
-      return <ChatPage key={-1} group={currGroup} />
-    } else {
-      console.log(">not null: " + currGroup.group__id.toString() + "<");
-      return <ChatPage key={currGroup.group__id.toString()} group={currGroup} />
-    }
+    // added a noGroups prop so ChatPage component can differentiate between
+    // "still fetching group data" and "this user is actually in 0 groups"
+    // in hindsight, we should be setting currGroup by default to undefined for "not yet fetched"
+    // and null for "we've fetched, but found no groups". but that would be too much logic
+    // to change right now (both in this component and the child component)
+    return (
+      <ChatPage2 currGroup={currGroup} currUser={currUser} resetGroupCallback={resetCurrGroup} refreshCallback={handleRefreshRequestEvent} noGroups={ groupList !== null && groupList.length === 0}/>
+    )
   };
 
   const renderGroupInfo = () => {
@@ -974,25 +1095,23 @@ const ChatListPage2 = () => {
                       const result = await response.json();
 
                       if (result.status === "success") {
-                        handleRefresh();
-                        var clonedCurrGroup = JSON.parse(JSON.stringify(currGroup));
-                        console.log(clonedCurrGroup);
-
                         console.log(curr_user.user__id + curr_user.user__first_name);
-                        for(var i = 0; i < clonedCurrGroup.users.length; i++){
-                          console.log(clonedCurrGroup.users[i]);
-                          if(clonedCurrGroup.users[i].user__id === curr_user.user__id){
-                            clonedCurrGroup.users.splice(i,1);
+                        for(var i = 0; i < currGroup.users.length; i++){
+                          console.log(currGroup.users[i]);
+                          if(currGroup.users[i].user__id === curr_user.user__id){
+                            sendMustRefreshEvent({
+                              action: "boot",
+                              user: currGroup.users[i]
+                            });
                             break;
                             // clonedCurrGroup.users.remove(i);
                           }
 
                         }
                         console.log("kkxianzaide");
-                        console.log(clonedCurrGroup);
 
-                        setCurrGroup(clonedCurrGroup);
                         setCurrModal(null);
+                        handleRefresh();
                       }
                     }}
                   />
@@ -1185,25 +1304,10 @@ const ChatListPage2 = () => {
                   );
                   const result = await response.json();
                   if (result.status === "success") {
-                    handleRefresh();
-                    var clonedCurrGroup = JSON.parse(JSON.stringify(currGroup));
-
-                    addingFriendList.forEach(friend_id => {
-                      friendList.forEach(curr_friend => {
-                        if (curr_friend.id === friend_id) {
-                          clonedCurrGroup.users.push({
-                            "user__id": curr_friend.id,
-                            "user__first_name": curr_friend.first_name,
-                            "user__last_name": curr_friend.last_name,
-                            "user__email": curr_friend.email,
-                            "user__profile_pic_url": curr_friend.profile_pic_url
-                          });
-                        }
-                      });
-                    });
-
-                    setCurrGroup(clonedCurrGroup);
                     setCurrModal(null);
+                    sendMustRefreshEvent({
+                      action: "other"
+                    });
                   }
                 }}
               />
@@ -1219,7 +1323,7 @@ const ChatListPage2 = () => {
     }
   };
 
-  if (validSession === null) {
+  if (validSession === null || currUser === null) {
     return (
       <div>
 
@@ -1257,7 +1361,7 @@ const ChatListPage2 = () => {
                   Recent Chats
                 </h1>
               </div>
-              <List.Item style={{ height: "70px" }}>
+              <List.Item style={{ height: "70px", borderBottom: "1px solid rgba(34,36,38,.15)" }}>
                 <Input
                   icon="search"
                   className="search-input"
@@ -1267,47 +1371,6 @@ const ChatListPage2 = () => {
                 />
               </List.Item>
               {renderList()}
-              <div
-                onClick={() => {
-                  setCurrModal("create-group");
-                }}
-              >
-                  <Button
-                    primary
-                    icon="plus"
-                    labelPosition="right"
-                    content="Create new group"
-                  />
-              </div>
-
-              <Modal
-                size="tiny"
-                open={currModal === "create-group"}
-                onClose={() => {
-                  setNewGroupName("");
-                  setNewGroupDescription("");
-                  setCurrModal(null);
-                }}
-              >
-                <Modal.Header>Create New Group</Modal.Header>
-                <Modal.Content>
-                  <Input placeholder="Group Name" style={{ width: "100%" }} onChange={(event, data) => {
-                    setNewGroupName(data.value);
-                  }}/>
-                  <Input placeholder="Group Description" style={{ width: "100%" }} onChange={(event, data) => {
-                    setNewGroupDescription(data.value);
-                  }}/>
-                </Modal.Content>
-                <Modal.Actions>
-                  <Button
-                    primary
-                    icon="checkmark"
-                    labelPosition="right"
-                    content="Save Changes"
-                    onClick={createNewGroup}
-                  />
-                </Modal.Actions>
-              </Modal>
             </List>
           </div>
         </div>

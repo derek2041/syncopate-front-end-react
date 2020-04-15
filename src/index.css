@@ -60,6 +60,10 @@ input {
   border-radius: 50px !important;
 }
 
+.message-left > div > div > p {
+  color: black !important;
+}
+
 label {
   font-family: "Exo 2" !important;
 }

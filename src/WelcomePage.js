@@ -25,7 +25,7 @@ const WelcomePage = () => {
       const result = await response.json();
 
       if (result.status === "success") {
-        window.location.href = "/my-profile";
+        window.location.href = "/my-chats";
       }
     }
 
@@ -324,7 +324,7 @@ const WelcomePage = () => {
                         console.log("ResultStatus: ", result.status);
 
                         if (result.status === "success") {
-                          window.location.href = "/my-profile";
+                          window.location.href = "/my-chats";
                         } else {
                           setShowLoginError(true);
                         }

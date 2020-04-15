@@ -13,8 +13,13 @@ if (false && window.location.host.includes("localhost")) {
 
 var socket = null;
 
-function subscribeToRoom(cb, room) {
-  socket = openSocket("http://" + domain + ":3001");
+function subscribeToRoom(cb, refreshCallback, room) {
+  socket = openSocket("http://" + domain + ":3002");
+
+  socket.on("propagate refresh", event_data => {
+    refreshCallback(event_data);
+  });
+
   socket.on("push to clients", newMessage => {
     try {
       newMessage = JSON.parse(newMessage);
@@ -34,34 +39,6 @@ function killChatConnection() {
   socket = null;
 }
 
-/*
-async function getGroupMessages(groupId) {
-
-
-  const response = await fetch(
-//    `http://18.219.112.140:8000/api/v1/get-messages?group_id=${groupId}`,
-       `http://18.219.112.140:8000/api/v1/get-messages/`,
-    {
-//      method: "GET",
-//      headers: {
-//        "Content-Type": "application/json"
-//      },
-//      credentials: "include"
-
-        method: "POST",
-        credentials: "include",
-        body: JSON.stringify({
-	persistent: true,
-          group_id: groupId || window.location.pathname.split("/").slice(-1)[0]
-      })
-    }
-  );
-
-  const result = await response.json();
-   // debugger
-  return result.messages
-}
-*/
 async function addGroupUser (userId, groupId) {
     const settings = {
       method: "POST",
@@ -82,6 +59,7 @@ async function addGroupUser (userId, groupId) {
     const result = await response.json();
 return result;
 }
+
 async function createGroup (name, desc, dm) {
     const settings = {
       method: "POST",
@@ -103,11 +81,26 @@ async function createGroup (name, desc, dm) {
     const result = await response.json();
 return result;
 }
+
 function sendMessageToRoom(message) {
   console.log("Sending message: " + JSON.stringify(message));
-  socket.emit("new message", message);
+  try {
+    socket.emit("new message", message);
+  } catch (err) {
+    window.location.href = "/my-chats";
+  }
 }
-export { subscribeToRoom, sendMessageToRoom, killChatConnection, addGroupUser, createGroup };
+
+function sendMustRefreshEvent(event_data) {
+  console.log("Sending must refresh event: " + JSON.stringify(event_data));
+  try {
+    socket.emit("refresh request", event_data);
+  } catch (err) {
+    window.location.href = "/my-chats";
+  }
+}
+
+export { subscribeToRoom, sendMessageToRoom, sendMustRefreshEvent, killChatConnection, addGroupUser, createGroup };
 
 // import openSocket from 'socket.io-client';
 // const  socket = openSocket('http://localhost:8000');
