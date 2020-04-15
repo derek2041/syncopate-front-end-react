@@ -327,7 +327,7 @@ const ChatListPage2 = () => {
       killChatConnection();
 
       setCurrGroup(null);
-      
+
 
       // we use handleRefresh() here because the socket connection is already dead and thus, will not receive the
       // propagate refresh event that would typically internally trigger handleRefresh();
@@ -454,6 +454,18 @@ const ChatListPage2 = () => {
               console.log("Selected Group ID: ", curr_group.group__id);
             }}
           >
+
+          <Icon
+            size="normal"
+            color="grey"
+            name="trash alternate outline"
+            style={{
+              float: "right",
+            }}
+            onClick={handleLeaveRequest}
+
+
+          />
             <div className="">
               <p
                 style={{
@@ -478,6 +490,7 @@ const ChatListPage2 = () => {
                   {"( " + curr_group.group__description + " )"}
                 </p>
               </p>
+
             </div>
             <List.Content></List.Content>
           </List.Item>
@@ -498,6 +511,17 @@ const ChatListPage2 = () => {
               console.log("Selected Group ID: ", curr_group.group__id);
             }}
           >
+          <Icon
+            size="normal"
+            color="grey"
+            name="trash alternate outline"
+            style={{
+              float: "right",
+            }}
+            onClick={handleLeaveRequest}
+
+
+          />
             <div className="">
               <p
                 style={{
