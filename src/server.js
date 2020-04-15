@@ -47,6 +47,6 @@ io.on("connection", socket => {
   });
 });
 
-const port = 3002;
+const port = 3001;
 io.listen(port);
 console.log("listening on port ", port);
