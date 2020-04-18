@@ -2,11 +2,6 @@
   text-align: center;
 }
 
-.dark-theme .App {
-  background-color: black !important;
-
-}
-
 .App-logo {
   height: 40vmin;
   pointer-events: none;
@@ -128,6 +123,8 @@ body:not(.dark-theme) nav {
     background-color: #000;
 }
 
+.dark-theme .ui.
+
 .dark-theme input {
     background: #000 !important;
     color: #fff;
@@ -140,56 +137,4 @@ body:not(.dark-theme) nav {
 
 .ui.modal > div {
     background: #000 !important;
-}
-
-.dark-theme #change-password-link {
-    color: white;
-
-}
-
-.dark-theme .ui.celled.list {
-    background-color: black !important;
-
-}
-
-.dark-theme #friends-container {
-    background-color: black !important;
-
-}
-
-.dark-theme #friend-info-container {
-   background-color: black;
-
-}
-
-.dark-theme #friend-info-back {
-  background-color: black; 
-
-}
-
-.dark-theme .topDiv{
-  background-color: black; 
-
-}
-
-.dark-theme .notification-container {
-  background-color: black !important;
-
-}
-
-
-.dark-theme .notification-list-header.table-content {
-  background-color: black !important; 
-
-}
-
-.dark-theme .notification-container .notification-list-header .notification-title {
-  background-color: black;
-
-}
-
-
-.ui.warning.button {
-  background-image: linear-gradient(to right, #314755 0%, #26a0da 51%, #314755 100%);   
-  text-color: white !important; 
 }
