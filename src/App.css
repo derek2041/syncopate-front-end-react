@@ -136,3 +136,8 @@ body:not(.dark-theme) nav {
 .ui.modal > div {
     background: #000 !important;
 }
+
+.dark-theme #change-password-link {
+    color: white;
+
+}
