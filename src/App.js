@@ -24,17 +24,8 @@ const App = () => {
   return (
     <div className="App">
        <div className="app-wrapper">
-      <nav>
-        <div className='text-center button-container'>
-          <button className="ui warning button"  onClick={() => window.document.body.classList.toggle("dark-theme") }>
-            Toggle Theme
-          </button>
-        </div>
-      </nav>
-
       <Router>
         <NavigationBar />
-        
         <Switch>
           <Route
             path="/register"

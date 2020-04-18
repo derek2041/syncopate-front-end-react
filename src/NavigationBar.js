@@ -75,6 +75,13 @@ const NavigationBar = () => {
         ></Menu.Item>
       </Menu.Menu>
 
+      <Menu.Menu position="center">
+
+	<button className="ui warning button"  onClick={() => window.document.body.classList.toggle("dark-theme") }>
+            Toggle Theme
+          </button>
+      </Menu.Menu>  
+
       <Menu.Menu position="right">
         <Menu.Item
           active={mouseOver === "add-friends"}
