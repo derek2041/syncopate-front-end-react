@@ -23,9 +23,9 @@ import Stats from "./Stats";
 const App = () => {
   return (
     <div className="App">
+       <div className="app-wrapper">
       <Router>
         <NavigationBar />
-        
         <Switch>
           <Route
             path="/register"
@@ -157,6 +157,7 @@ const App = () => {
         </Switch>
       </Router>
     </div>
+    </div> 
   );
 };
 
