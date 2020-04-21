@@ -12,6 +12,7 @@ io.on("connection", socket => {
     console.log("Connecting client to room: ", room);
 
     socket.on("refresh request", event_data => {
+      console.log("Pushing refresh request " + JSON.stringify(event_data) + " from " + socket.id + " to clients in room " + room);
       io.in(room).emit("propagate refresh", event_data);
     });
 
@@ -47,6 +48,6 @@ io.on("connection", socket => {
   });
 });
 
-const port = 3001;
+const port = 3002;
 io.listen(port);
 console.log("listening on port ", port);

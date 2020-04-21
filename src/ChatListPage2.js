@@ -272,6 +272,7 @@ const ChatListPage2 = () => {
 
       handleRefresh();
     } else if(event_data.action === "delete"){
+      console.log("PARSING RECEIVED DELETE GROUP EVENT OVER SOCKET");
       killChatConnection();
       setCurrGroup(null);
       handleRefresh();
@@ -302,45 +303,6 @@ const ChatListPage2 = () => {
   const handleChatDescriptionUpdateEvent = () => {
     return;
   }
-
-  const handleDeleteRequset = async () => {
-    const settings = {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      credentials: "include",
-      body: JSON.stringify({
-        group_id: currGroup.group__id
-      })
-    };
-    const response = await fetch(
-      `http://18.219.112.140:8000/api/v1/delete-group/`,
-      settings
-    );
-
-    const result = await response.json();
-
-    if (result.status === "success") {
-      // now we want to actually leave the chat in the User Interface
-      setCurrModal(null); // kill the leave chat confirmation modal
-
-      // tell other connected clients in this chat to re-fetch group list data
-      sendMustRefreshEvent({
-        action: "other"
-      });
-      // kill the socket connection since this user is LEAVING
-      killChatConnection();
-
-      setCurrGroup(null);
-
-
-      // we use handleRefresh() here because the socket connection is already dead and thus, will not receive the
-      // propagate refresh event that would typically internally trigger handleRefresh();
-      handleRefresh();
-    }
-  }
-
 
   const handleLeaveRequest = async () => {
     const settings = {
@@ -419,20 +381,27 @@ const ChatListPage2 = () => {
       },
       credentials: "include",
       body: JSON.stringify({
-        group_id: currGroup.group__id
+        group_id: currGroup.group__id,
+        deleted: true
       })
     };
+
     const response = await fetch(
       `http://18.219.112.140:8000/api/v1/delete-group/`,
       settings
     );
 
     const result = await response.json();
-    if(result.status === "success"){
+
+    debugger;
+
+    if (result.status === "success") {
       sendMustRefreshEvent({
         action: "delete"
-      })
+      });
+      killChatConnection();
       setCurrModal(null);
+      setCurrGroup(null);
       handleRefresh();
     }
   }
@@ -546,29 +515,15 @@ const ChatListPage2 = () => {
               console.log("Selected Group ID: ", curr_group.group__id);
             }}
           >
-
-          <Icon
-            size="normal"
-            color="grey"
-            name="trash alternate outline"
-            style={{
-              float: "right",
-            }}
-            onClick={() => {
-              setCurrModal("delete-group-chat");
-            }}
-
-
-          />
-          <Modal
+                      <Modal
             size="tiny"
-            open={currModal === "delete-group-chat"}
+            open={currModal === "delete-group-chat" + curr_group.group__id}
             onClose={() => {
 
               setCurrModal(null);
             }}
           >
-            <Modal.Header>Are you sure you want to delete the group?</Modal.Header>
+            <Modal.Header>Are you sure you want to delete the group: {curr_group.group__name}?</Modal.Header>
 
             <Modal.Actions>
               <Button
@@ -591,13 +546,13 @@ const ChatListPage2 = () => {
           </Modal>
           <Modal
             size="tiny"
-            open={currModal === "archive-group-chat"}
+            open={currModal === "archive-group-chat" + curr_group.group__id}
             onClose={() => {
 
               setCurrModal(null);
             }}
           >
-            <Modal.Header>Are you sure you want to archive the group?</Modal.Header>
+            <Modal.Header>Are you sure you want to archive the group: {curr_group.group__name}?</Modal.Header>
 
             <Modal.Actions>
               <Button
@@ -618,6 +573,19 @@ const ChatListPage2 = () => {
               />
             </Modal.Actions>
           </Modal>
+
+          <Icon
+            size="normal"
+            color="grey"
+            name="trash alternate outline"
+            style={{
+              float: "right",
+            }}
+            onClick={() => {
+              setCurrModal("delete-group-chat" + curr_group.group__id);
+            }}
+          />
+
           <Icon
             size="normal"
             color="grey"
@@ -676,6 +644,65 @@ const ChatListPage2 = () => {
               console.log("Selected Group ID: ", curr_group.group__id);
             }}
           >
+          <Modal
+            size="tiny"
+            open={currModal === "delete-group-chat" + curr_group.group__id}
+            onClose={() => {
+
+              setCurrModal(null);
+            }}
+          >
+            <Modal.Header>Are you sure you want to delete the group: {curr_group.group__name}?</Modal.Header>
+
+            <Modal.Actions>
+              <Button
+                primary
+                icon="checkmark"
+                labelPosition="right"
+                content="Yes"
+                onClick={handleGroupDeleteRequest}
+              />
+              <Button
+                secondary
+                icon="checkmark"
+                labelPosition="right"
+                content="No"
+                onClick={() => {
+                  setCurrModal(null);
+                }}
+              />
+            </Modal.Actions>
+          </Modal>
+          <Modal
+            size="tiny"
+            open={currModal === "archive-group-chat" + curr_group.group__id}
+            onClose={() => {
+
+              setCurrModal(null);
+            }}
+          >
+            <Modal.Header>Are you sure you want to archive the group: {curr_group.group__name}?</Modal.Header>
+
+            <Modal.Actions>
+              <Button
+                primary
+                icon="checkmark"
+                labelPosition="right"
+                content="Yes"
+                onClick={handleGroupArchiveRequest}
+              />
+              <Button
+                secondary
+                icon="checkmark"
+                labelPosition="right"
+                content="No"
+                onClick={() => {
+                  setCurrModal(null);
+                }}
+              />
+            </Modal.Actions>
+          </Modal>
+
           <Icon
             size="normal"
             color="grey"
@@ -685,7 +712,7 @@ const ChatListPage2 = () => {
 
             }}
             onClick={() => {
-              setCurrModal("delete-group-chat");
+              setCurrModal("delete-group-chat" + curr_group.group__id);
             }}
           />
           <Icon
@@ -697,10 +724,9 @@ const ChatListPage2 = () => {
               marginRight: "5px"
             }}
             onClick={() => {
-              setCurrModal("archive-group-chat");
+              setCurrModal("archive-group-chat" + curr_group.group__id);
             }}
           />
-
             <div className="">
               <p
                 style={{

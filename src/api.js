@@ -14,7 +14,7 @@ if (false && window.location.host.includes("localhost")) {
 var socket = null;
 
 function subscribeToRoom(cb, refreshCallback, room) {
-  socket = openSocket("http://" + domain + ":3001");
+  socket = openSocket("http://" + domain + ":3002");
 
   socket.on("propagate refresh", event_data => {
     refreshCallback(event_data);
