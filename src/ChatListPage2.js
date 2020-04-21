@@ -852,7 +852,7 @@ const ChatListPage2 = () => {
                 className="expand-item"
                 style={{ width: "100%", height: "50px" }}
               >
-                <div
+                <div class="dark-or-not"
                   style={{
                     width: "50%",
                     height: "100%",
@@ -921,7 +921,7 @@ const ChatListPage2 = () => {
                 className="expand-item"
                 style={{ width: "100%", height: "50px" }}
               >
-                <div
+                <div class="dark-or-not"
                   style={{
                     width: "50%",
                     height: "100%",
@@ -989,7 +989,7 @@ const ChatListPage2 = () => {
                 className="expand-item"
                 style={{ width: "100%", height: "50px" }}
               >
-                <div
+                <div class="dark-or-not"
                   style={{
                     width: "50%",
                     height: "100%",
