@@ -30,3 +30,9 @@
   color: white !important; 
 
 }
+
+
+.dark-theme .ui.toggle.checkbox label{
+  color: white !important; 
+
+}
