@@ -199,3 +199,35 @@ body:not(.dark-theme) nav {
    color: white !important; 
 
 }
+
+.dark-theme .container {
+  background-color: black;
+
+}
+
+.dark-theme .chatfeed-wrapper {
+  background-color: black;
+
+}
+
+.dark-theme .chat-panel {
+  background-color: black; 
+
+}
+
+
+.dark-theme .chat-history {
+  background-color: black; 
+
+}
+
+.dark-theme .fade.expand-item.visible.transition {
+  color: white !important; 
+
+}
+
+
+.dark-theme .dark-or-not {
+ color: white !important; 
+
+}
