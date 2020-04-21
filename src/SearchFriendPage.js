@@ -53,6 +53,8 @@ const SearchFriendPage = () => {
         { method: "POST", credentials: "include" }
       );
       const result = await response.json();
+      console.log("friend list here",result.friends );
+      result.friends.sort((a, b) => (a.pinned === true && b.pinned === false ? -1 : 1));
       setFriendList(result.friends);
     }
 
@@ -67,6 +69,49 @@ const SearchFriendPage = () => {
   const handleSearchChange = (event, data) => {
     setSearchQuery(data.value);
     console.log(data.value);
+  };
+
+
+  const handlePinnedFriendChange = async (event, data) => {
+    var settings;
+
+    if (data.checked === true) {
+      settings = {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        credentials: "include",
+        body: JSON.stringify({
+          friend_id: currUser.id,
+          pinned: true
+        })
+      };
+    } else if (data.checked === false) {
+      settings = {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        credentials: "include",
+        body: JSON.stringify({
+          friend_id: currUser.id,
+          pinned: false
+        })
+      };
+    }
+
+    const response = await fetch(
+      `http://18.219.112.140:8000/api/v1/pin-friend/`,
+      settings
+    );
+
+    const result = await response.json();
+
+    if (result.status === "success") {
+      handleRefresh();
+    }
+
   };
 
   const compareWithSearchQuery = checkUser => {
@@ -157,72 +202,140 @@ const SearchFriendPage = () => {
       console.log(
         curr_friend.email.substring(0, curr_friend.email.indexOf("@"))
       );
+      if (curr_friend.pinned === true) {
+        resultJSX.push(
+          <List.Item
+            className="list-item"
+            key={identifier}
+            style={{ height: "fit-content", borderRadius: "8px", background: "rgba(236, 236, 236, 0.9)"}}
+            onClick={() => {
+              setCurrUser(curr_friend);
 
-      resultJSX.push(
-        <List.Item
-          className="list-item"
-          key={identifier}
-          style={{ height: "fit-content", borderRadius: "8px" }}
-          onClick={() => {
-            setCurrUser(curr_friend);
-
-            console.log("Selected Friend ID: ", curr_friend.id);
-          }}
-        >
-          <Image
-            avatar
-            src={friendUrl}
-            style={{
-              float: "left",
-              width: "60px",
-              height: "60px",
-              marginRight: "2px"
+              console.log("Selected Friend ID: ", curr_friend.id);
             }}
-          />
-          <div className="userName">
-            <p
+          >
+            <Image
+              avatar
+              src={friendUrl}
               style={{
-                fontFamily: "Exo 2",
-                fontWeight: "600",
-                marginLeft: "20px",
-                height: "75%"
+                float: "left",
+                width: "60px",
+                height: "60px",
+                marginRight: "2px"
               }}
-            >
-              {curr_friend.first_name + " " + curr_friend.last_name}
+            />
+            <div className="userName">
               <p
                 style={{
                   fontFamily: "Exo 2",
-                  fontWeight: "400",
+                  fontWeight: "600",
                   marginLeft: "20px",
-                  height: "75%",
-                  fontSize: "18px",
-                  color: "grey",
-                  display: "inline-block"
+                  height: "75%"
                 }}
               >
-                {"( " +
-                  curr_friend.email.substring(
-                    0,
-                    curr_friend.email.indexOf("@")
-                  ) +
-                  " )"}
+                {curr_friend.first_name + " " + curr_friend.last_name}
+                <p
+                  style={{
+                    fontFamily: "Exo 2",
+                    fontWeight: "400",
+                    marginLeft: "20px",
+                    height: "75%",
+                    fontSize: "18px",
+                    color: "grey",
+                    display: "inline-block"
+                  }}
+                >
+                  {"( " +
+                    curr_friend.email.substring(
+                      0,
+                      curr_friend.email.indexOf("@")
+                    ) +
+                    " )"}
+                </p>
               </p>
-            </p>
-          </div>
-          <List.Content></List.Content>
-          <div className="status">
-            <p
+            </div>
+            <List.Content></List.Content>
+            <div className="status">
+              <p
+                style={{
+                  fontFamily: "Exo 2",
+                  fontWeight: "600",
+                  height: "75%"
+                }}
+              >
+                {renderAvailable(curr_friend)}
+              </p>
+            </div>
+          </List.Item>
+        );
+      }else{
+        resultJSX.push(
+          <List.Item
+            className="list-item"
+            key={identifier}
+            style={{ height: "fit-content", borderRadius: "8px" }}
+            onClick={() => {
+              setCurrUser(curr_friend);
+
+              console.log("Selected Friend ID: ", curr_friend.id);
+            }}
+          >
+            <Image
+              avatar
+              src={friendUrl}
               style={{
-                fontFamily: "Exo 2",
-                fontWeight: "600",
-                height: "75%"
+                float: "left",
+                width: "60px",
+                height: "60px",
+                marginRight: "2px"
               }}
-            >
-              {renderAvailable(curr_friend)}
-            </p>
-          </div>
-        </List.Item>
-      );
+            />
+            <div className="userName">
+              <p
+                style={{
+                  fontFamily: "Exo 2",
+                  fontWeight: "600",
+                  marginLeft: "20px",
+                  height: "75%"
+                }}
+              >
+                {curr_friend.first_name + " " + curr_friend.last_name}
+                <p
+                  style={{
+                    fontFamily: "Exo 2",
+                    fontWeight: "400",
+                    marginLeft: "20px",
+                    height: "75%",
+                    fontSize: "18px",
+                    color: "grey",
+                    display: "inline-block"
+                  }}
+                >
+                  {"( " +
+                    curr_friend.email.substring(
+                      0,
+                      curr_friend.email.indexOf("@")
+                    ) +
+                    " )"}
+                </p>
+              </p>
+            </div>
+            <List.Content></List.Content>
+            <div className="status">
+              <p
+                style={{
+                  fontFamily: "Exo 2",
+                  fontWeight: "600",
+                  height: "75%"
+                }}
+              >
+                {renderAvailable(curr_friend)}
+              </p>
+            </div>
+          </List.Item>
+        );
+      }
+
       identifier++;
     });
     return resultJSX;
@@ -288,6 +401,19 @@ const SearchFriendPage = () => {
                 <p style={{ fontSize: "grey", fontSize: "15px" }}>
                   {currUser.email}
                 </p>
+                <div style={{
+                  float: "center",
+                  borderRadius: "50px",
+                  fontSize: "18px"
+                }}>
+                  <Checkbox
+                    checked={currUser.pinned === true}
+                    toggle
+                    label="Pin Friend"
+                    onChange={handlePinnedFriendChange}
+                  />
+                </div>
+
               </div>
 
               <Button
@@ -305,23 +431,8 @@ const SearchFriendPage = () => {
                 content="Chat"
               ></Button>
 
-              <Button
-                content="Favorite"
-                as={() => {
-                  return (
-                    <img
-                      style={{
-                        float: "center",
-                        width: "20%",
-                        marginTop: "30px",
-                        borderRadius: "50px",
-                        fontSize: "18px"
-                      }}
-                      src={heartSign}
-                    ></img>
-                  );
-                }}
-              ></Button>
+
+
 
               <Button
                 negative
