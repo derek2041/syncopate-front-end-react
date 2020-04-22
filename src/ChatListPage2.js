@@ -1125,17 +1125,14 @@ const ChatListPage2 = () => {
               unmountOnHide={true}
             > 
           
-              <div style={{ color: "white", width: "100%", height: "50px" }}>
-              <div class="dark-or-not">
+              <div style={{ width: "100%", height: "50px" }}>
                 <Checkbox
                   checked={currGroup.pinned === true}
                   toggle
-                  class="dark-or-not"
                   label="Pin Conversation to Top"
                   onChange={handlePinnedChange}
-                  style={{ paddingTop: "14px", color: "grey" }}
+                  style={{ paddingTop: "14px" }}
                 />
-              </div>
               </div>
             </Transition>
           </div>

@@ -125,7 +125,7 @@ body:not(.dark-theme) nav {
 }
 
 .dark-theme .ui.primary.button {
-    background-color: #000;
+    background-color: blue;
 }
 
 .dark-theme input {
@@ -226,8 +226,46 @@ body:not(.dark-theme) nav {
 
 }
 
-
 .dark-theme .dark-or-not {
+ color: white !important; 
+
+}
+
+.ui.modal>.actions {
+ background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(63,31,128,1) 5%, rgba(31,153,157,1) 100%) !important;
+
+
+}
+
+
+.ui.modal>.header:not(.ui) {
+ background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(63,31,128,1) 5%, rgba(31,153,157,1) 100%) !important;
+
+}
+
+.ui.modal>.content {
+ background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(63,31,128,1) 5%, rgba(31,153,157,1) 100%) !important;
+
+}
+
+.dark-theme .ui.modal>.actions {
+ background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(63,31,128,1) 5%, rgba(31,153,157,1) 100%) !important;
+
+
+}
+
+
+.dark-theme .ui.modal>.header:not(.ui) {
+ background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(63,31,128,1) 5%, rgba(31,153,157,1) 100%) !important;
+
+}
+
+.dark-theme .ui.modal>.content {
+ background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(63,31,128,1) 5%, rgba(31,153,157,1) 100%) !important;
+
+}
+
+.dark-theme .ui.input>input {
  color: white !important; 
 
 }

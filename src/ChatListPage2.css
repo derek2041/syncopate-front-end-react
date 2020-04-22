@@ -36,3 +36,9 @@
   color: white !important; 
 
 }
+
+
+.dark-theme .ui.toggle.checkbox input:checked~.box, .ui.toggle.checkbox input:checked~label { 
+ color: white !important; 
+
+}
