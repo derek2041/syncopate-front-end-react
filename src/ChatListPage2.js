@@ -493,7 +493,7 @@ const ChatListPage2 = () => {
       console.log(curr_group);
 
       const $images = curr_group.users.map(user => {
-          return <img key={user.user__id + user.user__profile_pic_url} src={`/images/avatars/${user.user__profile_pic_url}`} />
+          return <img key={user.user__id + user.user__profile_pic_url} src={`http://18.219.112.140/images/avatars/${user.user__profile_pic_url}`} style={{ width: "30px", height: "30px", marginRight: "5px", marginTop: "5px" }}/>
       })
 
       const $imagesContainer = <div className="avatar-group" data-group-count={curr_group.users.length}>{$images}</div>
