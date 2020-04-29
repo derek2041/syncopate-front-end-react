@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Loader, Message } from "semantic-ui-react";
+import { Loader, Message, Button } from "semantic-ui-react";
 import mainLogo from "./images/1x/Asset 22.png";
 
 const ConfirmAccount = () => {
@@ -7,7 +7,7 @@ const ConfirmAccount = () => {
 
     useEffect(() => {
         async function confirmAccountToken() {
-            const token = window.location.href.substring(window.location.href.lastIndexOf());
+            const token = window.location.href.substring(window.location.href.lastIndexOf("/")+1);
 
             const response = await fetch(
                 `http://18.219.112.140:8000/regConfirmed/?token=${token}`,
@@ -38,7 +38,7 @@ const ConfirmAccount = () => {
 
     if (isConfirmed === null) {
         return (
-            <div>
+            <div style={{ marginTop: "20vh" }}>
                 <Message 
                     error
                     header="There was an issue confirming registration of your Syncopate account. This could be because of multiple reasons."
@@ -54,7 +54,7 @@ const ConfirmAccount = () => {
 
     if (isConfirmed === true) {
         return (
-            <div>
+            <div style={{ marginTop: "20vh", marginBottom: "50px" }}>
                 <Message 
                     positive
                     header="Thank you for confirming your Syncopate account!"
@@ -63,6 +63,15 @@ const ConfirmAccount = () => {
                         "To start, we recommend customizing your profile and getting things setup as soon as possible.",
                         "Remember, if you ever lose access to your Syncopate account, you can use the password reset page to regain access."
                     ]}
+                />
+
+                <Button
+                    primary
+                    style={{ margin: "0 auto" }}
+                    content="Login"
+                    onClick={() => {
+                        window.location.href = "/";
+                    }}
                 />
             </div>
         );

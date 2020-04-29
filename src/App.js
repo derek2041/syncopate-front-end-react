@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import { Redirect } from "react-router-dom";
 import logo from "./logo.svg";
 import "./App.css";
 import WelcomePage from "./WelcomePage";
@@ -154,6 +155,7 @@ const App = () => {
 
           <Route
             path="/"
+            exact
             render={() => {
               if (true) {
                 return <WelcomePage />;
@@ -162,6 +164,11 @@ const App = () => {
               }
             }}
           />
+
+          <Route
+            render={() => window.location.href = "/" }
+          />
+
         </Switch>
       </Router>
     </div>

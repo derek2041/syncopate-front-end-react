@@ -24,8 +24,7 @@ const ResetPasswordPage = () => {
               position: "relative"
             }}
           >
-            Please enter your email, we will send the reset password link to
-            your email account.
+            Please enter your Purdue email to receive a password reset link.
           </h4>
         </div>
       </div>
@@ -74,6 +73,9 @@ const ResetPasswordPage = () => {
             if (resetEmail === "") {
               setShowError(true);
               setErrorMessage("The email field should not be empty.");
+            } else if (!resetEmail.includes("@purdue.edu")) { 
+              setShowError(true);
+              setErrorMessage("The entered email is invalid. It must be a Purdue email address.");
             } else {
               setShowError(false);
               // window.location.href = "/register";
@@ -86,14 +88,16 @@ const ResetPasswordPage = () => {
               body: JSON.stringify({ email: resetEmail })
             };
             const response = await fetch(
-              `http://18.219.112.140:8000/api/v1/register/`,
+              `http://18.219.112.140:8000/api/v1/change-password-auth/`,
               settings
             );
             const result = await response.json();
             console.log("Result: ", result);
             console.log("ResultStatus: ", result.status);
             if (result.status === "success") {
-              window.location.href = "/";
+              window.confirm("An email with a password reset link has been sent to the provided email address!");
+            } else {
+              window.confirm("Yikes! We were unable to send the password reset link due to an issue on our end! Try again later?");
             }
           }}
         />
