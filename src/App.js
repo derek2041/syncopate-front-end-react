@@ -19,6 +19,7 @@ import SearchUserPage from "./SearchUserPage";
 import ChangePassword from "./ChangePassword";
 import NavigationBar from "./NavigationBar";
 import Stats from "./Stats";
+import ConfirmAccount from "./ConfirmAccount";
 
 const App = () => {
   return (
@@ -71,6 +72,13 @@ const App = () => {
             exact
             render={() => {
               return <ChatPage />;
+            }}
+          />
+
+          <Route
+            path="/confirm-account/:token"
+            render={() => {
+              return <ConfirmAccount />;
             }}
           />
 
