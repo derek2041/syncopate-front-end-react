@@ -257,6 +257,52 @@ const ChatListPage2 = () => {
       });
     }
   };
+  
+  const updateGroupPhoto = async () => {
+    const settings = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      credentials: "include",
+      body: JSON.stringify({
+        group_id: currGroup.group__id,
+        description: editGroupPhoto
+      })
+    };
+    const response = await fetch(
+      `http://18.219.112.140:8000/api/v1/group-avatar/`,
+      settings
+    );
+    const result = await response.json();
+
+    if (result.status === "success") {
+      setEditGroupPhoto("");
+      setCurrModal(null);
+      sendMustRefreshEvent({
+        action: "other"
+      });
+    }
+  };
+
+  const submitFileUpload = async () => {
+    const formData = new FormData();
+    const fileField = document.querySelector('input[type="file"]');
+    formData.append("avatar", fileField.files[0]);
+    setEditGroupPhoto(formData);
+    /*const response = await fetch(
+      `http://18.219.112.140:8000/api/v1//`,
+      {
+        method: "POST",
+        body: formData,
+        credentials: "include"
+      }
+    );
+
+    const result = await response.json();
+    handleReset();
+    console.log("upload=", result);*/
+  };
 
   const handleRefreshRequestEvent = (event_data) => {
     console.log("Part");
@@ -1026,6 +1072,23 @@ const ChatListPage2 = () => {
             }}
           >
             <Modal.Header>Change Group Photo</Modal.Header>
+            <Modal.Content>
+              <div style={{ paddingBottom: "50px", paddingTop: "20px" }}>
+                <input type="file" name="avatar" />
+                <Button onClick={submitFileUpload} primary>
+                Upload Photo
+                </Button>
+              </div>
+            </Modal.Content>
+            <Modal.Actions>
+              <Button
+                primary
+                icon="checkmark"
+                labelPosition="right"
+                content="Save Changes"
+                onClick={updateGroupPhoto}
+              />
+            </Modal.Actions>
           </Modal>
         </div>
       );
