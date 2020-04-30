@@ -107,16 +107,15 @@ const ResetPassword2 = () => {
             }
             var full_url = window.location.href;
 
-            var token = full_url.substring(full_url.lastIndexOf("/") + 1);
-            console.log(token);
+            var auth_token = full_url.substring(full_url.lastIndexOf("/") + 1);
+            console.log(auth_token);
             const settings = {
               method: "POST",
               headers: {
                 "Content-Type": "application/json"
               },
               body: JSON.stringify(
-                { password: resetPassword },
-                { token: token }
+                { password: resetPassword, token: auth_token }
               )
             };
             const response = await fetch(
