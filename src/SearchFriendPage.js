@@ -56,6 +56,15 @@ const SearchFriendPage = () => {
       console.log("friend list here",result.friends );
       result.friends.sort((a, b) => (a.pinned === true && b.pinned === false ? -1 : 1));
       setFriendList(result.friends);
+
+      debugger;
+      
+      for (var i = 0; i < result.friends.length; i++) {
+        if (currUser !== null && result.friends[i].id === currUser.id) {
+          setCurrUser(result.friends[i]);
+          break;
+        }
+      }
     }
 
     checkLoggedIn();

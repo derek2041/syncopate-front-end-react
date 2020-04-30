@@ -30,7 +30,7 @@ const CustomBubble = (props) => {
         </div>
       );
     } else {
-      const formattedMessage = {id: 0, message: props.message.content, senderName: "You"};
+      const formattedMessage = {id: 0, message: props.message.content, senderName: "You -" + props.message.created};
       return (
         <div
           className={`message-item-wrapper ${
@@ -53,7 +53,7 @@ const CustomBubble = (props) => {
         </div>
       );
     } else {
-      const formattedMessage = {id: props.message.user, message: props.message.content, senderName: props.message.user__first_name + " " + props.message.user__last_name};
+      const formattedMessage = {id: props.message.user, message: props.message.content, senderName: props.message.user__first_name + " " + props.message.user__last_name + " - " + props.message.created};
       console.log("formatted message:");
       console.log(formattedMessage);
       return (
@@ -157,7 +157,7 @@ const ChatPage2 = ({ currGroup, currUser, resetGroupCallback, refreshCallback, n
             user__last_name: new_received_msg.user.last_name,
             user__profile_pic_url: new_received_msg.user.profile_pic_url,
             rich_content: new_received_msg.rich_content,
-            senderName: new_received_msg.user.first_name + " " + new_received_msg.user.last_name,
+            senderName: new_received_msg.user.first_name + " " + new_received_msg.user.last_name + " - " + new Date(),
             id: 0
           });
         } else {
@@ -168,7 +168,7 @@ const ChatPage2 = ({ currGroup, currUser, resetGroupCallback, refreshCallback, n
             user__last_name: new_received_msg.user.last_name,
             user__profile_pic_url: new_received_msg.user.profile_pic_url,
             rich_content: new_received_msg.rich_content,
-            senderName: new_received_msg.user.first_name + " " + new_received_msg.user.last_name,
+            senderName: new_received_msg.user.first_name + " " + new_received_msg.user.last_name + " - " + new Date(),
             id: new_received_msg.user.id
           });
         }
@@ -228,7 +228,7 @@ const ChatPage2 = ({ currGroup, currUser, resetGroupCallback, refreshCallback, n
 
       try {
         raw_messages.forEach((curr_raw_message) => {
-          curr_raw_message.senderName = curr_raw_message.user__first_name + " " + curr_raw_message.user__last_name;
+          curr_raw_message.senderName = curr_raw_message.user__first_name + " " + curr_raw_message.user__last_name + " - " + new Date(curr_raw_message.created.replace(" ", "T"));
           curr_raw_message.message_id = curr_raw_message.id;
           if (curr_raw_message.user === currUser.id) {
             curr_raw_message.id = 0;
