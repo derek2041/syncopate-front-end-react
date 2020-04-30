@@ -64,41 +64,7 @@ const ChatListPage2 = () => {
     console.log(refreshCount + 1);
     setRefreshCount(i => i + 1);
   }
-  /*const updateGroupPhoto = async () => {
-     const formData = new FormData();
-     const fileField = document.querySelector('input[type="file"]');
-     console.log("doc "+ document.querySelector('input[type="file"]'));
-     console.log("filefield.files " + fileField);
-     console.log("filefield.files0 " + fileField.files[0]);
-     console.log("filefield.files1 " + fileField.files[1]);
-     console.log("filefield.files2 " + fileField.files[2]);
-     console.log("input " + 'input[type="file"]');
-     //formData.append("avatar", fileField.files[0]);
-     var tempid = currGroup.group__id;
-     var details = JSON.stringify({tempid});
-     //formData.append("group_id", currGroup.group__id);
-     formData.append("group_id", tempid);
-     formData.append("avatar", fileField);
-     //setEditGroupPhoto(formData);
-     //console.log("formdata" + formData);
-    const response = await fetch(
-      `http://18.219.112.140:8000/api/v1/group-avatar/`,
-        {
-                method: "POST",
-                body: formData,
-                credentials: "include"
-        }
-    );
-    const result = await response.json();
-        console.log(result);
-    if (result.status === "success") {
-      setEditGroupPhoto("");
-      setCurrModal(null);
-      sendMustRefreshEvent({
-        action: "other"
-      });
-    }
-  };*/
+  
   useEffect(() => {
     async function checkLoggedIn() {
       const response = await fetch(
