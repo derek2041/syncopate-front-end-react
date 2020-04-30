@@ -12,6 +12,11 @@ import {
 import { Link } from "react-router-dom";
 import "./NavigationBar.css";
 
+const pathsThatShouldNotShowNavigationBar = [
+  "/register", "/reset-password", "/confirm-account",
+  "/confirm-reset-password"
+];
+
 const NavigationBar = () => {
   const [mouseOver, setMouseOver] = useState(null);
 
@@ -21,6 +26,12 @@ const NavigationBar = () => {
 
   if (window.location.pathname === "/") {
     return null;
+  }
+
+  for (var i = 0; i < pathsThatShouldNotShowNavigationBar.length; i++) {
+    if (window.location.pathname.includes(pathsThatShouldNotShowNavigationBar[i])) {
+      return null;
+    }
   }
 
   return (

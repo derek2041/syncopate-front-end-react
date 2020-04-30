@@ -41,7 +41,7 @@ const ResetPassword2 = () => {
             style={{ marginBottom: "35px" }}
           >
             <Message.Header style={{ fontFamily: "Exo 2" }}>
-              Reset Password Fail
+              Reset Password Error
             </Message.Header>
             <p style={{ fontFamily: "Exo 2" }}>{errorMessage}</p>
           </Message>
@@ -107,20 +107,19 @@ const ResetPassword2 = () => {
             }
             var full_url = window.location.href;
 
-            var token = full_url.substring(full_url.lastIndexOf("/") + 1);
-            console.log(token);
+            var auth_token = full_url.substring(full_url.lastIndexOf("/") + 1);
+            console.log(auth_token);
             const settings = {
               method: "POST",
               headers: {
                 "Content-Type": "application/json"
               },
               body: JSON.stringify(
-                { password: resetPassword },
-                { token: token }
+                { password: resetPassword, token: auth_token }
               )
             };
             const response = await fetch(
-              `http://18.219.112.140:8000/api/v1/register/`,
+              `http://18.219.112.140:8000/confirm-reset-password/`,
               settings
             );
             const result = await response.json();

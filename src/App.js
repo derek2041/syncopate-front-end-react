@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import { Redirect } from "react-router-dom";
 import logo from "./logo.svg";
 import "./App.css";
 import WelcomePage from "./WelcomePage";
@@ -19,6 +20,7 @@ import SearchUserPage from "./SearchUserPage";
 import ChangePassword from "./ChangePassword";
 import NavigationBar from "./NavigationBar";
 import Stats from "./Stats";
+import ConfirmAccount from "./ConfirmAccount";
 
 const App = () => {
   return (
@@ -71,6 +73,13 @@ const App = () => {
             exact
             render={() => {
               return <ChatPage />;
+            }}
+          />
+
+          <Route
+            path="/confirm-account/:token"
+            render={() => {
+              return <ConfirmAccount />;
             }}
           />
 
@@ -146,6 +155,7 @@ const App = () => {
 
           <Route
             path="/"
+            exact
             render={() => {
               if (true) {
                 return <WelcomePage />;
@@ -154,6 +164,11 @@ const App = () => {
               }
             }}
           />
+
+          <Route
+            render={() => window.location.href = "/" }
+          />
+
         </Switch>
       </Router>
     </div>
