@@ -64,7 +64,41 @@ const ChatListPage2 = () => {
     console.log(refreshCount + 1);
     setRefreshCount(i => i + 1);
   }
-
+  /*const updateGroupPhoto = async () => {
+     const formData = new FormData();
+     const fileField = document.querySelector('input[type="file"]');
+     console.log("doc "+ document.querySelector('input[type="file"]'));
+     console.log("filefield.files " + fileField);
+     console.log("filefield.files0 " + fileField.files[0]);
+     console.log("filefield.files1 " + fileField.files[1]);
+     console.log("filefield.files2 " + fileField.files[2]);
+     console.log("input " + 'input[type="file"]');
+     //formData.append("avatar", fileField.files[0]);
+     var tempid = currGroup.group__id;
+     var details = JSON.stringify({tempid});
+     //formData.append("group_id", currGroup.group__id);
+     formData.append("group_id", tempid);
+     formData.append("avatar", fileField);
+     //setEditGroupPhoto(formData);
+     //console.log("formdata" + formData);
+    const response = await fetch(
+      `http://18.219.112.140:8000/api/v1/group-avatar/`,
+        {
+                method: "POST",
+                body: formData,
+                credentials: "include"
+        }
+    );
+    const result = await response.json();
+        console.log(result);
+    if (result.status === "success") {
+      setEditGroupPhoto("");
+      setCurrModal(null);
+      sendMustRefreshEvent({
+        action: "other"
+      });
+    }
+  };*/
   useEffect(() => {
     async function checkLoggedIn() {
       const response = await fetch(
@@ -259,23 +293,22 @@ const ChatListPage2 = () => {
   };
   
   const updateGroupPhoto = async () => {
-    const settings = {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      credentials: "include",
-      body: JSON.stringify({
-        group_id: currGroup.group__id,
-        description: editGroupPhoto
-      })
-    };
+     const formData = new FormData();
+     const fileField = document.querySelector("avatar");
+     var tempid = currGroup.group__id;
+     var details = JSON.stringify({tempid});
+     formData.append("group_id", tempid);
+     formData.append("avatar", document.querySelector("#avatar").files[0]);
     const response = await fetch(
       `http://18.219.112.140:8000/api/v1/group-avatar/`,
-      settings
+	{
+		method: "POST",
+        	body: formData,
+        	credentials: "include"
+	}
     );
     const result = await response.json();
-
+	console.log(result);
     if (result.status === "success") {
       setEditGroupPhoto("");
       setCurrModal(null);
@@ -285,24 +318,6 @@ const ChatListPage2 = () => {
     }
   };
 
-  const submitFileUpload = async () => {
-    const formData = new FormData();
-    const fileField = document.querySelector('input[type="file"]');
-    formData.append("avatar", fileField.files[0]);
-    setEditGroupPhoto(formData);
-    /*const response = await fetch(
-      `http://18.219.112.140:8000/api/v1//`,
-      {
-        method: "POST",
-        body: formData,
-        credentials: "include"
-      }
-    );
-
-    const result = await response.json();
-    handleReset();
-    console.log("upload=", result);*/
-  };
 
   const handleRefreshRequestEvent = (event_data) => {
     console.log("Part");
@@ -826,8 +841,9 @@ const ChatListPage2 = () => {
 
     return (
       <div style={{ width: "100%", borderBottom: "0.1rem solid lightgray" }}>
-        <h1 style={{ paddingTop: "40px" }}>{currGroup.group__name}</h1>
-        <h1 style={{ paddingBottom: "40px", color: "gray" }}>
+	<h1 style={{ paddingTop: "10px" }}><img id="rounded" src={"http://18.219.112.140/images/avatars/" + currGroup.group__profile_pic_url} alt="Profile Pic"/></h1>
+	<h1 style={{ paddingTop: "10px" }}>{currGroup.group__name}</h1>
+        <h1 style={{ paddingBottom: "35px", color: "gray" }}>
           {currGroup.group__description}
         </h1>
       </div>
@@ -1074,21 +1090,12 @@ const ChatListPage2 = () => {
             <Modal.Header>Change Group Photo</Modal.Header>
             <Modal.Content>
               <div style={{ paddingBottom: "50px", paddingTop: "20px" }}>
-                <input type="file" name="avatar" />
-                <Button onClick={submitFileUpload} primary>
+                <input type="file" name="avatar" id="avatar" />
+                <Button onClick={updateGroupPhoto} primary>
                 Upload Photo
                 </Button>
               </div>
             </Modal.Content>
-            <Modal.Actions>
-              <Button
-                primary
-                icon="checkmark"
-                labelPosition="right"
-                content="Save Changes"
-                onClick={updateGroupPhoto}
-              />
-            </Modal.Actions>
           </Modal>
         </div>
       );
