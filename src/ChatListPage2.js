@@ -809,21 +809,47 @@ const ChatListPage2 = () => {
 		im
           //return <img key={user.user__id + user.user__profile_pic_url} src={`http://18.219.112.140/images/avatars/${user.user__profile_pic_url}`} style={{ width: "30px", height: "30px", marginRight: "5px", marginTop: "5px" }}/>
       })*/
-	console.log("groupuser[0]"+currGroup.users[0].user__id);
-	  console.log(currUser);
-    return (
-      <div style={{ width: "100%", borderBottom: "0.1rem solid lightgray" }}>
-	{!currGroup.group__direct_message ? 
-	<h1 style={{ paddingTop: "10px" }}><img id="rounded" src={"http://18.219.112.140/images/avatars/" + currGroup.group__profile_pic_url} alt={"Default img"} /></h1>
-	: 
-	currGroup.users[0].user__id === currUser.id ?  <h1 style={{ paddingTop: "10px" }}><img id="rounded" src={"http://18.219.112.140/images/avatars/" + currGroup.users[1].user__profile_pic_url} alt={"Default dir img"} /></h1>
-	 : <h1 style={{ paddingTop: "10px" }}><img id="rounded" src={"http://18.219.112.140/images/avatars/" + currGroup.users[0].user__profile_pic_url} alt={"Default dir img"} /></h1>
-	}<h1>{currGroup.group__name}</h1>
-        <h1 style={{ paddingBottom: "35px", color: "gray" }}>
-          {currGroup.group__description}
-        </h1>
-      </div>
-    );
+    console.log(currUser);
+    if (!currGroup.group__direct_message) {
+      return (
+        <div style={{ width: "100%", borderBottom: "0.1rem solid lightgray" }}>
+          	<h1 style={{ paddingTop: "10px" }}><img id="rounded" src={"http://18.219.112.140/images/avatars/" + currGroup.group__profile_pic_url} alt={"Default img"} /></h1>
+            <h1>{currGroup.group__name}</h1>
+            <h1 style={{ paddingBottom: "35px", color: "gray" }}>
+              {currGroup.group__description}
+            </h1>
+        </div>
+      )
+    } else if (currGroup.users.length === 1) {
+      return (
+        <div style={{ width: "100%", borderBottom: "0.1rem solid lightgray" }}>
+            <h1 style={{ paddingTop: "10px" }}><img id="rounded" src={"http://18.219.112.140/images/avatars/" + currGroup.users[0].user__profile_pic_url} alt={"Default dir img"} /></h1>            <h1>{currGroup.group__name}</h1>
+            <h1 style={{ paddingBottom: "35px", color: "gray" }}>
+              {currGroup.group__description}
+            </h1>
+        </div>
+      )
+    } else if (currGroup.users[0].user__id === currUser.id) {
+      return (
+        <div style={{ width: "100%", borderBottom: "0.1rem solid lightgray" }}>
+	          <h1 style={{ paddingTop: "10px" }}><img id="rounded" src={"http://18.219.112.140/images/avatars/" + currGroup.users[1].user__profile_pic_url} alt={"Default dir img"} /></h1>
+            <h1>{currGroup.group__name}</h1>
+            <h1 style={{ paddingBottom: "35px", color: "gray" }}>
+              {currGroup.group__description}
+            </h1>
+        </div>
+      )
+    } else if (currGroup.users[1].user__id === currUser.id) {
+      return (
+        <div style={{ width: "100%", borderBottom: "0.1rem solid lightgray" }}>
+          	<h1 style={{ paddingTop: "10px" }}><img id="rounded" src={"http://18.219.112.140/images/avatars/" + currGroup.users[0].user__profile_pic_url} alt={"Default dir img"} /></h1>
+            <h1>{currGroup.group__name}</h1>
+            <h1 style={{ paddingBottom: "35px", color: "gray" }}>
+              {currGroup.group__description}
+            </h1>
+        </div>
+      )
+    }
   };
 
   const renderGroupOptions = () => {
