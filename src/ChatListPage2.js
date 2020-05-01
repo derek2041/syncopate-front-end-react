@@ -64,7 +64,7 @@ const ChatListPage2 = () => {
     console.log(refreshCount + 1);
     setRefreshCount(i => i + 1);
   }
-
+  
   useEffect(() => {
     async function checkLoggedIn() {
       const response = await fetch(
@@ -257,6 +257,33 @@ const ChatListPage2 = () => {
       });
     }
   };
+  
+  const updateGroupPhoto = async () => {
+     const formData = new FormData();
+     const fileField = document.querySelector("avatar");
+     var tempid = currGroup.group__id;
+     var details = JSON.stringify({tempid});
+     formData.append("group_id", tempid);
+     formData.append("avatar", document.querySelector("#avatar").files[0]);
+    const response = await fetch(
+      `http://18.219.112.140:8000/api/v1/group-avatar/`,
+	{
+		method: "POST",
+        	body: formData,
+        	credentials: "include"
+	}
+    );
+    const result = await response.json();
+	console.log(result);
+    if (result.status === "success") {
+      setEditGroupPhoto("");
+      setCurrModal(null);
+      sendMustRefreshEvent({
+        action: "other"
+      });
+    }
+  };
+
 
   const handleRefreshRequestEvent = (event_data) => {
     console.log("Part");
@@ -777,11 +804,22 @@ const ChatListPage2 = () => {
     if (currGroup === null) {
       return null;
     }
-
+	/*var img;  
+	currGroup.users.map(user => {
+		im
+          //return <img key={user.user__id + user.user__profile_pic_url} src={`http://18.219.112.140/images/avatars/${user.user__profile_pic_url}`} style={{ width: "30px", height: "30px", marginRight: "5px", marginTop: "5px" }}/>
+      })*/
+	console.log("groupuser[0]"+currGroup.users[0].user__id);
+	  console.log(currUser);
     return (
       <div style={{ width: "100%", borderBottom: "0.1rem solid lightgray" }}>
-        <h1 style={{ paddingTop: "40px" }}>{currGroup.group__name}</h1>
-        <h1 style={{ paddingBottom: "40px", color: "gray" }}>
+	{!currGroup.group__direct_message ? 
+	<h1 style={{ paddingTop: "10px" }}><img id="rounded" src={"http://18.219.112.140/images/avatars/" + currGroup.group__profile_pic_url} alt={"Default img"} /></h1>
+	: 
+	currGroup.users[0].user__id === currUser.id ?  <h1 style={{ paddingTop: "10px" }}><img id="rounded" src={"http://18.219.112.140/images/avatars/" + currGroup.users[1].user__profile_pic_url} alt={"Default dir img"} /></h1>
+	 : <h1 style={{ paddingTop: "10px" }}><img id="rounded" src={"http://18.219.112.140/images/avatars/" + currGroup.users[0].user__profile_pic_url} alt={"Default dir img"} /></h1>
+	}<h1>{currGroup.group__name}</h1>
+        <h1 style={{ paddingBottom: "35px", color: "gray" }}>
           {currGroup.group__description}
         </h1>
       </div>
@@ -1016,8 +1054,7 @@ const ChatListPage2 = () => {
               </div>
             </Transition>
           </div>
-
-          <Modal
+	    <Modal
             size="small"
             open={currModal === "change-group-photo"}
             onClose={() => {
@@ -1026,6 +1063,14 @@ const ChatListPage2 = () => {
             }}
           >
             <Modal.Header>Change Group Photo</Modal.Header>
+            <Modal.Content>
+              <div style={{ paddingBottom: "50px", paddingTop: "20px" }}>
+                <input type="file" name="avatar" id="avatar" />
+                <Button onClick={updateGroupPhoto} primary>
+                Upload Photo
+                </Button>
+              </div>
+            </Modal.Content>
           </Modal>
         </div>
       );
